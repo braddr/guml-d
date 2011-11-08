@@ -1,0 +1,71 @@
+<HTML>
+<HEAD>
+<TITLE>Guml Reference page 7</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<FONT SIZE=+3><b>VII. Conclusion</b></FONT>
+<FONT SIZE=+2>
+<p><a href="#pitfalls">Common Programming Pitfalls</a>
+<br><a href="#points">Technical Points</a>
+</FONT>
+</blockquote>
+<a name="pitfalls"><B> Common Programming Pitfalls.</B></a>
+<blockquote>
+
+<P><B>Variables vs. Values</B>
+
+<P>Possibly the first snare encountered by those learning to program in GUML is that of confusing variables with values, primarily by not using the <tt>\get</tt> statement where one belongs:
+
+<tt><P>&#9;\fop{this}{+}{that}</tt>  should be  <tt>\fop{\get{this}}{+}{\get{that}}
+</tt><P>and
+<tt><P>&#9;\isset{\get{foo}}</tt>  should be  <tt>\isset{foo}
+</tt>
+<P>Make note of this, as it can be a particularly insidious error to track down.
+
+<P>&nbsp;
+
+<B><P>Bracketing</B>
+
+<P>A handy feature of some text editors like Emacs and Jove is automatic visual bracket matching.  When the user types a closing bracket (or brace or parenthesis), the opening bracket which matches it briefly flashes, or a warning appears if none does.  This prevents all sorts of bracket mismatches, but it can lead to laziness on behalf of the programmer.  For instance, when retrieving the value of a variable as an argument to a macro it’s rather easy to forget to close off the <tt>\get</tt> command.  If left unnoticed, one may produce the following:
+
+<tt><P>&#9;\fop{\get{this}{+}{\get{that}}}
+</tt>
+<P>At first glance, everything seems in order here—since the keywords and arguments are compartmentalized, it’s difficult to notice that one close bracket is misplaced.  In the example, <tt>\fop</tt> receives only one argument, namely the contents of the variable <I>this</I>.  This is because inside <tt>\fop</tt>’s brackets lies the command <tt>\get{this}{+}{\get{that}}</tt>.  The <tt>\get</tt> macro looks up the value of the variable name given in its first argument, and ignores the rest of the arguments.  The top-level <tt>\fop</tt>, on the other hand, was expecting three or four arguments and received only one.  The error in this case will likely be a runtime error on the part of the GUML processor, which can be presented by a web browser as a &quot;malformed header error&quot; if it’s expecting GUML to produce HTML or other MIME type output.
+
+<P>A better way to format the <tt>\fop</tt> operator, particularly when simple sums are replaced with sums of products of differences (and so on..) is: 
+<blockquote>
+<tt><P>\fop{
+<P>  \get{this}
+<P>}{+}{
+<P>  \get{that}
+<P>}
+</tt>
+</blockquote>
+<P>By putting the bracketed data on a new line, it is significantly easier to visually scan for matching brackets.
+
+<P>&nbsp;
+</blockquote>
+
+<a name="points"><P><B>Technical points.</B></a>
+<blockquote>
+
+<P>The GUML interpreter is very picky about certain things.  It would behoove you to exercise caution by keeping these in mind.
+
+<P>Spaces are ignored (a) after the text of the name of a macro or command which has no arguments, (b) at the start of any line, or (c) in command mode (along with tabs and newlines).
+
+<P>A comment character, <tt>#</tt>, at the end of a line suppresses output of a newline.  This may be desirable if one is in text mode and does not want newlines.  It shows up extensively in those macros which present text with a strict required format.
+
+<P>There must be <I>no</I> space before the left brace of an argument to a command.  Any such space breaks the argument off into a separate group.  Even placing a comment character directly after the name of a command or the right brace of an argument breaks the chain of arguments.
+
+<P>The arguments to a macro, <tt>\1</tt> and up, may be used as arguments within other primitives and other macros, but if quoted and then later invoked, they will obviously be reset with whatever new arguments are passed.  If no arguments are passed, they will all be the empty string &quot;&quot;.
+
+<P>When an internal error occurs, command mode is automatically entered and 
+all arguments are instantly lost.  Variables may still be accessed if the 
+<tt>\error</tt> macro needs to use them.
+
+<P>Macro names may be at most 99 characters and contain only letters and the 
+underscore character  "_".  Variable names in general, however, may be of 
+unlimited length and contain any characters.
+
+<P>Attempting to get an unset variable returns the empty string; attempting to 
+invoke an unset variable causes an internal error.

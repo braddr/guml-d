@@ -1,0 +1,171 @@
+<HTML>
+<HEAD>
+<TITLE>Guml Reference</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+
+<FONT SIZE=+3><b>III. Advanced Topics</b></FONT>
+
+<blockquote>
+<FONT SIZE=+2>
+Header Files<br>
+Recursion<br>
+Loops<br>
+Database Connectivity
+</FONT>
+</blockquote>
+
+<p>
+
+<A NAME="3.1"><B>Header Files</B>
+
+<blockquote>
+
+To prevent a profusion of repeated function definitions, GUML is equipped
+with a primitive which allows data to be read in from another file.  The
+command <tt>\include{</tt><i>filename</i><tt>}</tt> reads in the text from
+the file named <I>filename</I>, interpreting it exactly as if it had been
+cut and pasted into the original file.  Thus, a macro which is used in many
+programs need only be defined once.  This allows libraries of function
+definitions to be constructed and accessed easily, facilitating the
+extensibility which is the wellspring of GUML's power.
+
+<p>
+
+The files located in the <tt>headers</tt> directory each contain a number
+of macros that simplify life, all built up in terms of the primitives.
+These macro definitions are loaded by using the <tt>\include</tt> command,
+as described previously.
+
+<p>
+
+Specifically, the file <tt>headers/plain_fmt</tt> specifies all of the
+plain format commands; the file <tt>headers/html_fmt</tt> contains a
+standard set of HTML command macros; the file <tt>headers/chicago</tt> is
+a series of GUML macros designed specifically for the Chicago project; the
+file <tt>headers/formulae</tt> contains the mathematical functions used in
+computations in the Chicago project; and the file <tt>headers/dave_fmt</tt>
+contains additional numeric and string manipulation routines.
+
+<p>
+
+Full descriptions of all macros in the header files is appended.
+
+</blockquote>
+
+<A NAME="3.2"><B>Recursion</B>
+
+<blockquote>
+
+Here are some sample macros which illustrate the capabilities of GUML.  We
+assume two macros from the plain format, <tt>\n</tt> (newline) and
+<tt>\ne</tt> (not-equals), are defined.  First, the macro <tt>\rectangle</tt>
+produces a rectangle of <tt>*</tt>'s with parameters specified.
+
+<blockquote>
+
+<pre>
+\set{starbar}{\quote{
+   \if{
+      \op{\1}{&gt;}{0}
+   }{
+      {*}
+      \starbar{\op{\1}{-}{1}}
+   }
+}}
+ 
+\set{rectangle}{\quote{
+   \if{
+      \op{\2}{&gt;}{0}
+   }{
+      \starbar{\1}
+      \n
+      \rectangle{\1}{\op{\2}{-}{1}}
+   }
+}}
+</pre>
+
+</blockquote>
+
+You may test this with <tt>\rectangle{\rand{40}}{\rand{8}}</tt>.  Note that
+using this recursion method you may inadvertently create an infinite loop;
+to guard against these cases, the parser automatically frantically kills
+the process with an abrupt message if a certain large maximum recursion
+depth is reached.
+
+</blockquote>
+
+<A NAME="3.3"><B>Loops</B>
+
+<blockquote>
+
+One may also simulate arrays in GUML.  The macro <tt>\backandforth</tt>
+prints a sequence of ten random one-digit numbers, and then prints them in
+reverse order.
+
+<blockquote>
+
+<pre>
+\set{doloop}{\quote{
+   \if{
+      \ne{\1}{\2}
+   }{
+      \set{_doloop_tmp}{\4}
+      \_doloop_tmp{\1}
+      \doloop{\op{\1}{+}{\3}}{\2}{\3}{\4}
+   }
+}}
+
+\set{backandforth}{\quote{
+   \doloop{0}{20}{1}{
+      \quote{\set{array_\1}{\rand{10}}\get{array_\1}\ }
+   }
+   \n
+   \doloop{19}{-1}{-1}{\quote{\get{array_\1}\ }}
+   \n
+}}
+
+</pre>
+
+</blockquote>
+
+Note that "associative arrays" may be formed in essentially the same way.
+
+</blockquote>
+
+<A NAME="3.4"><B>Database Connectivity</B>
+
+<blockquote>
+
+Interface to the Sybase database is effected via two commands,
+<tt>\sqlexec</tt> and <tt>\sqlrow</tt>.  <tt>\sqlexec</tt> sends its first
+argument to Sybase.  If it is supposed to return exactly one batch, one
+then uses <tt>\sqlrow</tt> to retrieve the results row-by-row.  It takes
+as arguments a series of variables which are then loaded with the respective
+columns.  A blank entry means that column is ignored.  <tt>\sqlrow</tt>
+returns a true value on success, a false value if no more values could be
+found and none were loaded.
+
+<p>
+
+The following sample code uses the <tt>\while</tt> primitive to retrieve the
+result set of records from a SQL query:
+
+<blockquote>
+<pre>
+\sqlexec{
+   select userID, name from userProfile
+}
+
+\while{
+   \sqlrow{id}{nm}
+}{
+   User `\get{id}' is named `\get{nm}'.
+}
+</pre>
+</blockquote>
+
+</blockquote>
+
+</BODY>
+</HTML>

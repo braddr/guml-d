@@ -1,0 +1,177 @@
+<!--
+<P>Having learned about primitives and variables, along with a wide variety of mathematical operations, it's time to take a look at conditional statements and see how to use them in conjunction with what we've learned so far.
+-->
+<HTML>
+<HEAD>
+<TITLE>Guml Reference page 5</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+
+<FONT SIZE=+3><b>V. Conditional Statements </b></FONT>
+<FONT SIZE=+2>
+<p><a href="#if"><b><tt>\if</tt></a>
+<br><a href="#while"><tt>\while</tt></b></a>
+</FONT>
+
+<blockquote>
+<P>Conditionals allow flow control in your document.  This can create Web pages which have varying output based upon the outcome of one or more tests.  If someone is coming from Mexico, send them the page in Spanish, if they are a registered user, check for new content that might interest them, etc.  Through the use of conditionals, documents on the Web gain a power that HTML simply cannot give – they are no longer stuck doing just one thing.  There are two built-in conditional primitives, <tt>\if</tt> and <tt>while</tt>. 
+</blockquote>
+
+<a name="if"><B><tt>\if</tt></B></a>
+
+<blockquote>
+<p>
+<tt>\if{<I>test</I>}{<I>then</I>}{<I>else</I>}</tt>  - expand either <I>then</I> or <I>else</I> (if given) according to the value of <I>test</I>
+
+<P>If the string <I>test</I> is not the empty string &quot;&quot;, the second argument <I>then</I> is expanded and returned.  Otherwise, if the optional third argument <I>else</I> is given, it is expanded and returned; if no third argument is specified and <I>test</I> is &quot;&quot;, the <tt>\if</tt> command returns the empty string &quot;&quot;.
+
+<P>The <tt>\if</tt> command is often used in conjunction with the <tt>\isset</tt> command which, as the name suggests, determines whether a variable has been set yet:
+
+<tt><P>\isset{</tt><I>var</I><tt>}</tt> - Returns the string &quot;true&quot; if the value of the variable named <I>var </I>has been set, otherwise returns the empty string &quot;&quot;.
+
+<P>An example of such a use would be:
+<blockquote>
+<TABLE CELLSPACING=0 BORDER=0 CELLPADDING=7 WIDTH=590>
+<TR><TD WIDTH="50%" VALIGN="TOP">
+<I><tt><P>GUML</I></tt></TD>
+<TD WIDTH="50%" VALIGN="TOP">
+<I><tt><P>PERL</I></tt></TD>
+</TR>
+<TR><TD WIDTH="50%" VALIGN="TOP">
+<tt><P>\if{
+<P>  \isset{USER}
+<P>}{
+<P>  Hello, user \get{USER}.
+<P>}{
+<P>  You are a guest.
+<P>&#9;}</tt></TD>
+<TD WIDTH="50%" VALIGN="TOP">
+<tt><P>&#9;if ($user) {
+<P>&#9;  print &quot;Hello, user $user.&quot;;
+<P>&#9;} else {
+<P>&#9;  print &quot;You are a guest.&quot;;
+<P>&#9;}</tt></TD>
+</TR>
+</TABLE>
+</blockquote>
+<P>which greets a user by name or informs them of their guesthood.
+
+<P>Just as the <tt>\op</tt> command expects its input to be strings representing numbers, the <tt>\if</tt> command expects a Boolean (or &quot;true or false&quot;) value as its first argument.  According to GUML, the string &quot;true&quot; is considered a &quot;true&quot; value, as is the string &quot;false&quot;.  In fact, any non-empty string (even &quot;0&quot;, unlike in PERL) given as the first argument causes <tt>\if</tt> to expand its second argument.  Only when it receives an empty string in its first argument does <tt>\if</tt> expand the optional third argument.
+
+<P>Another GUML primitive which may be useful within a conditional statement is the <tt>\rand</tt> function:
+
+<P>&#9;<tt>\rand{</tt><I>n</I><tt>}</tt>  - Returns a pseudo-random integer between 0 and <I>n</I>-1, inclusive.
+
+<P>For example, the command
+<blockquote>
+<TABLE CELLSPACING=0 BORDER=0 CELLPADDING=7 WIDTH=590>
+<TR><TD WIDTH="50%" VALIGN="TOP">
+<I><tt><P>GUML</I></tt></TD>
+<TD WIDTH="50%" VALIGN="TOP">
+<I><tt><P>PERL</I></tt></TD>
+</TR>
+<TR><TD WIDTH="50%" VALIGN="TOP">
+<tt><P>&#9;\if{\eq{\rand{5}}{0}}{
+<P>&#9;  boing!
+<P>&#9;}{
+<P>&#9;  thwack
+<P>&#9;}</tt></TD>
+<TD WIDTH="50%" VALIGN="TOP">
+<tt><P>if (rand(5)) {
+<P>  print &quot;thwack&quot;; 
+<P>} else {
+<P>  print &quot;boing!&quot;;
+<P>}</tt></TD>
+</TR>
+</TABLE>
+</blockquote>
+
+<P>returns the string &quot;boing!&quot; with probability 1/5, and &quot;thwack&quot; with probability 4/5.  Using some of the primitives we learned earlier and by using nested conditionals, we can check to see if a number entered by a user can be used as currency or if it contains improper characters or the wrong number of digits after the decimal place:
+<blockquote>
+<TABLE CELLSPACING=0 BORDER=0 CELLPADDING=7 WIDTH=590>
+<TR><TD VALIGN="TOP">
+<I><tt><P>GUML</I></tt></TD>
+</TR>
+<TR><TD VALIGN="TOP">
+<tt><P>&#9;\set{test}{$10,400.35}
+<P>&#9;\if{
+<P>&#9;  \money{\get{test}}
+<P>&#9;}{
+<P>&#9;  \if{
+<P>&#9;    \op{\index{\get{test}}{.}}{=}{\op{\length{\get{test}}}{-}{3}}
+<P>&#9;  }{
+<P>&#9;    That is a valid dollar value.
+<P>&#9;  }{
+<P>&#9;    You have too many digits after the decimal place.
+<P>&#9;}{
+<P>&#9;  I'm sorry, but that's not a valid number.
+<P>&#9;}&#9;</tt></TD>
+</TR>
+<TR><TD VALIGN="TOP">
+<I><tt><P>PERL</I></tt></TD>
+</TR>
+<TR><TD VALIGN="TOP">
+<tt><P>&#9;$test = &quot;$10,400.35&quot;;
+<P>&#9;$test =~ y/$,//d;&#9;&#9;# Note: it would be better PERL to do: 
+<P>&#9;&#9;&#9;&#9;&#9;# y/0-9.//cd; but we use this because it
+<P>&#9;&#9;&#9;&#9;&#9;# is analogous to the \money{} primitive.
+<P>&#9;if ($test =~ /[^0-9.]/) {
+<P>&#9;  print &quot;I'm sorry, but that's not a valid number.&quot;;
+<P>&#9;} elsif (index($test, &quot;.&quot;) == length($test) - 3) {
+<P>&#9;  print &quot;That is a valid dollar value.&quot;;
+<P>&#9;} else {
+<P>&#9;  print &quot;You have too many digits after the decimal place.&quot;;
+<P>&#9;}</tt></TD>
+</TR>
+</TABLE>
+</blockquote>
+<P>Since we set the <I>test</I> variable, we know what outcome there will be, but the GUML code, just like the PERL below it, walks through the various checks – first determining if it's made up of digits, the decimal point, commas and a dollar sign.  Next, it checks to make sure that the decimal point has only two digits after it.  This is a fairly certain set of tests, one additional one might include a check through the <tt>\fop</tt> primitive to ensure that the number generated by <tt>\money</tt> is, in fact, a floating-point number rather than an IP address, or some other oddly formatted number (i.e. 127.0.0.0 is not a valid number for currency).
+
+<P>Conditional statements can be used throughout a site to provide complex, interactive functionality to Web pages.  With no practical limit to the amount of nesting and testing that can occur, a wide variety of highly variant behaviors can be coded through GUML and the \if primitive.
+</blockquote>
+
+<p>
+<a name="while"><B><tt>\while</tt></B></a>
+
+<blockquote>
+<p>
+<tt>\while{</tt><I>test</I><tt>}{</tt><I>body</I><tt>}</tt>  - Expands <I>body</I> if <I>test</I> expands to a true value, then repeats.
+
+<P>The string <I>test</I> is a <tt>\quote</tt>'ed GUML test case, expected to return an empty string if the test is false.  The string <I>body </I>is <tt>\quote</tt>'ed GUML commands to be performed each time <I>test</I> tests true.  Hopefully, something in the <I>body</I> command string will eventually cause <I>test</I> to expand to the empty string &quot;&quot;.
+
+<!--
+<P>GUML's <tt>\while</tt> loop is not a primitive function, but rather a macro defined in the file <tt>headers/plain_fmt</tt>.  Unless told to do otherwise, the parser will try to expand a macro's arguments before passing them to the macro.  For instance, when you do <tt>\op{\get{a}}{+}{1}</tt>, the value of <I>a</I> is retrieved and sent to the <tt>\op</tt> primitive—the <tt>\op</tt> function isn't given &quot;<tt>\get{a}</tt>&quot; for its first argument.  Because of this, the syntax for a <tt>\while</tt> loop is a little confusing; in order for the <tt>\while</tt> loop to work properly, its arguments must be <tt>\quote</tt>'ed GUML code.  Consider the following snippet of code:
+<blockquote>
+<tt><P>\set{i}{0}
+<P>\while{\op{\i}{&lt;}{5}}{
+<P>&#9;\i\n
+<P>&#9;\inc{i}
+<P>}
+</tt>
+</blockquote>
+<P>Since the arguments are expanded <I>before</I> being passed to the <tt>\while</tt> macro, the code actually looks like this immediately before the <tt>\while</tt> macro is expanded:
+<blockquote>
+<tt><P>\while{true}{0
+<P>}
+</tt>
+</blockquote>
+<P>When executed, this code will spew the string &quot;0&quot; followed by a newline until the interpreter decides it’s had enough, presents an error message to this effect, and aborts rather unceremoniously.  Of course, the proper way to write the loop is like this:
+<blockquote>
+<tt><P>\set{i}{0}
+<P>\while{\quote{\op{\i}{&lt;}{5}}}{\quote{  
+<P>&#9;\i\n
+<P>&#9;\inc{i}
+<P>}}
+</tt>
+</blockquote>
+-->
+
+<P>In each iteration of the loop, <tt>\while</tt> expands the test case, tests 
+it for a &quot;truth&quot; value, then either invokes another <tt>\while</tt> 
+with the same arguments or stops.  Because <tt>\while</tt> is defined 
+recursively, and because an un-<tt>\quote</tt>’ed test case usually expands 
+to &quot;true&quot;, infinite loops are a common plight to the novice GUML 
+programmer.
+
+<P>&nbsp;
+</blockquote>

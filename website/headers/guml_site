@@ -1,0 +1,41 @@
+\include{/headers/html_fmt}
+\include{/headers/global}
+
+# htmlhead
+# --------
+#    \1 == title
+#    \2 == emit body tag flag
+#    \3 == extra content for head block
+#    \4 == extra http headers for conttype
+\set{htmlhead}{\quote{
+  \if{\not{\isset{htmlheaded}}}{
+    \set{htmlheaded}{}
+    \conttype{\4}
+    <html>
+    <head>
+    <title>www.guml.org\if{\1}{\ -- \1}</title>
+    \3#
+    </head>
+    \if{\not{\2}}{
+      <body bgcolor="\#c0c0c0" text="\#000000" link="\#000077" vlink="\#000077" alink="\#0033CC">
+    }
+    <br><br>
+    <center>
+  }
+}}
+
+# htmlfoot
+# --------
+\set{htmlfoot}{\quote{
+        <p>
+        <font face="Verdana, Arial, Helvetica, Sans-Serif" SIZE="-3">
+          \href{show source}{/show_source.ghtml?filename=\get{FILENAME}}
+        </font><br>
+        <font face="Verdana, Arial, Helvetica, Sans-Serif" SIZE="-2">
+          Copyright &copy; 1999 by PureMagic Software for the GUML Project
+        </font>
+      </center>
+    </body>
+  </html>
+}}
+

@@ -1,0 +1,26 @@
+\include{/headers/guml_site}
+# must clear some only-do-once flags since this is an error page
+\unset{conttyped}
+\unset{htmlheaded}
+
+\htmlhead{GUML -- Internal Error}
+
+\center_box{75%}{\font{\href{GUML}{/}\ -- Internal Error}{+3}}
+{<p>\n}
+
+\simple_box{75%}{
+  ERROR_results:<br>
+  <pre>
+  \htmlquote{\quote{\get{ERROR_results}}}
+  </pre>
+}
+<p>
+
+\simple_box{75%}{
+  ERROR_traceback:<br>
+  <pre>
+  \get{ERROR_traceback}
+  </pre>
+}
+
+\htmlfoot

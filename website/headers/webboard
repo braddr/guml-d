@@ -1,0 +1,53 @@
+\include{/headers/guml_site}
+
+\set{wb_category}{1}
+
+\set{header}{\quote{
+	\sqlexec{
+		select name, description from groups where id = \get{gid}
+	}
+	\ignore{\sqlrow{gname}{gdesc}}
+
+	<center>
+	<img src="/images/coldlogo.gif">
+	<br>
+	<h2>\get{gname}</h2>
+	<b>\get{gdesc}</b>
+	</center>
+}}
+
+\set{navbar}{\quote{
+	<p>
+	<center>
+	<hr>
+	<a href="../index.html">Home</a> |  
+	<a href="index.guml">All Groups</a> |
+	<a href="group_index.guml?gid=\get{gid}">Group Index</a> |
+	<a href="group_index.guml?gid=\get{gid}&showall=1">View ALL Articles</a>
+	<a href="post.guml?gid=\get{gid}">Post New</a> |  
+	<a href="user_profile.guml">User Profile</a> |
+	<a href="mark_all_read.guml?gid=\get{gid}">Mark All As Read</a> |
+	</center>
+	<hr>
+	<p>
+}}
+
+\set{uid}{\quote{
+  \if{
+    \get{USER}
+  }{
+    \sqlexec{
+      select id from users where userid = "\sqlquote{\get{USER}}"
+    }
+    \if{
+      \not{\sqlrow{uid}}
+    }{
+      \bounce{unknown_user_error.guml}
+      \exit
+    }{
+      \get{uid}
+    }
+  }{
+    \set{uid}{-1}
+  }
+}}

@@ -1,0 +1,125 @@
+\set{fontface}{
+  {face="Verdana, Arial, Helvetica, Sans-Serif"}
+}
+
+\set{font}{\quote{
+  {<font \fontface\if{\2}{\ size="\2"}\if{\3}{\ \3}>\1</font>}
+}}
+
+\set{menu_cmd}{\quote{{<li><a href="\2">\1</a>}}}
+
+\set{href}{\quote{{<a href="\2">\1</a>}}}
+
+\set{infotable}{\quote{
+<dl>
+}}
+
+\set{infopoint}{\quote{
+<dt><b>\font{\1}{}{color="\#111111"}</b>
+<dd>\2
+}}
+
+\set{infotableend}{\quote{
+</dl>
+}}
+
+\set{bullettable}{\quote{
+  <table border=0 cellpadding="0" cellspacing="0">
+  <tr><td><img src="/images/clear.gif" height="1" width="30"></td><td></td></tr>
+}}
+
+\set{bulletpoint}{\quote{
+  <tr><td colspan="2">\font{\1}{+1}</td></tr>
+  <tr><td><br></td><td>\font{\2}{-1}</td></tr>
+  <tr><td colspan="2"><img src="/images/clear.gif" height="10" width="1"></td></tr>
+}}
+
+\set{bullettableend}{\quote{
+  </table>
+}}
+
+\set{spacer}{\quote{
+  {<img src="/images/clear.gif" height="\1" width="\2">}
+}}
+
+\set{header_box}{\quote{
+  \set{header_box__i}{2}
+  <table border=0 cellspacing=0 cellpadding=0\if{\1}{\ width="\1"}><tr><td>\expand{\\drawbox\{\}\{\}\{\}\{25%\}\{align=center\}\{4\}\while{\op{\header_box__i}{<=}{\paramcount}}{\{\param{\header_box__i}\}\inc{header_box__i}}}</td></tr></table>
+  \unset{header_box__i}
+}}
+
+\set{center_box}{\quote{
+  \set{simple_box__i}{2}
+  \expand{\\drawbox\{\}\{\}\{\}\{\1\}\{align=center\}\{\}\while{\op{\simple_box__i}{<=}{\paramcount}}{\{\param{\simple_box__i}\}\inc{simple_box__i}}}
+  \unset{simple_box__i}
+}}
+
+\set{simple_box}{\quote{
+  \set{simple_box__i}{2}
+  \expand{\\drawbox\{\}\{\}\{\}\{\1\}\{\}\{\}\while{\op{\simple_box__i}{<=}{\paramcount}}{\{\param{\simple_box__i}\}\inc{simple_box__i}}}
+  \unset{simple_box__i}
+}}
+
+# \1 == border color    (default: 000000)
+# \2 == internal color  (default: 9999cc)
+# \3 == bgimage         (default: /images/clear.gif)
+# \4 == width           (default: none)
+# \5 == alignment       (default: none)
+# \6 == cellpadding     (default: 8)
+# rest == content rows
+\set{drawbox}{\quote{
+  <table border="0" cellpadding="1" cellspacing="0" background="/images/clear.gif"\if{\4}{\ width="\4"}>
+    <tr>
+      <td\if{\1}{
+        \if{\ne{\1}{none}}{\ bgcolor="\#\1"}
+      }{
+        {\ bgcolor="\#000000"}
+      }>
+        <table border="0" width="100%" cellpadding="\if{\6}{\6}{8}" cellspacing="0"\if{\2}{
+            \if{\ne{\2}{none}}{\ bgcolor="\#\2"}
+          }{
+            {\ bgcolor="\#9999cc"}
+          }\if{\3}{
+            \if{\ne{\3}{none}}{\ background="\3"}
+          }{
+            {\ background="/images/clear.gif"}
+          }>
+        {
+          \set{drawbox__i}{7}
+          \while{\op{\drawbox__i}{<=}{\paramcount}}{
+            {<tr\if{\5}{\ \5}><td>}
+            {\param{\drawbox__i}}
+            {</td></tr>\n}
+            \inc{drawbox__i}
+          }
+        }#
+        </table>
+      </td>
+    </tr>
+  </table>
+  \unset{drawbox__i}
+}}
+
+\set{global_navbar}{\quote{
+  \font{<P>}{-2}\n
+
+  <table border="0" cellpadding="1" cellspacing="0" width="75%" bgcolor="\#000000">
+    <tr>
+      <td bgcolor="\#000000">
+        <table border="0" cellpadding="2" cellspacing="0" width="100%" bgcolor="\#9999CC">
+          <tr>
+            <td align=center>
+              \font{
+                [ <a href="/">Home</a> ]
+                [ <a href="/cgi-bin/cvsweb">CVS Web</a> ]
+                [ <a href="/lxr/source/">LXR</a> -
+                  <a href="/lxr/source/1.1/cold/genesis/">1.1</a> -
+                  <a href="/lxr/source/1.2/cold/genesis/">1.2</a> ]
+              }{-1}
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+}}

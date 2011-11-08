@@ -1,0 +1,57 @@
+\include{/headers/guml_site}
+
+\htmlhead{GUML -- Cmd Ref -- Macros}
+
+\center_box{75%}{\font{\href{GUML}{..}\ -- \href{Cmd Ref}{.}\ -- Macros}{+3}}
+{<p>\n}
+
+<a name="eq">\header_box{75%}{\\\\eq}</a>
+\simple_box{75%}{
+  <code>\\\\eq\\\{string1\\\}\\\{string2\\\}</code><p>
+  This command compares the two strings and returns 'true' if they're
+  exactly the same or nothing if they're not.
+}
+<br>
+<a name="get">\header_box{75%}{\\\\get}</a>
+\simple_box{75%}{
+  <code>\\\\get\\\{string1\\\}</code><p>
+  This command returns the contents of the stored macro.<p>
+  See also: <a href="\\\#set">\\\\set</a>
+}
+<br>
+<a name="if">\header_box{75%}{\\\\if}</a>
+\simple_box{75%}{
+  <code>\\\\if\\\{condition\\\}\\\{true code\\\}\\\{false code\\\}</code><p>
+}
+<br>
+<a name="include">\header_box{75%}{\\\\include}</a>
+\simple_box{75%}{
+  blah
+}
+<br>
+<a name="isset">\header_box{75%}{\\\\isset}</a>
+\simple_box{75%}{
+  blah
+}
+<br>
+<a name="quote">\header_box{75%}{\\\\quote}</a>
+\simple_box{75%}{
+  blah
+}
+<br>
+<a name="set">\header_box{75%}{\\\\set}</a>
+\simple_box{75%}{
+  blah
+}
+<br>
+<a name="unset">\header_box{75%}{\\\\unset}</a>
+\simple_box{75%}{
+  blah
+}
+<br>
+<a name="while">\header_box{75%}{\\\\while}</a>
+\simple_box{75%}{
+  blah
+}
+
+\htmlfoot

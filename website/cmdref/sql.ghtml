@@ -1,0 +1,28 @@
+\include{/headers/guml_site}
+
+\htmlhead{GUML -- Cmd Ref -- SQL}
+
+\center_box{75%}{\font{\href{GUML}{..}\ -- \href{Cmd Ref}{.}\ -- SQL}{+3}}
+{<p>\n}
+
+<a name="sqlexec">\header_box{75%}{\\\\sqlexec}</a>
+\simple_box{75%}{
+  blah
+}
+<br>
+<a name="sqlrow">\header_box{75%}{\\\\sqlrow}</a>
+\simple_box{75%}{
+  blah
+}
+<br>
+<a name="sqlquote">\header_box{75%}{\\\\sqlquote}</a>
+\simple_box{75%}{
+  blah
+}
+<br>
+<a name="plsqlcall">\header_box{75%}{\\\\plsqlcall}</a>
+\simple_box{75%}{
+  blah
+}
+
+\htmlfoot

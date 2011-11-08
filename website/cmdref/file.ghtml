@@ -1,0 +1,53 @@
+\include{/headers/guml_site}
+
+\htmlhead{GUML -- Cmd Ref -- File}
+
+\center_box{75%}{\font{\href{GUML}{..}\ -- \href{Cmd Ref}{.}\ -- File}{+3}}
+{<p>\n}
+
+<a name="dirclose">\header_box{75%}{\\\\dirclose}</a>
+\simple_box{75%}{
+  blah
+}
+<br>
+<a name="diropen">\header_box{75%}{\\\\diropen}</a>
+\simple_box{75%}{
+  blah
+}
+<br>
+<a name="dirread">\header_box{75%}{\\\\dirread}</a>
+\simple_box{75%}{
+  blah
+}
+<br>
+<a name="filedelete">\header_box{75%}{\\\\filedelete}</a>
+\simple_box{75%}{
+  blah
+}
+<br>
+<a name="fileexists">\header_box{75%}{\\\\fileexists}</a>
+\simple_box{75%}{
+  blah
+}
+<br>
+<a name="fileread">\header_box{75%}{\\\\fileread}</a>
+\simple_box{75%}{
+  blah
+}
+<br>
+<a name="filestatus">\header_box{75%}{\\\\filestatus}</a>
+\simple_box{75%}{
+  blah
+}
+<br>
+<a name="filewrite">\header_box{75%}{\\\\filewrite}</a>
+\simple_box{75%}{
+  blah
+}
+<br>
+<a name="isdir">\header_box{75%}{\\\\isdir}</a>
+\simple_box{75%}{
+  blah
+}
+
+\htmlfoot

@@ -1,0 +1,212 @@
+<HTML>
+<HEAD>
+<TITLE>Guml Reference page 3</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+
+<FONT SIZE=+3><b>III. Variables</b></FONT>
+<FONT SIZE=+2>
+<p><a href="#vs"><b><tt>\get</tt></b> vs <b><tt>\</tt></b></a>
+<br><a href="#scope">Variable Scope</a>
+<br><a href="#clearing">Clearing Variables</a>
+</FONT>
+
+<blockquote>
+<p>
+<i><b>What's a variable?</b><br>
+<blockquote>
+A variable is a place where GUML stores data for later use.  For example, when
+it is used with a database, a user's name could be put into a variable, then
+used to display content that is personalized by using their name.  HTML doesn't
+use variables, as it is just a way to lay out text and images.<br>
+Languages like C, PERL, and Java use variables to help manipulate data. 
+For more on variables consult a beginning programming book.<br></i>
+</blockquote>
+
+The values of variables in GUML are assigned and retrieved through the
+primitive functions <tt>\set</tt> and <tt>\get</tt>, and a special use of
+the "<tt>\</tt>" character.  The syntax of these commands is:
+
+<blockquote>
+
+<tt>\set{</tt><i>variable</i><tt>}{</tt><i>value</i><tt>}</tt> -
+	Sets the value of the variable named <I>variable</I> to that given by
+	<I>value</I>
+<p>
+<tt>\get{</tt><i>variable</i><tt>}</tt> -
+	Gets the content of the variable named <I>variable</I>, or "" if it is
+	unset
+<p>
+<tt>\</tt><i>variable</i> -
+	Gets the content of the variable named <I>variable</I> and parses any
+	GUML code inside
+
+</blockquote>
+
+For example,
+
+<blockquote>
+
+<tt>\set{b}{yadda}</tt> sets the value of variable <I>b</I> to the string "yadda"
+<br>
+<tt>\get{a}</tt> returns the empty string ""
+<br>
+<tt>\b</tt> returns "yadda"
+<br>
+<tt>\set{a}{\get{b}}</tt> sets the value of variable a to that of variable b
+<br>
+<tt>\get{a}</tt> returns the string "yadda"
+<br>
+<tt>\get{b}</tt> returns the string "yadda"
+
+</blockquote>
+</blockquote>
+
+<A NAME="vs"><B>\get vs. \</B></A>
+
+<blockquote>
+
+This shows one way to set a variable, with the <tt>\set</tt> primitive and
+two separate ways to retrieve the contents contained within a variable.  The
+primary difference between the two methods of variable retrieval are how
+their contents are handled by the GUML parser.  In the first case, using
+<tt>\get</tt>, the GUML parser is instructed <I>not</I> to evaluate the
+contents of the variable--this is the most typical way to retrieve data and
+is the way that any user-entered data should <I>always</I> be obtained.  If
+the data contains any of the GUML special characters ("\", "{", "}" and "#")
+then retrieving the data with the backslash operator is certain to produce
+unexpected, and unwanted, results.
+
+<p>
+
+When you are absolutely certain that none of GUML's special characters will
+be in a variable's contents, you can use the backslash to retrieve the
+contents of a variable.  This is because, in short, accessing variables in
+this way will not only tell GUML to retrieve the contents (as <tt>\get</tt>
+does) but also to parse the contents.  Consider the following snippet of code:
+
+<blockquote>
+
+<TABLE CELLSPACING=0 BORDER=0 CELLPADDING=7 WIDTH=590>
+<TR><TD WIDTH="50%" VALIGN="TOP">
+<I><tt><P>GUML</I></tt></TD>
+<TD WIDTH="50%" VALIGN="TOP">
+<I><tt><P>PERL</I></tt></TD>
+</TR>
+<TR><TD WIDTH="50%" VALIGN="TOP">
+<tt><P>\set{b}{zoiks}
+<P>\set{a}{\get{b}}
+<P>\set{b}{murp}
+<P>\get{a}
+<P>\a</tt></TD>
+<TD WIDTH="50%" VALIGN="TOP">
+<tt><P>&#9;$b = &quot;zoiks&quot;;
+<P>&#9;$a = $b;
+<P>&#9;$b = &quot;murp&quot;;
+<P>&#9;print $a;&#9;(approx.)
+<P>&#9;print $a;</tt></TD>
+</TR>
+</TABLE>
+
+</blockquote>
+
+This returns the string &quot;zoiks&quot; twice, because the command <tt>\set{a}{\get{b}}</tt> sets the value of the variable a to the value given in the second argument of <tt>\set</tt>.  In this case, this is the result of the command <tt>\get{b}</tt>, or the string &quot;zoiks&quot;.  This is analogous to our earlier example of nested commands with the \op primitive.
+
+<P>It's worthwhile to note that there's no direct correlation in PERL to the <tt>\get{<I>var</I>}</tt> primitive.  The print command with quotes is similar, stating &quot;print the contents of this statement, but don’t evaluate them.&quot;
+
+<P>Let's see how <tt>\</tt> and <tt>\get</tt> behave under different circumstances:
+<blockquote>
+</tt>
+<TABLE CELLSPACING=0 BORDER=0 CELLPADDING=7 WIDTH=590>
+<TR><TD WIDTH="50%" VALIGN="TOP">
+<I><tt><P>GUML</I></tt></TD>
+<TD WIDTH="50%" VALIGN="TOP">
+<I><FONT SIZE=2><P>PERL</I></tt></TD>
+</TR>
+<TR><TD WIDTH="50%" VALIGN="TOP">
+<tt><P>\set{b}{zoiks}
+<P>\set{a}{\quote{\get{b}}}
+<P>\set{b}{murp}
+<P>\get{a}
+<P>\a</tt></TD>
+<TD WIDTH="50%" VALIGN="TOP">
+<tt><P>&#9;$b = &quot;zoiks&quot;;
+<P>&#9;sub a { return $b; }
+<P>&#9;$b = &quot;murp&quot;;
+<P>&#9;print &amp;a;&#9;(see above)
+<P>&#9;print &amp;a;</tt></TD>
+</TR>
+</TABLE>
+</blockquote>
+<P>This outputs &quot;\get{b}&quot; and &quot;murp&quot; respectively.  In this case, we used the <tt>\quote</tt> primitive to set the value of the variable <I>a</I> to the string &quot;\get{b}&quot;.  When run through <tt>\get</tt>, GUML knew not to parse it and just returned &quot;\get{b}&quot; – as it should.  Using the backslash operator, GUML was instructed to expand the code within <I>a</I> – or to &quot;get and display the contents of <I>b</I>.&quot;  Hence, &quot;murp&quot;.
+
+<P>This should blink a warning light for security.  Ultimately, the <tt>\</tt> operator is a powerful means to allow designers to easily extend GUML’s functionality through macros.  However, if used in conjunction with user-input data, it could create some serious problems.  For the most part, you are best off sticking with <tt>\get{<I>var</I>}</tt> rather than <tt>\<I>var</I></tt>.  The backslash operator is the door to create and use macros within GUML, discussed later.
+</blockquote>
+
+<A NAME="scope"><B><P>Variable Scope</B></A>
+
+<blockquote>
+
+<P>All variables have global scope; that is, there is only one instance of each variable within each request sent to the Web server.  The value of a variable may be set within any portion of a page, and <tt>\set</tt> stores the value until another <tt>\set</tt> changes the value.  Consider this:
+<blockquote>
+<TABLE CELLSPACING=0 BORDER=0 CELLPADDING=7 WIDTH=590>
+<TR><TD WIDTH="50%" VALIGN="TOP">
+<I><tt><P>GUML</I></tt></TD>
+<TD WIDTH="50%" VALIGN="TOP">
+<I><tt><P>PERL</I></tt></TD>
+</TR>
+<TR><TD WIDTH="50%" VALIGN="TOP">
+<tt><P>&#9;\get{a}
+<P>&#9;\set{a}{zoiks}
+<P>&#9;\get{a}
+<P>&#9;\set{a}{murp}
+<P>&#9;\get{a}</tt></TD>
+<TD WIDTH="50%" VALIGN="TOP">
+<tt><P>&#9;print $a;
+<P>&#9;$a = &quot;zoiks&quot;;
+<P>&#9;print $a;
+<P>&#9;$a = &quot;murp&quot;;
+<P>&#9;print $a;</tt></TD>
+</TR>
+</TABLE>
+</blockquote>
+
+<P>This returns:  &quot;&quot;, &quot;zoiks&quot;, &quot;murp&quot;, as each <tt>\get</tt> and <tt>\set</tt> is encounters in succession.  This is to be expected, as variables can easily be overwritten.  
+
+<P>Variables are ephemeral, however, lasting only for a particular page request (i.e. if the same variable is used on two separate Web pages, there is no connectivity between its two instances).  Once GUML has delivered a file to the Web server to be displayed on your browser, it exits, clearing all of its variable settings, so even reloading the same page will not reuse old variables.  Using the above example, running a second time would generate the same exact output, rather than &quot;murp&quot;, &quot;zoiks&quot;, and &quot;murp&quot; since the last value of <I>a</I> isn't carried over to the second, and subsequent instance.
+
+<P>To create variables which are available in every GUML request, you should set the variable within a header file (see Part V for more on header files).  This effectively creates a constant, whose value you can change if need be.
+
+</blockquote>
+<A NAME="clearing"><B><P>Clearing Variables</B></a>
+<blockquote>
+
+<P>If you have a variable that has a value which you wish to clear, the <tt>\unset</tt> primitive instructs GUML to remove a variable from the collection of defined variables:
+
+<P>&#9;<tt>\unset{</tt><I>variable</I><tt>}</tt> - unsets the variable <I>variable</I> if it has already been set
+
+<P>The result of this operation is that subsequent calls to <tt>\isset{</tt><I>var</I><tt>}</tt> return &quot;&quot; until the command 
+<tt>\set{</tt><I>var</I><tt>}{</tt><I>val</I><tt>}</tt> is again invoked.  For example:
+<blockquote>
+<TABLE CELLSPACING=0 BORDER=0 CELLPADDING=7 WIDTH=590>
+<TR><TD WIDTH="50%" VALIGN="TOP">
+<I><tt><P>GUML</I></tt></TD>
+<TD WIDTH="50%" VALIGN="TOP">
+<I><tt><P>PERL</I></tt></TD>
+</TR>
+<TR><TD WIDTH="50%" VALIGN="TOP">
+<tt><P>&#9;\get{a}
+<P>&#9;\set{a}{zoiks}
+<P>&#9;\get{a}
+<P>&#9;\unset{a}
+<P>&#9;\get{a}</tt></TD>
+<TD WIDTH="50%" VALIGN="TOP">
+<tt><P>&#9;print $a;
+<P>&#9;$a = &quot;zoiks&quot;;
+<P>&#9;print $a;
+<P>&#9;$a = &quot;&quot;;
+<P>&#9;print $a;</tt></TD>
+</TR>
+</TABLE>
+</blockquote>
+<P>As you might suspect, this generates the output: &quot;&quot;, &quot;zoiks&quot;, &quot;&quot;.  <tt>\Unset</tt> may seem a bit on the useless side, but when used in conjunction with header files, global variables (or semi-constants) and macros, the <tt>\unset</tt> primitive enables greater levels of control over the behavior of your GUML code.

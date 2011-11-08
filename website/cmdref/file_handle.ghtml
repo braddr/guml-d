@@ -1,0 +1,43 @@
+\include{/headers/guml_site}
+
+\htmlhead{GUML -- Cmd Ref -- File Handle}
+
+\center_box{75%}{\font{\href{GUML}{..}\ -- \href{Cmd Ref}{.}\ -- File Handle}{+3}}
+{<p>\n}
+
+<a name="append">\header_box{75%}{\\\\append}</a>
+\simple_box{75%}{
+  blah
+}
+<br>
+<a name="close">\header_box{75%}{\\\\close}</a>
+\simple_box{75%}{
+  blah
+}
+<br>
+<a name="isopen">\header_box{75%}{\\\\isopen}</a>
+\simple_box{75%}{
+  blah
+}
+<br>
+<a name="open">\header_box{75%}{\\\\open}</a>
+\simple_box{75%}{
+  blah
+}
+<br>
+<a name="output">\header_box{75%}{\\\\output}</a>
+\simple_box{75%}{
+  blah
+}
+<br>
+<a name="readline">\header_box{75%}{\\\\readline}</a>
+\simple_box{75%}{
+  blah
+}
+<br>
+<a name="writeline">\header_box{75%}{\\\\writeline}</a>
+\simple_box{75%}{
+  blah
+}
+
+\htmlfoot

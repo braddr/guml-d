@@ -1,0 +1,21 @@
+\include{/headers/guml_site}
+
+\htmlhead{GUML -- Show Source}
+
+\center_box{75%}{\font{\href{GUML}{/}\ -- Show Source}{+3}}
+{<p>\n}
+
+\if{
+  \not{\get{filename}}
+}{
+  \center_box{75%}{Error:  Need to specify a file name}
+}{
+  \header_box{75%}{\href{\get{filename}}{\get{filename}}}
+  \simple_box{75%}{\quote{
+    <pre>
+    \htmlquote{\fileread{\get{filename}}}
+    </pre>
+  }}
+}
+
+\htmlfoot

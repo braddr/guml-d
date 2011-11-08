@@ -1,0 +1,133 @@
+\include{/headers/guml_site}
+
+\htmlhead{GUML -- Cmd Ref -- String}
+
+\center_box{75%}{\font{\href{GUML}{..}\ -- \href{Cmd Ref}{.}\ -- String}{+3}}
+{<p>\n}
+
+<a name="htmlquote">\header_box{75%}{\\\\htmlquote}</a>
+\simple_box{75%}{
+  <code>\\\\htmlquote\\\{string to quote\\\}</code><p>
+  This function escapes '&lt;', '&gt;', '&amp;' and '&quot;' within the string to quote
+  into '&amp;lt;', '&amp;gt;', '&amp;amp;', and '&amp;quot;'.<p>
+  Example:<br>
+  <code>&nbsp;&nbsp;\\\\htmlquote\\\{a string with a &quot; in it\\\}\\ --> \htmlquote{\htmlquote{a string with a " in it}}</code>
+}
+<br>
+<a name="sqlquote">\header_box{75%}{\\\\sqlquote}</a>
+\simple_box{75%}{
+  <code>\\\\sqlquote\\\{string to quote\\\}</code><p>
+  This function converts a string with &quot;'s to &quot;&quot for Informix, MySQL, and SYBASE.
+  For Oracle it converts ' to '';<p>
+  Example:<br>
+  <code>&nbsp;&nbsp;\\\\sqlquote\\\{a string with a &quot; in it\\\}\\ --> \htmlquote{\sqlquote{a string with a " in it}}</code>
+}
+<br>
+<a name="strcmp">\header_box{75%}{\\\\strcmp}</a>
+\simple_box{75%}{
+  <code>\\\\strcmp\\\{string1\\\}\\\{string2\\\}</code><p>
+  This function returns -1 if string1 is less than string2, 0 if they're the same, or 1 if string1 is breater than string 2.<p>
+  Example:<br>
+  <code>&nbsp;&nbsp;\\\\strcmp\\\{aaa\\\}\\\{bbb\\\}\\ --> \strcmp{aaa}{bbb}</code><br>
+  <code>&nbsp;&nbsp;\\\\strcmp\\\{bbb\\\}\\\{bbb\\\}\\ --> \strcmp{bbb}{bbb}</code><br>
+  <code>&nbsp;&nbsp;\\\\strcmp\\\{bbb\\\}\\\{aaa\\\}\\ --> \strcmp{bbb}{aaa}</code>
+}
+<br>
+<a name="strindex">\header_box{75%}{\\\\strindex}</a>
+\simple_box{75%}{
+  <code>\\\\strindex\\\{string1\\\}\\\{string2\\\}</code><p>
+  This function returns the offset of string2 in string1, 0 based.
+  If string2 is not found in string1, nothing is returned.<p>
+  Example:<br>
+  <code>&nbsp;&nbsp;\\\\strindex\\\{This is a test\\\}\\\{is a\\\}\\ --> \strindex{This is a test}{is a}</code><br>
+  <code>&nbsp;&nbsp;\\\\strindex\\\{This is a test\\\}\\\{blah\\\}\\ --> \strindex{This is a test}{blah}</code><br>
+  <code>&nbsp;&nbsp;\\\\strindex\\\{This is a test\\\}\\\{This\\\}\\ --> \strindex{This is a test}{This}</code><br>
+}
+<br>
+<a name="strip">\header_box{75%}{\\\\strip}</a>
+\simple_box{75%}{
+  <code>\\\\strip\\\{bigstring\\\}\\\{characters to yank\\\}</code><br>
+  <code>\\\\strip\\\{bigstring\\\}\\\{characters to leave\\\}\\\{1\\\}</code><p>
+  Both return the resulting stripped string.<p>
+  Warning, common mistake:<br>
+  <code>&nbsp;&nbsp;\\\\strip\\\{some string with spaces\\\}\\\{\\ \\\}</code><br>
+  should be<br>
+  <code>&nbsp;&nbsp;\\\\strip\\\{some string with spaces\\\}\\\{\\\\ \\\}</code><p>
+  Example:<br>
+  <code>&nbsp;&nbsp;\\\\strip\\\{some string with spaces\\\}\\\{\\\\ \\\}\\ --> \strip{some string with spaces}{\ }</code><br>
+  <code>&nbsp;&nbsp;\\\\strip\\\{some string with spaces\\\}\\\{rstlneo\\\}\\\{1\\\}\\ --> \strip{some string with spaces}{rstlneo}{1}</code>
+}
+<br>
+<a name="strlength">\header_box{75%}{\\\\strlength}</a>
+\simple_box{75%}{
+  <code>\\\\strlength\\\{string\\\}</code><p>
+  This function returns the length of string.<p>
+  Example:<br>
+  <code>&nbsp;&nbsp;\\\\strlength\\\{This is a test\\\}\\ --> \strlength{This is a test}</code>
+}
+<br>
+<a name="strlower">\header_box{75%}{\\\\strlower}</a>
+\simple_box{75%}{
+  <code>\\\\strlower\\\{string\\\}</code><p>
+  This function returns the lowercased string.<p>
+  Example:<br>
+  <code>&nbsp;&nbsp;\\\\strupper\\\{This is a test\\\}\\ --> \strupper{This is a test}</code>
+}
+<br>
+<a name="strsoundex">\header_box{75%}{\\\\strsoundex}</a>
+\simple_box{75%}{
+  <code>\\\\strsoundex\\\{string\\\}\\\{optional number of output chars\\\}</code><p>
+  This function returns a \href{soundex}{http://www.nara.gov/genealogy/coding.html}\ of string.<p>
+  Example:<br>
+  <code>&nbsp;&nbsp;\\\\strsoundex\\\{Oregon\\\}&nbsp; --> \strsoundex{Oregon}</code><br>
+  <code>&nbsp;&nbsp;\\\\strsoundex\\\{Oregan\\\}&nbsp; --> \strsoundex{Oregan}</code><br>
+  <code>&nbsp;&nbsp;\\\\strsoundex\\\{Orageno\\\}\\ --> \strsoundex{Orageno}</code>
+}
+<br>
+<a name="strtok">\header_box{75%}{\\\\strtok}</a>
+\simple_box{75%}{
+  <code>\\\\strtok\\\{string to tokenize || nothing\\\}\\\{token separators\\\}</code><p>
+  This function returns the first or next token from the string.<p>
+  Example:<br>
+  <code>
+  &nbsp;&nbsp;\\\\set\\\{token\\\}\\\{\\\\strtok\\\{string to tokenize\\\}\\\{\\\\ \\\}\\\}<br>
+  &nbsp;&nbsp;\\\\while\\\{<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;\\\\get\\\{token\\\}<br>
+  &nbsp;&nbsp;\\\}\\\{<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;\\\\get\\\{token\\\}&lt;br&gt;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;\\\\set\\\{token\\\}\\\{\\\\strtok\\\{\\\}\\\{\\\\ \\\}\\\}<br>
+  &nbsp;&nbsp;\\\}<br>
+  </code>
+  yields:<br>
+  <code>
+  \set{token}{\strtok{string to tokenize}{\ }}
+  \while{
+    \get{token}
+  }{
+    &nbsp;&nbsp;\get{token}<br>
+    \set{token}{\strtok{}{\ }}
+  }
+  </code>
+}
+<br>
+<a name="strupper">\header_box{75%}{\\\\strupper}</a>
+\simple_box{75%}{
+  <code>\\\\strupper\\\{string\\\}</code><p>
+  This function returns the uppercased string.<p>
+  Example:<br>
+  <code>&nbsp;&nbsp;\\\\strupper\\\{This is a test\\\}\\ --> \strupper{This is a test}</code>
+}
+<br>
+<a name="substr">\header_box{75%}{\\\\substr}</a>
+\simple_box{75%}{
+  <code>\\\\substr\\\{string\\\}\\\{start\\\}\\\{count\\\}</code><p>
+  This function returns count characters from string starting at the 0 based start position.
+  If start is greater than the length of the string, then nothing is returned.  If count characters
+  don't exist then as many that exist are returned.<p>
+  Example:<br>
+  <code>&nbsp;&nbsp;\\\\substr\\\{0123456789\\\}\\\{3\\\}\\\{4\\\}&nbsp; --> \substr{0123456789}{3}{4}</code><br>
+  <code>&nbsp;&nbsp;\\\\substr\\\{0123456789\\\}\\\{10\\\}\\\{4\\\}\\ --> \substr{0123456789}{10}{4}</code><br>
+  <code>&nbsp;&nbsp;\\\\substr\\\{0123456789\\\}\\\{8\\\}\\\{4\\\}&nbsp; --> \substr{0123456789}{8}{4}</code>
+}
+
+\htmlfoot

@@ -1,0 +1,1019 @@
+<HTML>
+<HEAD>
+<TITLE>Guml Reference</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+
+<FONT SIZE=+3><b>II. Programming in GUML</b></FONT>
+<FONT SIZE=+2>
+<p>Syntax
+<br>A Brief Overview Of Primitives
+<br>Command vs. Text Mode
+<br>Variables
+<br>Operators
+<br>Conditional Statements
+<br>Macros
+<br>Error Handling
+</FONT>
+
+<P><A NAME="2.1">
+
+<blockquote>
+
+Programming in GUML is best done understanding several aspects of the
+language, including its syntax, how it treats variables and some simple
+logical structures and operations.  In this section, we'll cover each
+of these and more (listed above) in detail.
+
+<P>
+
+To better introduce the programming of GUML, we will use several examples.
+If these seem confusing at first, this is likely because we'll be introducing
+variables and primitives before we have a chance to discuss them in depth.
+When in doubt, focus on the structure of the example, rather than its
+specific function.  We will cover variables, primitives and macros in due
+course.  Where appropriate, we provide counter-examples in PERL (note: we
+use the PERL "print" command to duplicate standard commands in GUML, as that
+is essentially GUML's basic function -- to evaluate commands and print their
+results).
+
+<P>
+
+Once you've completed Part II, you should be able to program in GUML without
+any difficulty.  Spend some time getting familiar with the primitives and
+GUMLs features before moving on to Part III and some more advanced methods
+of programming.
+
+</blockquote>
+
+<A NAME="2.1"><B>Syntax</B>
+
+<blockquote>
+
+When reading a file, the GUML interpreter scans input for certain characters
+which indicate that subsequent text is to be taken as a GUML command.
+Everything else--that input it decides isn't intended for it--is piped
+directly to output.  This enables the GUML programmer to embed HTML and
+JavaScript statements within GUML files.  Since these are clearly not
+intended for GUML's interpretation, they get passed right along without
+adulteration.
+
+<P>The special characters that GUML looks out for are:
+
+<blockquote>
+<tt>\</tt> - Backslash indicates the beginning of a GUML command.
+<br>
+<tt>{</tt> - Left brace opens a block of text as part of an argument to a GUML command.
+<br>
+<tt>}</tt> - Right brace ends a block of text inteded to be grouped as an argument.<br>
+<tt>#</tt> - Pound sign indicates the rest of the line is a comment, and should not be output or evaluated.
+</blockquote>
+
+<p>
+<!-- <IMG SRC="Image1.gif" WIDTH=234 HEIGHT=332 ALIGN="LEFT" HSPACE=12> -->
+(sidebar: "What is an argument?")
+
+<p>
+
+If you wish to use any of these four special characters as plain text, you
+may precede any of them with a "<tt>\</tt>".  Viz., "<tt>\\</tt>" produces
+"<tt>\</tt>", "<tt>\{</tt>" produces "<tt>{</tt>", "<tt>\}</tt>" produces
+"<tt>}</tt>", and "<tt>\#</tt>" produces "<tt>#</tt>".  This latter one is
+especially useful in HTML where you wish to use special characters (i.e.
+&amp;#160; would need to be rendered as &amp;\#160;).
+
+<P>
+
+Using these special characters, the general form of a GUML command is:
+
+<blockquote><tt><i>\command{argument1}{argument2}...</i></tt></blockquote>
+
+This differs significantly from HTML tags and C functions insofar as there
+is not a bracket pair which serves to enclose all the arguments to the
+command, i.e.:
+
+<blockquote>
+HTML: <tt>&lt;IMG src="sample.gif"&gt;</tt>
+<br>
+PERL: <tt>&amp;SubRoutine(arg1, arg2);</tt>
+</blockquote>
+
+In GUML, there is no (practical) upper limit to the number of arguments for
+a command.  Generally, if too few arguments are specified, the remaining
+ones will be assumed to be the empty argument <tt>{}</tt>.  If too many are
+specified, the result of the extra ones will be disregarded, although they
+will be evaluated.  This is important, as extraneous, but evaluated,
+arguments that are syntactically incorrect will cause server errors due the
+inability of GUML to correctly parse the file.
+
+<P>
+
+GUML's parser allows commands to be nested to perform complex calculations
+or evaluations to render a page.  This means that the output of a command
+may be an argument to another command.  For example:
+
+<blockquote><tt>\op{2}{+}{\op{5}{-}{2}}</tt></blockquote>
+
+Here, the result of <tt>\op{5}{-}{2}</tt> (or 3) is used as the third
+argument for the first <tt>\op</tt>, so it evaluates as
+<tt>\op{2}{+}{3}</tt>, or 5.  Like arguments, there is no practical upper
+limit to the amount of command nesting, and consequently the complexity of
+an operation.  For debugging and readability purposes, it is suggested that,
+just as in C or other languages, reasonable attention be paid to the format
+of GUML code.  The above example could, and perhaps should, be rewritten as:
+
+<blockquote>
+
+<TABLE CELLSPACING=0 BORDER=0 CELLPADDING=7 WIDTH=590>
+<TR>
+	<TD WIDTH="50%" VALIGN="TOP"><tt><i><b>GUML</b></i></tt></TD>
+	<TD WIDTH="50%" VALIGN="TOP"><tt><i><b>PERL</b></i></tt></TD>
+</TR><TR>
+	<TD WIDTH="50%" VALIGN="TOP">
+<pre>
+\op{2}{+}{
+   \op{5}{-}{2}
+}
+</pre>
+	</TD>
+	<TD WIDTH="50%" VALIGN="TOP">
+<pre>
+print 2 + (5 - 2);
+</pre>
+	</TD>
+</TR>
+</TABLE>
+
+</blockquote>
+
+Functionally, this causes no problem as the additional whitespace characters
+(i.e. returns, tabs and spaces) are simply not interpreted by the GUML
+parser.  It is important to remember that any macro or primitive can be
+nested within another, a slightly more interesting (and useful) example is:
+
+<blockquote>
+
+<TABLE CELLSPACING=0 BORDER=0 CELLPADDING=7 WIDTH=590>
+<TR>
+	<TD WIDTH="50%" VALIGN="TOP"><tt><i><b>GUML</b></i></tt></TD>
+	<TD WIDTH="50%" VALIGN="TOP"><tt><i><b>PERL</b></i></tt></TD>
+</TR><TR>
+	<TD WIDTH="50%" VALIGN="TOP">
+<pre>
+\set{addme}{
+   \op{5}{-}{2}
+}
+\op{2}{+}{
+   \get{addme}
+}
+</pre>
+	</TD>
+	<TD WIDTH="50%" VALIGN="TOP">
+<pre>
+$addme = 5 - 2;
+print 2 + $addme;
+</pre>
+	</TD>
+</TR>
+</TABLE>
+
+</blockquote>
+
+Here, we set a variable, named "addme", to a value, then add it to the
+number 2.  Having used several examples with primitives and variables, let's
+take a quick spin around the various primitives within GUML.
+
+</blockquote>
+
+<B><A NAME="2.2">A Brief Overview Of Primitives</B>
+
+<blockquote>
+
+Primitives are commands which form the foundation of GUML.  How these
+commands work is defined directly in the source code of GUML, and they can
+be used by any file that is passed to the GUML parser.  This structure
+enables a high degree of programmability and customization as only the most
+vital and basic commands are part of the core GUML program.  This helps keep
+GUML efficient by preventing unneeded commands from being loaded into memory.
+
+<P>
+
+Here, we'll briefly introduce each of the primitives with a short description
+of their function.  In the primitives listed below, any primitive whose
+function is to test for a certain condition will return the value "true" or
+"" (for false) where appropriate.  For more in-depth examples and
+explanations, consult Part IV.
+
+<blockquote>
+
+<TABLE CELLSPACING=0 BORDER=0 CELLPADDING=7 WIDTH=541>
+<TR>
+	<TD WIDTH="21%" VALIGN="TOP"><B>Primitive</B></TD>
+	<TD WIDTH="79%" VALIGN="TOP"><B>Function</B></TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\cmode</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Places the GUML parser in "command mode"</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\email</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Sends electronic mail through the GUML parser</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\eq</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Tests for the equality of two strings</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\fileexists</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Tests for the existance of a file</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\fixun</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Examines a string for unusual characters, returning "true" if clean</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\fop</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Floating point operations</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\get</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Obtain the contents of a variable, or "" if the variable is unset</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\htadd</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Add an entry to an .htusers file</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\htmlquote</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Quote text to avoid unwanted HTML parsing</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\if</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Conditional statement primitive</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\include</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Includes the contents of another file as part of the
+		currently-parsed file</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\index</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Test for the existence of a string within another string</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\isquery</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Determine if there is any data being posted from a form</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\isset</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Test if a given variable is set</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\money</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Strips a string of dollar signs and commas, converting dollar
+		amounts to a floating point value.</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\op</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Perform a binary operation (i.e. addition, subtraction)</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\quote</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Quotes text without expanding/parsing any contained GUML code</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\rand</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Outputs a random non-negative integer</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\set</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Sets the a variable to a given value</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\sqlexec</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Executes a SQL command to interface with a database</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\sqlquote</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Quotes text to avoid unwanted SQL parsing</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\sqlrow</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Retrieves the data from the next row of the results of a
+		<I>sqlexec</I> call</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\substr</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Returns a requested subset of a given string</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\tmode</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Places the GUML parser in "text mode"</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\unset</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Clear a variable setting</TD>
+</TR>
+</TABLE>
+
+</blockquote>
+
+In addition to this list and the reference in Part IV, we will introduce
+several of these primitives in detail in specific examples and applications
+of GUML in the following sections.
+
+</blockquote>
+
+<B><A NAME="2.3">Command vs. Text Mode</B>
+
+<blockquote>
+
+When parsing a file, processing an argument, or expanding a variable, GUML
+begins in command mode (a.k.a. cmode).  The main feature of this mode is that
+all whitespace is ignored, so one can put in blank lines, indentation, or
+tabs as one wishes without it being outputted.  In text mode (a.k.a., tmode),
+on the other hand, spaces, tabs, and newlines are outputted normally, as one
+would want in text.  When the group, argument, or variable ends, GUML returns
+to whatever mode it was in before, either cmode or tmode.
+
+<p>
+
+One can switch between modes by hand by using the <tt>\cmode</tt> and
+<tt>\tmode</tt> primitives.  Also, as soon as any text is encountered, text
+mode is automatically started.  As such, the distinction between modes is
+tenuous at best, and probably best forgotten--particularly in the case of
+GUML-generated HTML in which formatting will be ignored by the browser
+anyway.  Simply remember that everything that isn't a command will be
+outputted by the processor.
+
+<p>
+
+Leading spaces at the start of the line are ignored in either mode.  Use of a
+"control-space", a backslash followed by a space, can be used to force output
+of a space.  A backslash at the end of a line also forces leading spaced on
+the next line to be read in.
+
+</blockquote>
+
+<a name="2.4"><b>Variables</b>
+
+<blockquote>
+
+(sidebar: "What is a variable?")
+
+<p>
+
+The values of variables in GUML are assigned and retrieved through the
+primitive functions <tt>\set</tt> and <tt>\get</tt>, and a special use of
+the "<tt>\</tt>" character.  The syntax of these commands is:
+
+<blockquote>
+
+<tt>\set{</tt><i>variable</i><tt>}{</tt><i>value</i><tt>}</tt> -
+	Sets the value of the variable named <I>variable</I> to that given by
+	<I>value</I>
+<p>
+<tt>\get{</tt><i>variable</i><tt>}</tt> -
+	Gets the content of the variable named <I>variable</I>, or "" if it is
+	unset
+<p>
+<tt>\</tt><i>variable</i> -
+	Gets the content of the variable named <I>variable</I> and parses any
+	GUML code inside
+
+</blockquote>
+
+For example,
+
+<blockquote>
+
+<tt>\set{b}{yadda}</tt> sets the value of variable <I>b</I> to the string "yadda"
+<br>
+<tt>\get{a}</tt> returns the empty string ""
+<br>
+<tt>\b</tt> returns "yadda"
+<br>
+<tt>\set{a}{\get{b}}</tt> sets the value of variable a to that of variable b
+<br>
+<tt>\get{a}</tt> returns the string "yadda"
+<br>
+<tt>\get{b}</tt> returns the string "yadda"
+
+</blockquote>
+</blockquote>
+
+<B>\get vs. \</B>
+
+<blockquote>
+
+This shows one way to set a variable, with the <tt>\set</tt> primitive and
+two separate ways to retrieve the contents contained within a variable.  The
+primary difference between the two methods of variable retrieval are how
+their contents are handled by the GUML parser.  In the first case, using
+<tt>\get</tt>, the GUML parser is instructed <I>not</I> to evaluate the
+contents of the variable--this is the most typical way to retrieve data and
+is the way that any user-entered data should <I>always</I> be obtained.  If
+the data contains any of the GUML special characters ("\", "{", "}" and "#")
+then retrieving the data with the backslash operator is certain to produce
+unexpected, and unwanted, results.
+
+<p>
+
+When you are absolutely certain that none of GUML's special characters will
+be in a variable's contents, you can use the backslash to retrieve the
+contents of a variable.  This is because, in short, accessing variables in
+this way will not only tell GUML to retrieve the contents (as <tt>\get</tt>
+does) but also to parse the contents.  Consider the following snippet of code:
+
+<blockquote>
+
+<TABLE CELLSPACING=0 BORDER=0 CELLPADDING=7 WIDTH=590>
+<TR><TD WIDTH="50%" VALIGN="TOP">
+<I><tt><P>GUML</I></tt></TD>
+<TD WIDTH="50%" VALIGN="TOP">
+<I><tt><P>PERL</I></tt></TD>
+</TR>
+<TR><TD WIDTH="50%" VALIGN="TOP">
+<tt><P>\set{b}{zoiks}
+<P>\set{a}{\get{b}}
+<P>\set{b}{murp}
+<P>\get{a}
+<P>\a</tt></TD>
+<TD WIDTH="50%" VALIGN="TOP">
+<tt><P>&#9;$b = &quot;zoiks&quot;;
+<P>&#9;$a = $b;
+<P>&#9;$b = &quot;murp&quot;;
+<P>&#9;print $a;&#9;(approx.)
+<P>&#9;print $a;</tt></TD>
+</TR>
+</TABLE>
+
+</blockquote>
+
+This returns the string &quot;zoiks&quot; twice, because the command <tt>\set{a}{\get{b}}</tt> sets the value of the variable a to the value given in the second argument of <tt>\set</tt>.  In this case, this is the result of the command <tt>\get{b}</tt>, or the string &quot;zoiks&quot;.  This is analogous to our earlier example of nested commands with the \op primitive.
+
+<P>It's worthwhile to note that there's no direct correlation in PERL to the <tt>\get{<I>var</I>}</tt> primitive.  The print command with quotes is similar, stating &quot;print the contents of this statement, but don’t evaluate them.&quot;
+
+<P>Let's see how <tt>\</tt> and <tt>\get</tt> behave under different circumstances:
+<blockquote>
+</tt>
+<TABLE CELLSPACING=0 BORDER=0 CELLPADDING=7 WIDTH=590>
+<TR><TD WIDTH="50%" VALIGN="TOP">
+<I><tt><P>GUML</I></tt></TD>
+<TD WIDTH="50%" VALIGN="TOP">
+<I><FONT SIZE=2><P>PERL</I></tt></TD>
+</TR>
+<TR><TD WIDTH="50%" VALIGN="TOP">
+<tt><P>\set{b}{zoiks}
+<P>\set{a}{\quote{\get{b}}}
+<P>\set{b}{murp}
+<P>\get{a}
+<P>\a</tt></TD>
+<TD WIDTH="50%" VALIGN="TOP">
+<tt><P>&#9;$b = &quot;zoiks&quot;;
+<P>&#9;sub a { return $b; }
+<P>&#9;$b = &quot;murp&quot;;
+<P>&#9;print &amp;a;&#9;(see above)
+<P>&#9;print &amp;a;</tt></TD>
+</TR>
+</TABLE>
+</blockquote>
+<P>This outputs &quot;\get{b}&quot; and &quot;murp&quot; respectively.  In this case, we used the <tt>\quote</tt> primitive to set the value of the variable <I>a</I> to the string &quot;\get{b}&quot;.  When run through <tt>\get</tt>, GUML knew not to parse it and just returned &quot;\get{b}&quot; – as it should.  Using the backslash operator, GUML was instructed to expand the code within <I>a</I> – or to &quot;get and display the contents of <I>b</I>.&quot;  Hence, &quot;murp&quot;.
+
+<P>This should blink a warning light for security.  Ultimately, the <tt>\</tt> operator is a powerful means to allow designers to easily extend GUML’s functionality through macros.  However, if used in conjunction with user-input data, it could create some serious problems.  For the most part, you are best off sticking with <tt>\get{<I>var</I>}</tt> rather than <tt>\<I>var</I></tt>.  The backslash operator is the door to create and use macros within GUML, discussed later.
+</blockquote>
+
+<B><P>Variable Scope</B>
+
+<blockquote>
+
+<P>All variables have global scope; that is, there is only one instance of each variable within each request sent to the Web server.  The value of a variable may be set within any portion of a page, and <tt>\set</tt> stores the value until another <tt>\set</tt> changes the value.  Consider this:
+<blockquote>
+<TABLE CELLSPACING=0 BORDER=0 CELLPADDING=7 WIDTH=590>
+<TR><TD WIDTH="50%" VALIGN="TOP">
+<I><tt><P>GUML</I></tt></TD>
+<TD WIDTH="50%" VALIGN="TOP">
+<I><tt><P>PERL</I></tt></TD>
+</TR>
+<TR><TD WIDTH="50%" VALIGN="TOP">
+<tt><P>&#9;\get{a}
+<P>&#9;\set{a}{zoiks}
+<P>&#9;\get{a}
+<P>&#9;\set{a}{murp}
+<P>&#9;\get{a}</tt></TD>
+<TD WIDTH="50%" VALIGN="TOP">
+<tt><P>&#9;print $a;
+<P>&#9;$a = &quot;zoiks&quot;;
+<P>&#9;print $a;
+<P>&#9;$a = &quot;murp&quot;;
+<P>&#9;print $a;</tt></TD>
+</TR>
+</TABLE>
+</blockquote>
+
+<P>This returns:  &quot;&quot;, &quot;zoiks&quot;, &quot;murp&quot;, as each <tt>\get</tt> and <tt>\set</tt> is encounters in succession.  This is to be expected, as variables can easily be overwritten.  
+
+<P>Variables are ephemeral, however, lasting only for a particular page request (i.e. if the same variable is used on two separate Web pages, there is no connectivity between its two instances).  Once GUML has delivered a file to the Web server to be displayed on your browser, it exits, clearing all of its variable settings, so even reloading the same page will not reuse old variables.  Using the above example, running a second time would generate the same exact output, rather than &quot;murp&quot;, &quot;zoiks&quot;, and &quot;murp&quot; since the last value of <I>a</I> isn't carried over to the second, and subsequent instance.
+
+<P>To create variables which are available in every GUML request, you should set the variable within a header file (see Part V for more on header files).  This effectively creates a constant, whose value you can change if need be.
+
+</blockquote>
+<B><P>Clearing Variables</B>
+<blockquote>
+
+<P>If you have a variable that has a value which you wish to clear, the <tt>\unset</tt> primitive instructs GUML to remove a variable from the collection of defined variables:
+
+<P>&#9;<tt>\unset{</tt><I>variable</I><tt>}</tt> - unsets the variable <I>variable</I> if it has already been set
+
+<P>The result of this operation is that subsequent calls to <tt>\isset{</tt><I>var</I><tt>}</tt> return &quot;&quot; until the command 
+<tt>\set{</tt><I>var</I><tt>}{</tt><I>val</I><tt>}</tt> is again invoked.  For example:
+<blockquote>
+<TABLE CELLSPACING=0 BORDER=0 CELLPADDING=7 WIDTH=590>
+<TR><TD WIDTH="50%" VALIGN="TOP">
+<I><tt><P>GUML</I></tt></TD>
+<TD WIDTH="50%" VALIGN="TOP">
+<I><tt><P>PERL</I></tt></TD>
+</TR>
+<TR><TD WIDTH="50%" VALIGN="TOP">
+<tt><P>&#9;\get{a}
+<P>&#9;\set{a}{zoiks}
+<P>&#9;\get{a}
+<P>&#9;\unset{a}
+<P>&#9;\get{a}</tt></TD>
+<TD WIDTH="50%" VALIGN="TOP">
+<tt><P>&#9;print $a;
+<P>&#9;$a = &quot;zoiks&quot;;
+<P>&#9;print $a;
+<P>&#9;$a = &quot;&quot;;
+<P>&#9;print $a;</tt></TD>
+</TR>
+</TABLE>
+</blockquote>
+<P>As you might suspect, this generates the output: &quot;&quot;, &quot;zoiks&quot;, &quot;&quot;.  <tt>\Unset</tt> may seem a bit on the useless side, but when used in conjunction with header files, global variables (or semi-constants) and macros, the <tt>\unset</tt> primitive enables greater levels of control over the behavior of your GUML code.
+
+</blockquote>
+<B><P><A NAME="_Toc372599817">
+<P>Operators</A>
+</B>
+<blockquote>
+<P>In GUML, integer arithmetic is performed via the <tt>\op</tt> function.  Its syntax is:<tt><P>\op{<I>val1</I>}{<I>op</I>}{<I>val2</I>}</tt> - Perform the mathematical operation indicated by <I>op</I> on values <I>val1</I> and <I>val2
+</I>
+
+<P>Here, <I>val1</I> and <I>val2</I> are expected to be strings representing numbers (e.g., &quot;23&quot; or &quot;-5&quot;, not &quot;three&quot;), and  <I>op</I> indicates which operation to perform on the numbers given.  Although, typically, GUML will be able to handle commands that lack the proper number of arguments (as noted in the Syntax section), the <tt>\op</tt> command (and it's floating-point cousin, <tt>\fop</tt>) are notable exceptions.  Each of these commands specifically requires that all three arguments are present, generating an error if not.
+
+<P>The following table outlines the functions performed by <tt>\op</tt>:
+
+<blockquote>
+<P>&#9;<I>op</I>&#9;operation&#9;&#9;returns
+
+<P>&#9;<tt>+</tt>&#9;sum&#9;&#9;&#9;<I>val1</I>+<I>val2
+
+
+</I><tt><P>-</tt>&#9;difference&#9;&#9;<I>val1</I>-<I>val2
+
+
+</I><tt><P>*</tt>&#9;multiplication&#9;&#9;<I>val1</I>*<I>val2
+</I><tt><P>/</tt>&#9;integer quotient&#9;&#9;<I>val1</I>/<I>val2
+</I><tt><P>%</tt>&#9;modulus&#9;&#9;&#9;integer remainder when <I>val1</I> is divided by <I>val2
+</I>
+<tt><P>&lt;</tt>&#9;less than&#9;&#9;&#9;&quot;true&quot; if <I>val1</I> is less than <I>val2</I>, else &quot;&quot;
+<tt><P>&gt;</tt>&#9;greater than&#9;&#9;&quot;true&quot; if <I>val1</I> is greater than <I>val</I>2, else &quot;&quot;
+<tt><P>&lt;=</tt>&#9;less than or equal to&#9;&quot;true&quot; if <I>val1</I> is less than or equal to <I>val2</I>, else &quot;&quot;
+<tt><P>&gt;=</tt>&#9;greater than or equal to&#9;&quot;true&quot; if <I>val1</I> is greater than or equal to <I>val2</I>, else &quot;&quot;
+<tt><P>=</tt>&#9;equals&#9;&#9;&#9;&quot;true&quot; if <I>val1</I> equals <I>val2</I>, else &quot;&quot;
+
+<tt><P>|</tt>&#9;bitwise or&#9;&#9;
+<tt><P>&amp;</tt>&#9;bitwise and&#9;&#9;<I>see below
+</I><tt><P>^</tt>&#9;bitwise exclusive-or&#9;
+
+<tt><P>v</tt> or <tt>V</tt>&#9;validate number&#9;&quot;true&quot; if <I>val1</I> is a valid string representation of an&#9;integer, else &quot;&quot;
+</blockquote>
+</blockquote>
+<B><P>\op Notes</B>
+<blockquote>
+
+<UL>
+</tt><LI>Note that <tt>\eq</tt>, a primitive mentioned earlier, tests for string equality, while using <tt>=</tt> tests for numerical equality; <tt>\eq{012}{12}</tt> is false (returns &quot;&quot;) but <tt>\op{012}{=}{12}</tt> is true.  This is analogous to the behavior PERL. </LI></UL>
+<UL>
+<LI>The <tt>v</tt> operation exposes the peculiarity that <tt>\op</tt> still requires a third argument even if it’s not used.  The string &quot;0&quot; or &quot;unused&quot; is always a good choice, i.e.:</LI></UL>
+<blockquote>
+<P ALIGN="RIGHT"><TABLE CELLSPACING=0 BORDER=0 CELLPADDING=7 WIDTH=559>
+<TR><TD WIDTH="50%" VALIGN="TOP">
+<I><tt><P>GUML</I></tt></TD>
+<TD WIDTH="50%" VALIGN="TOP">
+<I><tt><P>PERL</I></tt></TD>
+</TR>
+<TR><TD WIDTH="50%" VALIGN="TOP">
+<tt><P>&#9;\op{4}{v}{unused}</tt></TD>
+<TD WIDTH="50%" VALIGN="TOP">
+<tt><P>&#9;print 4 =~ /\d+/;&#9;</tt></TD>
+</TR>
+<TR><TD WIDTH="50%" VALIGN="TOP">
+<tt><P>&#9;\op{pasta}{v}{unused}</tt></TD>
+<TD WIDTH="50%" VALIGN="TOP">
+<tt><P>&#9;print &quot;pasta&quot; =~ /\d+/</tt></TD>
+</TR>
+</TABLE>
+</blockquote>
+<P>Naturally, you can use variables (with the <tt>\get</tt> primitive) instead of numbers and words, as the utility of testing whether &quot;4&quot; is an integer or not is pretty minimal.  Test cases, like this, are best used in conjunction with conditional statements, discussed in-depth in the next section.
+
+</blockquote>
+<B><P>A Note on Data Types</B>
+<blockquote>
+
+<P>Many languages have several different kinds of data types (i.e. integers, strings, arrays, etc.).  This allows programmers to interact with and manipulate data using functions and commands that make sense for that data type (for example, multiplying strings doesn't make much sense).
+
+<P>In GUML there is only one data type, the string.  Functions which expect numbers, like <tt>\op</tt>, first convert their input to numbers, perform the requested calculation, then convert the result to a string.  In this way, we need not worry about what type of data is in a variable, nor whether a function is being called with the right type of input.  When a function tries this conversion on a string which doesn't represent a number, like &quot;blammo&quot;, the input is taken to be zero.  Thus, the result of the command <tt>\op{work}{+}{toil}</tt> is the string &quot;0&quot;.
+
+</blockquote>
+<B><P>Bitwise Operations</B>
+<blockquote>
+
+<P>The bitwise operations <tt>|</tt>, <tt>&amp;</tt>, and <tt>^</tt> compare the binary representations of the numbers <I>val1</I> and <I>val2</I> and return a new number whose bits are the logical and, or, and exclusive-or of the bits in the input numbers.  These operations are included only to appease the veteran C programmer, and will likely find little practical use.  As such, for more details on these operations, the reader is referred to any introductory C text.
+
+</blockquote>
+<B><P>Floating Point Operations</B>
+<blockquote>
+
+<P>Floating-point operations (those involving non-integral, or real numbers) are performed with the <tt>\fop</tt> command, with syntax almost identical to that of <tt>\op:
+<P>\fop{<I>val1</I>}{<I>op</I>}{<I>val2</I>}{<I>digits</I>}</tt> - Perform the mathematical operation indicated by <I>op</I> on values <I>val1</I> and <I>val2</I>, with optional argument <I>digits</I> indicating the degree of accuracy.
+
+<P>In addition those operations performed by <tt>\op</tt>, above, the <tt>\fop</tt> primitive supports the following:
+<blockquote>
+<I><P>op</I>&#9;operation&#9;&#9;returns
+
+<tt><P>/</tt>&#9;real quotient&#9;&#9;the floating-point value <I>val1</I>/<I>val2
+
+<P>**&#9;</I>exponential&#9;the floating-point value <I>val1<SUP>val2
+</I></SUP>
+
+<tt><P>f</tt> or <tt>F</tt>&#9;floor&#9;&#9;&#9;the &quot;floor&quot;, or integer part, of <I>val1
+</I><tt><P>c</tt> or <tt>C</tt>&#9;ceiling&#9;&#9;&#9;the &quot;ceiling&quot;, or next greatest integer, of <I>val1
+</I><tt><P>r</tt> or <tt>R</tt>&#9;round&#9;&#9;&#9;<I>val1</I> rounded to the nearest integer
+<tt><P>v</tt> or <tt>V</tt>&#9;validate number&#9;&quot;true&quot; if <I>val1</I> is a valid string representation of a&#9;&#9;&#9;floating-point value, else &quot;&quot;
+</blockquote>
+<br>
+(sidebar: "What is a unary operator") 
+<!--
+<IMG SRC="Image3.gif" WIDTH=236 HEIGHT=159 ALIGN="LEFT" HSPACE=12>
+-->
+
+</blockquote>
+<B><P>\fop Notes</B>
+<blockquote>
+
+<UL>
+<LI>The modulus (<tt>%</tt>) operator is not supported by the <tt>\fop</tt> function.</LI></UL>
+
+<UL>
+<LI>As with the <tt>v</tt> operation in <tt>\op</tt>, the unary operators <tt>f</tt>, <tt>c</tt>, <tt>r</tt>, and <tt>v</tt> require a third argument to <tt>\fop</tt>, even though this value is never used.</LI></UL>
+
+<UL>
+<LI>Though GUML does a respectable job of determining how many digits after the decimal point to return, a fourth argument may also be given to force the number of digits after the decimal place to <I>digits</I>.</LI></UL>
+
+</blockquote>
+<B><P>The \money Primitive</B>
+<blockquote>
+
+<P>Finally, in order to perform calculations with strings representing amounts of money, GUML uses a special primitive.  The \money command attempts to convert a &quot;money&quot;-type string (of the form $dd,ddd.cc) to a floating-point value (ddddd.cc) by removing the dollar signs and commas.  
+
+<P>If the string contains any character other than a number (0-9), a dollar sign ($), a comma (,), or a decimal point (a.k.a. period), the function returns the empty string &quot;&quot;; otherwise, the stripped and valid string is returned.  This command is useful for handling user-entered data which may, through egregious lack of foresight on behalf of the user, contain dollar signs and/or commas.  For example, the command
+<blockquote>
+<TABLE CELLSPACING=0 BORDER=0 CELLPADDING=7 WIDTH=590>
+<TR><TD WIDTH="50%" VALIGN="TOP">
+<I><tt><P>GUML</I></tt></TD>
+<TD WIDTH="50%" VALIGN="TOP">
+<I><tt><P>PERL</I></tt></TD>
+</TR>
+<TR><TD WIDTH="50%" VALIGN="TOP">
+<tt><P>&#9;\fop{
+<P>&#9;  \money{$10,240.37}}{+}{
+<P>&#9;    \money{1725.1}
+<P>&#9;}</tt></TD>
+<TD WIDTH="50%" VALIGN="TOP">
+<tt><P>&#9;$a = ‘$10,240.37’;
+<P>&#9;$a =~ y/$,//d;
+<P>&#9;printf &quot;%5.3f&quot;, $a + 1725.1;</tt></TD>
+</TR>
+</TABLE>
+</blockquote>
+
+<P>returns the string &quot;11965.47&quot;.  The <tt>\money</tt> command does not enforce proper placement of commas or dollar signs (<tt>\money{15,2,19$8,2.1$$,18,5}</tt> returns the string &quot;1521982.1185&quot;), nor does it complain if it encounters more than one decimal point (<tt>\money{134.10.2.10}</tt> returns the string &quot;134.10.2.10&quot;).  This should not be construed as an abuse of grammar since, presumably, <tt>\money</tt> will only be used in conjunction with other functions which verify that this output is indeed a proper number, such as:
+<blockquote>
+<TABLE CELLSPACING=0 BORDER=0 CELLPADDING=7 WIDTH=590>
+<TR><TD WIDTH="50%" VALIGN="TOP">
+<I><tt><P>GUML</I></tt></TD>
+<TD WIDTH="50%" VALIGN="TOP">
+<I><tt><P>PERL</I></tt></TD>
+</TR>
+<TR><TD WIDTH="50%" VALIGN="TOP">
+<tt><P>&#9;\fop{
+<P>&#9;  \money{$10,240.37}
+<P>&#9;  {v}{blank}
+<P>&#9;}</tt></TD>
+<TD WIDTH="50%" VALIGN="TOP">
+<tt><P>&#9;$a = ‘$10,240.37’;
+<P>&#9;$a =~ y/$,//d;
+<P>&#9;print $a =~ /^\d+\.\d+$/;</tt></TD>
+</TR>
+</TABLE>
+</blockquote>
+<P>Additional testing could be done to ensure that it only had 2 digits after the decimal point (or it could be forced through the \fop primitive to be truncated to 2 digits).
+
+<P>Having learned about primitives and variables, along with a wide variety of mathematical operations, it's time to take a look at conditional statements and see how to use them in conjunction with what we've learned so far.
+
+</blockquote>
+<B><P><A NAME="_Toc372599818">
+<P>Conditional Statements</A></B>
+<blockquote>
+
+<P>Conditionals allow flow control in your document.  This can create Web pages which have varying output based upon the outcome of one or more tests.  If someone is coming from Mexico, send them the page in Spanish, if they are a registered user, check for new content that might interest them, etc.  Through the use of conditionals, documents on the Web gain a power that HTML simply cannot give – they are no longer stuck doing just one thing.  There is one built-in conditional primitive, <tt>\if</tt>.  Its syntax is:
+
+<tt><P>\if{<I>test</I>}{<I>then</I>}{<I>else</I>}</tt>  - expand either <I>then</I> or <I>else</I> (if given) according to the value of <I>test</I>
+
+<P>If the string <I>test</I> is not the empty string &quot;&quot;, the second argument <I>then</I> is expanded and returned.  Otherwise, if the optional third argument <I>else</I> is given, it is expanded and returned; if no third argument is specified and <I>test</I> is &quot;&quot;, the <tt>\if</tt> command returns the empty string &quot;&quot;.
+
+<P>The <tt>\if</tt> command is often used in conjunction with the <tt>\isset</tt> command which, as the name suggests, determines whether a variable has been set yet:
+
+<tt><P>\isset{</tt><I>var</I><tt>}</tt> - Returns the string &quot;true&quot; if the value of the variable named <I>var </I>has been set, otherwise returns the empty string &quot;&quot;.
+
+<P>An example of such a use would be:
+<blockquote>
+<TABLE CELLSPACING=0 BORDER=0 CELLPADDING=7 WIDTH=590>
+<TR><TD WIDTH="50%" VALIGN="TOP">
+<I><tt><P>GUML</I></tt></TD>
+<TD WIDTH="50%" VALIGN="TOP">
+<I><tt><P>PERL</I></tt></TD>
+</TR>
+<TR><TD WIDTH="50%" VALIGN="TOP">
+<tt><P>\if{
+<P>  \isset{USER}
+<P>}{
+<P>  Hello, user \get{USER}.
+<P>}{
+<P>  You are a guest.
+<P>&#9;}</tt></TD>
+<TD WIDTH="50%" VALIGN="TOP">
+<tt><P>&#9;if ($user) {
+<P>&#9;  print &quot;Hello, user $user.&quot;;
+<P>&#9;} else {
+<P>&#9;  print &quot;You are a guest.&quot;;
+<P>&#9;}</tt></TD>
+</TR>
+</TABLE>
+</blockquote>
+<P>which greets a user by name or informs them of their guesthood.
+
+<P>Just as the <tt>\op</tt> command expects its input to be strings representing numbers, the <tt>\if</tt> command expects a Boolean (or &quot;true or false&quot;) value as its first argument.  According to GUML, the string &quot;true&quot; is considered a &quot;true&quot; value, as is the string &quot;false&quot;.  In fact, any non-empty string (even &quot;0&quot;, unlike in PERL) given as the first argument causes <tt>\if</tt> to expand its second argument.  Only when it receives an empty string in its first argument does <tt>\if</tt> expand the optional third argument.
+
+<P>Another GUML primitive which may be useful within a conditional statement is the <tt>\rand</tt> function:
+
+<P>&#9;<tt>\rand{</tt><I>n</I><tt>}</tt>  - Returns a pseudo-random integer between 0 and <I>n</I>-1, inclusive.
+
+<P>For example, the command
+<blockquote>
+<TABLE CELLSPACING=0 BORDER=0 CELLPADDING=7 WIDTH=590>
+<TR><TD WIDTH="50%" VALIGN="TOP">
+<I><tt><P>GUML</I></tt></TD>
+<TD WIDTH="50%" VALIGN="TOP">
+<I><tt><P>PERL</I></tt></TD>
+</TR>
+<TR><TD WIDTH="50%" VALIGN="TOP">
+<tt><P>&#9;\if{\eq{\rand{5}}{0}}{
+<P>&#9;  boing!
+<P>&#9;}{
+<P>&#9;  thwack
+<P>&#9;}</tt></TD>
+<TD WIDTH="50%" VALIGN="TOP">
+<tt><P>if (rand(5)) {
+<P>  print &quot;thwack&quot;; 
+<P>} else {
+<P>  print &quot;boing!&quot;;
+<P>}</tt></TD>
+</TR>
+</TABLE>
+</blockquote>
+
+<P>returns the string &quot;boing!&quot; with probability 1/5, and &quot;thwack&quot; with probability 4/5.  Using some of the primitives we learned earlier and by using nested conditionals, we can check to see if a number entered by a user can be used as currency or if it contains improper characters or the wrong number of digits after the decimal place:
+<blockquote>
+<TABLE CELLSPACING=0 BORDER=0 CELLPADDING=7 WIDTH=590>
+<TR><TD VALIGN="TOP">
+<I><tt><P>GUML</I></tt></TD>
+</TR>
+<TR><TD VALIGN="TOP">
+<tt><P>&#9;\set{test}{$10,400.35}
+<P>&#9;\if{
+<P>&#9;  \money{\get{test}}
+<P>&#9;}{
+<P>&#9;  \if{
+<P>&#9;    \op{\index{\get{test}}{.}}{=}{\op{\length{\get{test}}}{-}{3}}
+<P>&#9;  }{
+<P>&#9;    That is a valid dollar value.
+<P>&#9;  }{
+<P>&#9;    You have too many digits after the decimal place.
+<P>&#9;}{
+<P>&#9;  I'm sorry, but that's not a valid number.
+<P>&#9;}&#9;</tt></TD>
+</TR>
+<TR><TD VALIGN="TOP">
+<I><tt><P>PERL</I></tt></TD>
+</TR>
+<TR><TD VALIGN="TOP">
+<tt><P>&#9;$test = &quot;$10,400.35&quot;;
+<P>&#9;$test =~ y/$,//d;&#9;&#9;# Note: it would be better PERL to do: 
+<P>&#9;&#9;&#9;&#9;&#9;# y/0-9.//cd; but we use this because it
+<P>&#9;&#9;&#9;&#9;&#9;# is analogous to the \money{} primitive.
+<P>&#9;if ($test =~ /[^0-9.]/) {
+<P>&#9;  print &quot;I'm sorry, but that's not a valid number.&quot;;
+<P>&#9;} elsif (index($test, &quot;.&quot;) == length($test) - 3) {
+<P>&#9;  print &quot;That is a valid dollar value.&quot;;
+<P>&#9;} else {
+<P>&#9;  print &quot;You have too many digits after the decimal place.&quot;;
+<P>&#9;}</tt></TD>
+</TR>
+</TABLE>
+</blockquote>
+<P>Since we set the <I>test</I> variable, we know what outcome there will be, but the GUML code, just like the PERL below it, walks through the various checks – first determining if it's made up of digits, the decimal point, commas and a dollar sign.  Next, it checks to make sure that the decimal point has only two digits after it.  This is a fairly certain set of tests, one additional one might include a check through the <tt>\fop</tt> primitive to ensure that the number generated by <tt>\money</tt> is, in fact, a floating-point number rather than an IP address, or some other oddly formatted number (i.e. 127.0.0.0 is not a valid number for currency).
+
+<P>Conditional statements can be used throughout a site to provide complex, interactive functionality to Web pages.  With no practical limit to the amount of nesting and testing that can occur, a wide variety of highly variant behaviors can be coded through GUML and the \if primitive.
+
+</blockquote>
+<B><P><A NAME="_Toc372599819">
+<P>Macros</A></B>
+<blockquote>
+
+<P>An example of a macro definition using the <tt>\op</tt> function is:
+<blockquote>
+<tt><P>\set{iplusplus}{\quote{\set{i}{\op{\i}{+}{1}}}}</tt>.
+</blockquote>
+<P>This creates a command which increases the value of the variable <I>i</I> by one.  Therefore,
+<blockquote>
+<tt><P>\set{i}{1} \get{i}
+<P>\iplusplus \get{i}
+<P>\iplusplus \get{i}
+</tt>
+</blockquote>
+<P>generates <tt>1</tt>, <tt>2</tt>, and <tt>3</tt> as output.
+
+<P>Arguments may be passed to invoked variables just like to primitives, using the symbols <tt>\1</tt>, <tt>\2</tt>, <tt>\3</tt>, and so on.  For instance, the command <tt>\set{echo}{\quote{\1}}</tt> creates a macro <tt>\echo</tt> which simply returns whatever was given in its first argument.  A comparatively more useful macro is defined by the command
+<blockquote>
+<tt><P>\set{inc}{\quote{
+<P>  \set{\1}{
+<P>    \op{
+<P>      \get{\1}
+<P>    }{+}{1}
+<P>  }
+<P>}}
+</tt>
+</blockquote>
+<P>Instead of writing a separate macro to increment the variable <I>j</I> by one, we may use <tt>\inc{i}</tt> or <tt>\inc{j}</tt> to add one to either <I>i</I> or <I>j</I>, respectively.
+
+<P>Macros are defined in exactly the same way as variables, except that we must tell the interpreter not to expand the GUML code inside the definition.  This is done with the <tt>\quote</tt> command:
+
+<tt><P>\quote{</tt><I>string</I><tt>}</tt>  - returns the string <I>string</I> exactly as written, not expanding any GUML within.
+
+<P>Consider the following snippet of code:
+<blockquote>
+<tt><P>\set{b}{zoiks}
+<P>\set{a}{\get{b}}
+<P>\set{b}{murp}
+<P>\a
+</tt>
+</blockquote>
+<P>This returns the string &quot;zoiks&quot;, because the command <tt>\set{a}{\get{b}}</tt> sets the value of the variable <I>a</I> to the value given in the second argument to <tt>\set</tt>, which is, in this case, the result of the command <tt>\get{b}</tt>—the string &quot;zoiks&quot;.  If we change this to:
+<blockquote>
+<tt><P>\set{b}{zoiks}
+<P>\set{a}{\quote{\get{b}}}
+<P>\set{b}{murp}
+<P>\a
+</tt>
+</blockquote>
+<P>it instead returns the string &quot;murp&quot;.  In this case, the command <tt>\set{a}{\quote{\get{b}}}</tt> sets the value of the variable <I>a</I> to the string &quot;\get{b}&quot;.  The command <tt>\a</tt> tells the GUML interpreter to retrieve the contents of <I>a</I> and interpret any GUML code within.  The command <tt>\get{a}</tt>, on the other hand, tells the interpreter <I>not</I> to expand any GUML code found inside, only to present the contents exactly as stored.  Thus, if a variable contains user-entered data, you should <I>always</I> retrieve it with the <tt>\get</tt> function.  If the data contains any of the GUML meta-characters (<tt>\</tt>, <tt>{</tt>, <tt>}</tt>, and <tt>#</tt>), expanding it with the backslash operator is certain to produce unexpected results.  Again, only when you can be absolutely certain that none of GUML's special characters will be in a variable's contents should you consider using the backslash to retrieve data from a variable.
+
+<P>For example, the file <tt>headers/html_fmt</tt> includes the following definition:
+<blockquote>
+<tt><P>\set{conttype}{\quote{
+<P>  \if{\not{\isset{conttyped}}}{
+<P>    {Content-type: text/html\n\if{\1}{\1\n}\n}
+<P>    \set{conttyped}{}# Don't let it happen more than once!
+<P>  }
+<P>}}
+</tt>
+</blockquote>
+<P>Of course, the same result could be achieved by testing the variable <I>conttyped</I> for a certain value which the procedure sets.  In fact, when regarding the output only as a &quot;truth&quot; value, the functions <tt>\get</tt> and <tt>\isset</tt> are nearly identical, since <tt>\get</tt> also returns an empty string when a variable has not yet been set. The key difference is when the argument is a variable that has been set to the empty string; <tt>\get</tt> returns the empty string, while <tt>\isset</tt> returns &quot;true&quot;.  Whether one tests for a variable’s existence or its value is, for the most part, irrelevant and strictly a matter of personal preference and programming style.
+
+</blockquote>
+<B><P><A NAME="_Toc372599820">
+<P>Error Handling</A></B>
+<blockquote>
+
+<P>GUML handles errors through two variables.  The controlling variable, <tt>ERROR</tt>, is a special one.  Once it is set, all outstanding groups are automatically ended without prejudice.  The variable remains set and is expected to be outputted verbatim by the top level function.
+
+<P>Normally, <tt>ERROR</tt> will be set by a macro, <tt>\error</tt>, which will be triggered either by an internal error in the parser or by GUML code.  If an internal error in executing GUML is encountered, it will try to run <tt>\error</tt> with an argument giving the type of error as a text string containing English.  If <tt>\error</tt> is undefined, which could happen in the case of a grievous error, it prints a frantic message to that effect and kills the process.  Thus, it is a good idea to always have your formats incorporate an error processing command which will take care of setting <tt>ERROR</tt>.  <tt>headers/plain_fmt</tt> inputs the file <tt>headers/error_fmt</tt>, which should contain an error-handling routine.
+
+<P>One's own uses of <tt>\error</tt> should be in GUML code when something has gone wrong requiring immediate cessation of expansion.  A message should be in the first argument, which will then be outputted.  For instance,
+<blockquote>
+<tt><P>\if{
+<P>  \not{\isset{USER}}
+<P>}{
+<P>  \error{You must be registered to use this page!}
+<P>}
+</tt>
+</blockquote>
+<P>will block non-users from a document, with a notice as to why.
+
+<P>In the case of a bad filename or a file-not-found error, the special GUML file
+<tt><P>headers/file-not-found</tt> will be loaded.  This should contain instructions to set <tt>ERROR</tt> appropriately.
+
+<P>&nbsp;
+</blockquote>
+<P><B> Common Programming Pitfalls.</B>
+<blockquote>
+
+<P><B>Variables vs. Values</B>
+
+<P>Possibly the first snare encountered by those learning to program in GUML is that of confusing variables with values, primarily by not using the <tt>\get</tt> statement where one belongs:
+
+<tt><P>&#9;\fop{this}{+}{that}</tt>  should be  <tt>\fop{\get{this}}{+}{\get{that}}
+</tt><P>and
+<tt><P>&#9;\isset{\get{foo}}</tt>  should be  <tt>\isset{foo}
+</tt>
+<P>Make note of this, as it can be a particularly insidious error to track down.
+
+<P>&nbsp;
+
+<B><P>Bracketing</B>
+
+<P>A handy feature of some text editors like Emacs and Jove is automatic visual bracket matching.  When the user types a closing bracket (or brace or parenthesis), the opening bracket which matches it briefly flashes, or a warning appears if none does.  This prevents all sorts of bracket mismatches, but it can lead to laziness on behalf of the programmer.  For instance, when retrieving the value of a variable as an argument to a macro it’s rather easy to forget to close off the <tt>\get</tt> command.  If left unnoticed, one may produce the following:
+
+<tt><P>&#9;\fop{\get{this}{+}{\get{that}}}
+</tt>
+<P>At first glance, everything seems in order here—since the keywords and arguments are compartmentalized, it’s difficult to notice that one close bracket is misplaced.  In the example, <tt>\fop</tt> receives only one argument, namely the contents of the variable <I>this</I>.  This is because inside <tt>\fop</tt>’s brackets lies the command <tt>\get{this}{+}{\get{that}}</tt>.  The <tt>\get</tt> macro looks up the value of the variable name given in its first argument, and ignores the rest of the arguments.  The top-level <tt>\fop</tt>, on the other hand, was expecting three or four arguments and received only one.  The error in this case will likely be a runtime error on the part of the GUML processor, which can be presented by a web browser as a &quot;malformed header error&quot; if it’s expecting GUML to produce HTML or other MIME type output.
+
+<P>A better way to format the <tt>\fop</tt> operator, particularly when simple sums are replaced with sums of products of differences (and so on..) is: 
+<blockquote>
+<tt><P>\fop{
+<P>  \get{this}
+<P>}{+}{
+<P>  \get{that}
+<P>}
+</tt>
+</blockquote>
+<P>By putting the bracketed data on a new line, it is significantly easier to visually scan for matching brackets.
+
+<P>&nbsp;
+</blockquote>
+<B><P>The <tt>\while</tt> macro</B>
+<blockquote>
+<tt><P>\while{</tt><I>test</I><tt>}{</tt><I>body</I><tt>}</tt>  - Expands <I>body</I> if <I>test</I> expands to a true value, then repeats.
+
+<P>The string <I>test</I> is a <tt>\quote</tt>'ed GUML test case, expected to return an empty string if the test is false.  The string <I>body </I>is <tt>\quote</tt>'ed GUML commands to be performed each time <I>test</I> tests true.  Hopefully, something in the <I>body</I> command string will eventually cause <I>test</I> to expand to the empty string &quot;&quot;.
+
+<P>GUML's <tt>\while</tt> loop is not a primitive function, but rather a macro defined in the file <tt>headers/plain_fmt</tt>.  Unless told to do otherwise, the parser will try to expand a macro's arguments before passing them to the macro.  For instance, when you do <tt>\op{\get{a}}{+}{1}</tt>, the value of <I>a</I> is retrieved and sent to the <tt>\op</tt> primitive—the <tt>\op</tt> function isn't given &quot;<tt>\get{a}</tt>&quot; for its first argument.  Because of this, the syntax for a <tt>\while</tt> loop is a little confusing; in order for the <tt>\while</tt> loop to work properly, its arguments must be <tt>\quote</tt>'ed GUML code.  Consider the following snippet of code:
+<blockquote>
+<tt><P>\set{i}{0}
+<P>\while{\op{\i}{&lt;}{5}}{
+<P>&#9;\i\n
+<P>&#9;\set{i}{\op{\i}{+}{1}}
+<P>}
+</tt>
+</blockquote>
+<P>Since the arguments are expanded <I>before</I> being passed to the <tt>\while</tt> macro, the code actually looks like this immediately before the <tt>\while</tt> macro is expanded:
+<blockquote>
+<tt><P>\while{true}{0
+<P>}
+</tt>
+</blockquote>
+<P>When executed, this code will spew the string &quot;0&quot; followed by a newline until the interpreter decides it’s had enough, presents an error message to this effect, and aborts rather unceremoniously.  Of course, the proper way to write the loop is like this:
+<blockquote>
+<tt><P>\set{i}{0}
+<P>\while{\quote{\op{\i}{&lt;}{5}}}{\quote{
+<P>&#9;\i\n
+<P>&#9;\set{i}{\op{\i}{+}{1}}
+<P>}}
+</tt>
+</blockquote>
+<P>In each iteration of the loop, the <tt>\while</tt> macro expands the test case, tests it for a &quot;truth&quot; value, then either invokes another <tt>\while</tt> with the same arguments or stops.  Because the <tt>\while</tt> macro is defined recursively, and because an un-<tt>\quote</tt>’ed test case usually expands to &quot;true&quot; before being passed to the macro, infinite loops are a common plight to the novice GUML programmer.
+
+<P>&nbsp;
+</blockquote>
+<P><B>Technical points.</B>
+<blockquote>
+
+<P>The GUML interpreter is very picky about certain things.  It would behoove you to exercise caution by keeping these in mind.
+
+<P>Spaces are ignored (a) after the text of the name of a macro or command which has no arguments, (b) at the start of any line, or (c) in command mode (along with tabs and newlines).
+
+<P>A comment character, <tt>#</tt>, at the end of a line suppresses output of a newline.  This may be desirable if one is in text mode and does not want newlines.  It shows up extensively in those macros which present text with a strict required format.
+
+<P>There must be <I>no</I> space before the left brace of an argument to a command.  Any such space breaks the argument off into a separate group.  Even placing a comment character directly after the name of a command or the right brace of an argument breaks the chain of arguments.
+
+<P>The arguments to a macro, <tt>\1</tt> and up, may be used as arguments within other primitives and other macros, but if quoted and then later invoked, they will obviously be reset with whatever new arguments are passed.  If no arguments are passed, they will all be the empty string &quot;&quot;.
+
+<P>When an internal error occurs, command mode is automatically entered and all arguments are instantly lost.  Variables may still be accessed if the <tt>\error</tt> macro needs to use them.
+
+<P>Macro names may be at most 99 characters and contain only letters and the underscore character _.  Variable names in general, however, may be of unlimited length and contain any characters.
+
+<P>Attempting to get an unset variable returns the empty string; attempting to invoke an unset variable causes an internal error.
+</BODY>
+</HTML>

@@ -1,0 +1,108 @@
+<html>
+<head>
+<title>Molson Handbook - oci and plsqlcall</title>
+</head>
+<body bgcolor="#ffffff" text="#000000" link="#bb0000" vlink="#880000" alink="#ff0000">
+
+<center>
+<h1>OCI and plsqlcall</h1>
+
+<table width=470>
+<tr><td>
+
+<b>OCI</b>
+<p>
+
+..stands for Oracle C Interface.  As may be expected, this is the interface
+through which guml talks to the Oracle database.  Usage is fairly
+straghtforward, and guml's <tt>oracle.c</tt> code is mostly adopted from an
+Oracle demonstration program.
+
+<p>
+
+For <tt>sqlexec</tt>'s, the procedure is:
+
+<ul>
+<li>open the return cursor
+<li>pass a SQL query and the return cursor to the database
+</ul>
+
+The <tt>sqlrow</tt> command then pulls data row by row from the result set
+pointed to by the return cursor.
+
+<p>
+<b>plsqlcall</b>
+<p>
+
+The problem is that Oracle's stored procedures don't implicitly return result
+sets back to the OCI environment through a return cursor.  To insure that it
+works properly, we do the following:
+
+<p>
+
+Inside the guml <tt>plsqlcall</tt> function, we parse the plsql call and wedge
+in an extra argument which is bound to a cursor.  So,
+
+<blockquote>
+<tt>\plsqlcall{</tt><i>package</i><tt>.</tt><i>procedure</i><tt>(</tt><i>data</i><tt>,</tt><i>data</i><tt>);}</tt>
+</blockquote>
+
+becomes
+
+<blockquote>
+<tt>\plsqlcall{</tt><i>package</i><tt>.</tt><i>procedure</i><tt>(</i><tt>:retcurs,</tt><i>data</i><tt>,</tt><i>data</i><tt>);}</tt>
+</blockquote>
+
+<p>
+
+The stored package function must then be written to pass the result set
+back through this cursor:
+
+<blockquote>
+<tt>
+CREATE OR REPLACE PACKAGE </tt><i>package</i><tt> AS<br>
+<ul>
+    PROCEDURE </tt><i>procedure</i><tt> (<br>
+<ul>
+    return_cursor   IN OUT int_curs,<br>
+    </tt><i>arg</i><tt>             arg%type,<br>
+    ...
+</ul>
+	);
+</ul>
+);<br>
+END package;
+<p>
+CREATE OR REPLACE PACKAGE BODY </tt><i>package</i><tt> AS<br>
+<ul>
+    PROCEDURE </tt><i>procedure</i><tt> (
+<ul>
+        return_cursor   IN OUT int_curs,<br>
+        </tt><i>arg</i><tt>				arg%type,<br>
+        ...
+</ul>
+    )<br>
+    IS<br>
+    BEGIN<br>
+<ul>
+        OPEN return_cursor FOR<br>
+            SELECT * FROM table;
+</ul>
+    END;<br>
+</ul>
+END;<br>
+</pre>
+</blockquote>
+
+</td></tr>
+</table>
+
+</center>
+
+<p align=right>
+
+<a href="../index.html"><--- back     </a>
+
+
+</body>
+</html>

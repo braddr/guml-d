@@ -1,0 +1,23 @@
+\include{/headers/guml_site}
+
+\htmlhead{GUML Developer Central}
+
+\center_box{75%}{\font{GUML Developer Central}{+3}}
+{<p>\n}
+
+\header_box{75%}{Commands}
+\expand{
+  \\simple_box\{75%\}\if{
+    #\eq{\strindex{\get{REMOTE_ADDR}}{199.2.208.}}{0}
+    #\eq{\strindex{\get{REMOTE_ADDR}}{192.168.}}{0}
+    #\eq{\strindex{\get{REMOTE_ADDR}}{127.0.0.}}{0}
+  }{
+    {\{\menu_cmd{Administration}{/admin}\}}
+  }\{
+    \menu_cmd{Command Reference}{/cmdref}
+  \}
+}
+
+\htmlfoot
+
+

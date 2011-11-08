@@ -1,0 +1,85 @@
+<HTML>
+<HEAD>
+<TITLE>Guml Reference</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+
+<A NAME="_Toc372599809">
+<FONT SIZE=+3><b>I. Introduction</b></FONT>
+<p>
+<FONT SIZE=+2>
+What Is GUML?<br>
+Why Use GUML?<br>
+How Does GUML Work?
+</FONT>
+
+<P><A NAME="1">
+
+<blockquote>
+
+This document is directed towards the capable HTML programmer who may, or
+may not, have a more extensive background in a major programming language.
+Some exposure to PERL or another language is assumed, as we do not cover
+many of the basics of scripting and programming.  Anyone with significant
+experience in PERL, C or Java, however, should find this document easy to
+digest.
+
+<P>
+
+In the case of some outstanding questions which may be unfamiliar to
+scripting and engineering novices, we've included sidebars that answer some
+questions which the experienced reader will wish to skip (i.e. "What's an
+argument?").
+
+</blockquote>
+
+<B><a NAME="1.1">What Is GUML?</A></B>
+
+<blockquote>
+
+GUML is a simple, user-extensible, macro-based, meta language for generating
+documents on-the-fly.  Specifically, it allows for rapid development of
+dynamic content in World Wide Web pages without requiring knowledge of C
+programming or the CGI interface.  GUML, simply, is an extension to HTML,
+opening up the necessary control for dynamic content to the World Wide Web
+publisher or designer.  These extensions take commonly used and needed
+programming tools and place them, with a simple language, in the hands of
+designers to make HTML more than a simple markup language.
+
+</blockquote>
+
+<B><A NAME="1.2">Why Use GUML?</A></B>
+
+<blockquote>
+
+GUML is built from a small set of primitive functions, to which may be
+added any number of user-defined macros.  Additionally, application-specific
+primitives, such as database access or higher math functions, are easily
+incorporated into the core as needed.  Since GUML is based on robust
+technologies, like C, and has a highly flexibile nature allowing it to
+connect with a variety of databases, it provides a cross-platform solution
+to dynamic content on the World Wide Web.  This cross-platform nature
+enables the leveraging of content across multiple server platforms, multiple
+Web servers and multiple database servers. GUML is elegant, yet powerful--it
+frees the development of content from the confines of machinery.
+
+</blockquote>
+
+<B><A NAME="1.3">How Does GUML Work?</A></B>
+
+<blockquote>
+
+The GUML interpreter is a CGI (Common Gateway Interface) application which
+is executed, most typically, through an http request to a Web server.  Along
+with the request, GUML is told which input file it needs to handle (i.e.
+"page" on the Web) and proceeds to parse the file based upon GUMLs primitive
+functions and any defined macros.  A plain text HTML file is generated
+through this process and sent back to the user through the http server.  In
+the case of database access, GUML provides the bridge between the Web server
+and the database server, understanding how to communicate with each,
+therefore enabling content variant upon the contents of a database.
+
+</blockquote>
+
+</BODY>
+</HTML>

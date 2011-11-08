@@ -1,0 +1,33 @@
+\include{/headers/guml_site}
+
+\htmlhead{GUML -- Cmd Ref -- Math}
+
+\center_box{75%}{\font{\href{GUML}{..}\ -- \href{Cmd Ref}{.}\ -- Math}{+3}}
+{<p>\n}
+
+<a name="calc">\header_box{75%}{\\\\calc}</a>
+\simple_box{75%}{
+  blah
+}
+<br>
+<a name="fop">\header_box{75%}{\\\\fop}</a>
+\simple_box{75%}{
+  blah
+}
+<br>
+<a name="money">\header_box{75%}{\\\\money}</a>
+\simple_box{75%}{
+  blah
+}
+<br>
+<a name="op">\header_box{75%}{\\\\op}</a>
+\simple_box{75%}{
+  blah
+}
+<br>
+<a name="rand">\header_box{75%}{\\\\rand}</a>
+\simple_box{75%}{
+  blah
+}
+
+\htmlfoot

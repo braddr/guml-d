@@ -1,0 +1,98 @@
+\include{/headers/guml_site}
+
+\htmlhead{GUML -- Command Reference}
+
+\set{command_link}{\quote{{&nbsp;&nbsp;&nbsp;&nbsp;<a href="\2">\1</a><br>}}}
+
+\center_box{75%}{\font{\href{GUML}{..}\ -- Command Reference}{+3}}
+{<p>\n}
+
+\header_box{75%}{Commands}
+\simple_box{75%}{
+  <table border=0 width="100%">
+  <tr><td valign=top width="33%">
+\href{Macro Programming}{macros.ghtml}:<br>
+  \command_link{\\\\eq}{macros.ghtml\\\#eq}
+  \command_link{\\\\get}{macros.ghtml\\\#get}
+  \command_link{\\\\if}{macros.ghtml\\\#if}
+  \command_link{\\\\include}{macros.ghtml\\\#include}
+  \command_link{\\\\isset}{macros.ghtml\\\#isset}
+  \command_link{\\\\quote}{macros.ghtml\\\#quote}
+  \command_link{\\\\set}{macros.ghtml\\\#set}
+  \command_link{\\\\unset}{macros.ghtml\\\#unset}
+  \command_link{\\\\while}{macros.ghtml\\\#while}
+<br>
+\href{String}{string.ghtml}:<br>
+  \command_link{\\\\htmlquote}{string.ghtml\\\#htmlquote}
+  \command_link{\\\\sqlquote}{string.ghtml\\\#sqlquote}
+  \command_link{\\\\strcmp}{string.ghtml\\\#strcmp}
+  \command_link{\\\\strindex}{string.ghtml\\\#strindex}
+  \command_link{\\\\strip}{string.ghtml\\\#strip}
+  \command_link{\\\\strlength}{string.ghtml\\\#strlength}
+  \command_link{\\\\strlower}{string.ghtml\\\#strlower}
+  \command_link{\\\\strsoundex}{string.ghtml\\\#strsoundex}
+  \command_link{\\\\strtok}{string.ghtml\\\#strtok}
+  \command_link{\\\\strupper}{string.ghtml\\\#strupper}
+  \command_link{\\\\substr}{string.ghtml\\\#substr}
+</td><td valign=top width="33%">
+\href{Math}{math.ghtml}:<br>
+  \command_link{\\\\calc}{math.ghtml\\\#calc}
+  \command_link{\\\\fop}{math.ghtml\\\#fop}
+  \command_link{\\\\money}{math.ghtml\\\#money}
+  \command_link{\\\\op}{math.ghtml\\\#op}
+  \command_link{\\\\rand}{math.ghtml\\\#rand}
+<br>
+\href{SQL}{sql.ghtml}:<br>
+  \command_link{\\\\sqlexec}{sql.ghtml\\\#sqlexec}
+  \command_link{\\\\sqlrow}{sql.ghtml\\\#sqlrow}
+  \command_link{\\\\sqlquote}{sql.ghtml\\\#sqlquote}
+  \command_link{\\\\plsqlcall}{sql.ghtml\\\#plsqlcall}
+<br>
+\href{File}{file.ghtml}:<br>
+  \command_link{\\\\dirclose}{file.ghtml\\\#dirclose}
+  \command_link{\\\\diropen}{file.ghtml\\\#diropen}
+  \command_link{\\\\dirread}{file.ghtml\\\#dirread}
+  \command_link{\\\\filedelete}{file.ghtml\\\#filedelete}
+  \command_link{\\\\fileexists}{file.ghtml\\\#fileexists}
+  \command_link{\\\\fileread}{file.ghtml\\\#fileread}
+  \command_link{\\\\filestatus}{file.ghtml\\\#filestatus}
+  \command_link{\\\\filewrite}{file.ghtml\\\#filewrite}
+  \command_link{\\\\isdir}{file.ghtml\\\#isdir}
+</td><td valign=top width="33%">
+\href{Misc}{misc.ghtml}:<br>
+  \command_link{\\\\date}{misc.ghtml\\\#date}
+  \command_link{\\\\email}{misc.ghtml\\\#email}
+  \command_link{\\\\environ}{misc.ghtml\\\#environ}
+  \command_link{\\\\param}{misc.ghtml\\\#param}
+  \command_link{\\\\paramcount}{misc.ghtml\\\#paramcount}
+  \command_link{\\\\shell}{misc.ghtml\\\#shell}
+  \command_link{\\\\time}{misc.ghtml\\\#time}
+<br>
+\href{File Handle}{file_handle.ghtml}:<br>
+  \command_link{\\\\append}{file_handle.ghtml\\\#append}
+  \command_link{\\\\close}{file_handle.ghtml\\\#close}
+  \command_link{\\\\isopen}{file_handle.ghtml\\\#isopen}
+  \command_link{\\\\open}{file_handle.ghtml\\\#open}
+  \command_link{\\\\output}{file_handle.ghtml\\\#output}
+  \command_link{\\\\readline}{file_handle.ghtml\\\#readline}
+  \command_link{\\\\writeline}{file_handle.ghtml\\\#writeline}
+<br>
+\href{Special Use}{special.ghtml}:<br>
+  \command_link{\\\\encodepassword}{special.ghtml\\\#encodepassword}
+  \command_link{\\\\tuxedo}{special.ghtml\\\#tuxedo}
+  \command_link{\\\\tuxedoresults}{special.ghtml\\\#tuxedoresults}
+  \command_link{\\\\shutdownguml}{special.ghtml\\\#shutdownguml}
+  \command_link{\\\\exit}{special.ghtml\\\#exit}
+#<br><br>
+#Depreciated:
+#  \command_link{\\\\cmode}{}
+#  \command_link{\\\\tmode}{}
+#
+</td></tr>
+</table>
+}
+
+\htmlfoot
+
+
+

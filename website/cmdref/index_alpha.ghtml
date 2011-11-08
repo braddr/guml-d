@@ -1,0 +1,80 @@
+\include{/headers/guml_site}
+
+\htmlhead{GUML -- Command Reference}
+
+\center_box{75%}{\font{\href{GUML}{..}\ -- Command Reference}{+3}}
+{<p>\n}
+
+\header_box{75%}{File Commands}
+\simple_box{75%}{
+  <table border=0 width="100%">
+  <tr><td>
+
+  \menu_cmd{\\\\append}{}
+  \menu_cmd{\\\\calc}{}
+  \menu_cmd{\\\\close}{}
+  \menu_cmd{\\\\cmode}{}
+  \menu_cmd{\\\\date}{}
+  \menu_cmd{\\\\dirclose}{}
+  \menu_cmd{\\\\diropen}{}
+  \menu_cmd{\\\\dirread}{}
+  \menu_cmd{\\\\email}{}
+  \menu_cmd{\\\\encodepassword}{}
+  \menu_cmd{\\\\environ}{}
+  \menu_cmd{\\\\eq}{}
+  \menu_cmd{\\\\exit}{}
+  \menu_cmd{\\\\filedelete}{}
+  \menu_cmd{\\\\fileexists}{}
+  \menu_cmd{\\\\fileread}{}
+  \menu_cmd{\\\\filestatus}{}
+  \menu_cmd{\\\\filewrite}{}
+  \menu_cmd{\\\\fop}{}
+  \menu_cmd{\\\\get}{}
+  \menu_cmd{\\\\htmlquote}{}
+  \menu_cmd{\\\\if}{}
+  \menu_cmd{\\\\include}{}
+  \menu_cmd{\\\\isdir}{}
+  \menu_cmd{\\\\isopen}{}
+  \menu_cmd{\\\\isset}{}
+  \menu_cmd{\\\\money}{}
+  \menu_cmd{\\\\op}{}
+  \menu_cmd{\\\\open}{}
+
+  </td><td>
+
+  \menu_cmd{\\\\output}{}
+  \menu_cmd{\\\\param}{}
+  \menu_cmd{\\\\paramcount}{}
+  \menu_cmd{\\\\plsqlcall}
+  \menu_cmd{\\\\quote}{}
+  \menu_cmd{\\\\rand}{}
+  \menu_cmd{\\\\readline}{}
+  \menu_cmd{\\\\set}{}
+  \menu_cmd{\\\\shell}{}
+  \menu_cmd{\\\\shutdownguml}{}
+  \menu_cmd{\\\\sqlexec}
+  \menu_cmd{\\\\sqlquote}
+  \menu_cmd{\\\\sqlrow}
+  \menu_cmd{\\\\strcmp}{}
+  \menu_cmd{\\\\strindex}{}
+  \menu_cmd{\\\\strip}{}
+  \menu_cmd{\\\\strlength}{}
+  \menu_cmd{\\\\strlower}{}
+  \menu_cmd{\\\\strsoundex}{}
+  \menu_cmd{\\\\strtok}{}
+  \menu_cmd{\\\\strupper}{}
+  \menu_cmd{\\\\substr}{}
+  \menu_cmd{\\\\time}{}
+  \menu_cmd{\\\\tmode}{}
+  \menu_cmd{\\\\tuxedo}{}
+  \menu_cmd{\\\\tuxedoresults}{}
+  \menu_cmd{\\\\unset}{}
+  \menu_cmd{\\\\while}{}
+  \menu_cmd{\\\\writeline}{}
+
+  </td></tr>
+  </table>
+}
+
+\htmlfoot
+

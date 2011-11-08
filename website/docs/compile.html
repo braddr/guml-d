@@ -1,0 +1,55 @@
+<HTML>
+<HEAD>
+<TITLE>Molson Handbook - Guml Compilation</TITLE>
+</HEAD>
+<body bgcolor="#ffffff" text="#000000" link="#bb0000" vlink="#880000" alink="#ff0000">
+
+<center>
+<h1>GUML configuration and compilation</h1>
+
+<p>
+
+<table width=470>
+<tr><td>
+
+The most recent version of guml is kept in <tt>/pkgs/guml/dev</tt>.
+Site-specific configuration options are located in the <tt>local.h</tt> header
+file and the guml <tt>Makefile</tt>.  Options for the larger Cybersight sites,
+including Molson, are predefined in <tt>#ifdef</tt> blocks in <tt>local.h</tt>;
+so, to configure guml for Molson, you only need to uncomment the
+<tt>SITE = MOLSON</tt> and <tt>DB = ORACLE</tt> lines in the <tt>Makefile</tt>.
+
+<p>
+
+Setting up fast-cgi is somewhat more cumbersome.  In addition to uncommenting
+the <tt>FASTCGI = yes</tt> line in guml's <tt>Makefile</tt>, the web server
+must be configured and compiled with the fastcgi module, and guml must be
+invoked as a daemon service.
+
+<p>
+
+Full details are available at the <a href="http://www.apache.org">Apache</a>
+and <a href="http://www.fastcgi.org">Fast CGI</a> web sites.
+
+<p>
+
+If the <tt>make</tt> finishes without error, you may notice that two
+separate programs have been built, <tt>bestguml</tt> and <tt>stub</tt>.
+Since it's usually a non-trivial exercise getting the web server to properly
+set environment variables for cgi programs, we simplify the matter by
+launching guml in two steps: <tt>stub</tt> sets the required environment
+variables, then launches the program specified by <tt>EXECGUML</tt>, defined
+in <tt>local.h</tt>.  This spawned executable is traditionally named
+<tt>actualbestguml</tt>, so installation consists of copying <tt>stub</tt> to
+<tt>cgi-bin/bestguml</tt> and <tt>bestguml</tt> to
+<tt>cgi-bin/actualbestguml</tt>.
+
+</td></tr>
+</table>
+
+<p align=right>
+
+<a href="../index.html"><--- back</a>
+
+</BODY>
+</HTML>

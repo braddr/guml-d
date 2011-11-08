@@ -1,0 +1,33 @@
+\include{/headers/guml_site}
+
+\htmlhead{GUML -- Cmd Ref -- Special Use}
+
+\center_box{75%}{\font{\href{GUML}{..}\ -- \href{Cmd Ref}{.}\ -- Special Use}{+3}}
+{<p>\n}
+
+<a name="encodepassword">\header_box{75%}{\\\\encodepassword}</a>
+\simple_box{75%}{
+  blah
+}
+<br>
+<a name="tuxedo">\header_box{75%}{\\\\tuxedo}</a>
+\simple_box{75%}{
+  blah
+}
+<br>
+<a name="tuxedoresults">\header_box{75%}{\\\\tuxedoresults}</a>
+\simple_box{75%}{
+  blah
+}
+<br>
+<a name="shutdownguml">\header_box{75%}{\\\\shutdownguml}</a>
+\simple_box{75%}{
+  blah
+}
+<br>
+<a name="exit">\header_box{75%}{\\\\exit}</a>
+\simple_box{75%}{
+  blah
+}
+
+\htmlfoot

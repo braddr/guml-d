@@ -1,0 +1,43 @@
+\include{/headers/guml_site}
+
+\htmlhead{GUML -- Cmd Ref -- Misc}
+
+\center_box{75%}{\font{\href{GUML}{..}\ -- \href{Cmd Ref}{.}\ -- Misc}{+3}}
+{<p>\n}
+
+<a name="date">\header_box{75%}{\\\\date}</a>
+\simple_box{75%}{
+  blah
+}
+<br>
+<a name="email">\header_box{75%}{\\\\email}</a>
+\simple_box{75%}{
+  blah
+}
+<br>
+<a name="environ">\header_box{75%}{\\\\environ}</a>
+\simple_box{75%}{
+  blah
+}
+<br>
+<a name="param">\header_box{75%}{\\\\param}</a>
+\simple_box{75%}{
+  blah
+}
+<br>
+<a name="paramcount">\header_box{75%}{\\\\paramcount}</a>
+\simple_box{75%}{
+  blah
+}
+<br>
+<a name="shell">\header_box{75%}{\\\\shell}</a>
+\simple_box{75%}{
+  blah
+}
+<br>
+<a name="time">\header_box{75%}{\\\\time}</a>
+\simple_box{75%}{
+  blah
+}
+
+\htmlfoot

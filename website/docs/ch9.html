@@ -1,0 +1,79 @@
+<HTML>
+<HEAD>
+<TITLE>Guml Reference - Chapter 9</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<FONT SIZE=+3><b><A NAME="5">IX. Macros - Extending GUML </b></FONT>
+<p>
+
+<FONT SIZE=+2><P><A NAME="5.1">
+Header Files</FONT><FONT SIZE=+1>
+<dd><a href="#plain"><tt>plain_fmt</tt></a><br>
+<dd><a href="#html"><tt>html_fmt</tt></a><br>
+</FONT>
+<br><br>
+<a name="plain"><b>The following macros are defined in <tt>plain_fmt</tt>:</b></a>
+<blockquote><p>
+<tt>\n</tt> - a newline character
+<p>
+<tt>\t</tt> - a tab character
+<p>
+<tt>\not</tt> - returns "true" if the first argument consists entirely of
+whitespace, otherwise the empty string.
+<p>
+<tt>\notset</tt> - equivalent to <tt>\not{\isset{\1}}</tt>
+<p>
+<tt>\ne</tt> - "not equal"
+<p>
+<tt>\isinteger</tt> - "true" if the argument is an integer, otherwise the empty string
+<p>
+<tt>\isfloat</tt> - "true" if the argument is a floating-point number, otherwise the empty string
+<p>
+<tt>\ismoney</tt> - "true" if the argument represents a "money" quantity, otherwise the empty string
+<p>
+<tt>\ignore</tt> - swallows any output from the arguments
+<p>
+<tt>\expand</tt> - expands any GUML code in the first argument
+<p>
+<tt>\inc</tt> - increment the first <i>variable</i> by the value given in the
+second argument, or one if not given.  Note that <tt>\op</tt> takes an empty
+string or a non-numeric or non-integral value as 0, so
+<tt>\unset{i} \inc{i}</tt> causes <tt>i</tt> to be set to 1.
+<p>
+<tt>\dec</tt> - similar to <tt>\inc</tt>, but decrement the number instead
+<p>
+<tt>\and</tt> - returns "true" only if both arguments are non-false strings
+<p>
+<tt>\or</tt> - returns the empty string only if both arguments contain no
+non-whitespace characters, else returns "true".
+<p>
+<tt>\stripguml</tt> - strips the "\, #, {, }" characters 
+<p>
+<tt>\sqlvar</tt> -  sqlquote for variables
+<p>
+<tt>\tokenize{text}{string}{array}</tt> -  break "text" on "string" into "array"  e.g., after executing "\tokenize{yadda blaaah narf}{a}{str}", we have: str_1="ya", str_2="dda" str_3=" bla" str_4="a" str_5="a" str_6="h na" str_7="rf"
+<p>
+<tt>\replace{text}{from}{to}</tt> - return "text" with all instances of string "from" replaced by "to" e.g., \replace{yarrrrrgh}{rrr}{aa} --> "yaaarrgh" (sans quotes)
+<br><br><br>
+</blockquote>
+
+<a name="html"><b>The following macros are defined in <tt>html_fmt</tt>:</b></a>
+<p><blockquote>
+<tt>\conttype</tt> - Outputs content-type header and tells env so.  Won't output if already done.
+<p>
+<tt>\htmlhead</tt> - Starts off an HTML document.  Takes one argument, a title.  Optionally takes something for H1.  Does nothing if header's already been printed.
+<p>
+<tt>\set_cookie</tt> - Do the Cookie Set thing
+<p>
+<tt>\htmlfoot</tt> - End of an HTML document. 
+<p>
+<tt>\bounce</tt> - Bounce to another URL.
+<p>
+<tt>\fullbounce</tt> - Bounce to another Full URL.
+<p>
+</blockquote>
+</BODY>
+</HTML>
+
+
+

@@ -1,0 +1,261 @@
+<HTML>
+<HEAD>
+<TITLE>Guml Reference - Chapter 4</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<b><A NAME="5">V. Extending GUML</b>
+<p>
+
+Header Files<br>
+Adding Primitives
+
+
+<P><A NAME="5.1">
+<B>Header Files</B>
+
+The following macros are defined in <tt>plain_fmt</tt>:
+
+<p>
+<tt>\n</tt> - a newline character
+<p>
+<tt>\not</tt> - returns "true" if the first argument consists entirely of
+whitespace, otherwise the empty string.
+<p>
+<tt>\ne</tt> - "not equal"
+<p>
+<tt>\isinteger</tt> - "true" if the argument is an integer, otherwise the empty string
+<p>
+<tt>\isfloat</tt> - "true" if the argument is a floating-point number, otherwise the empty string
+<p>
+<tt>\ismoney</tt> - "true" if the argument represents a "money" quantity, otherwise the empty string
+<p>
+<tt>\ignore</tt> - swallows any output from the arguments
+<p>
+<tt>\expand</tt> - expands any GUML code in the first argument
+<p>
+
+<pre>
+\set{n}{\quote{\
+}}
+
+\set{not}{\quote{\if{\1}{}{true}}}
+
+\set{ne}{\quote{\not{\eq{\1}{\2}}}}
+
+\set{isinteger}{\quote{\op{\1}{V}{0}}}
+\set{isfloat}{\quote{\fop{\1}{V}{0}}}
+\set{ismoney}{\quote{\if{\money{\1}}{true}{}}}
+
+# Ignores contents.
+\set{ignore}{}
+
+# Expand the GUML of an argument.
+\set{expand}{\quote{
+  \set{_expand_com}{\1}
+  \_expand_com
+}}
+</pre>
+
+dave_fmt:
+<p>
+<tt>\notset</tt> - equivalent to <tt>\not{\isset{\1}}</tt>
+<p>
+<tt>\inc</tt> - increment the first <i>variable</i> by the value given in the
+second argument, or one if not given.  Note that <tt>\op</tt> takes an empty
+string or a non-numeric or non-integral value as 0, so
+<tt>\unset{i} \inc{i}</tt> causes <tt>i</tt> to be set to 1.
+<p>
+<tt>\dec</tt> - similar to <tt>\inc</tt>, but decrement the number instead
+<p>
+<tt>\and</tt> - returns "true" only if both arguments are non-false strings
+<p>
+<tt>\or</tt> - returns the empty string only if both arguments contain no
+non-whitespace characters, else returns "true".
+<p>
+
+<pre>
+# some more from dave..:
+# a "not set" operator.  i rarely use it..
+\set{notset}{\quote{\if{\isset{\1}}{}{true}}}
+
+# an increment operator.. first arg += second if there, else just 1
+# note that this is an integer operation!  i don't want you \inc'ing
+# floating point values- that's bad grammar.
+\set{inc}{\quote{
+  \set{\1}{\op{\get{\1}}{+}{\if{\2}{\2}{1}}}
+}}
+
+# a decrement operator.. first arg -= second if there, else just 1
+# same precaution as above
+\set{dec}{\quote{
+  \set{\1}{\op{\get{\1}}{-}{\if{\2}{\2}{1}}}
+}}
+
+# logical operations..
+
+\set{and}{\quote{
+  \if{\1}{\if{\2}{true}{}}{}
+}}
+
+\set{or}{\quote{
+  \if{\1}{true}{\if{\2}{true}{}}
+}}
+
+\set{stripguml}{\quote{
+  \strip{\1}{\\\#\{\}}
+}}
+
+# note the syntax change from \isinteger.  horribly abusive, but i don't
+# much care for the other..
+\set{isint}{\quote{\op{\get{\1}}{V}{0}}}
+ 
+# sqlquote for variables..
+\set{sqlvar}{\quote{\sqlquote{\get{\1}}}}
+
+# break text \1 on string \2 into array \3
+# e.g., after executing "\tokenize{yadda blaaah narf}{a}{str}", we have:
+# str_1="ya", str_2="dda" str_3=" bla" str_4="a" str_5="a"
+# str_6="h na" str_7="rf"
+#
+# ..considering making behaviour more like other tokenizers.  and/or making it
+# a primitive.
+#
+\set{tokenize}{\quote{
+        \set{_token}{\if{\2}{\2}{\ }}
+        \set{_text}{\1}
+        \set{_arrayname}{\3}
+        \set{i}{0}
+        \while{\get{_text}}{
+                \inc{i}
+                \set{pivot}{\strindex{\get{_text}}{\get{_token}}}
+#{pivot1: \get{pivot}<br>}
+                \if{\pivot}{
+                        \inc{pivot}{\strlength{\get{_token}}}
+#{pivot2: \get{pivot}<br>}
+                        \set{\get{_arrayname}_\i}{\substr{\get{_text}}{0}{\pivot
+}}
+#{setting \get{_arrayname}_\i to: \substr{\get{_text}}{0}{\pivot}<br>}
+                        \set{_text}{
+                                \substr{\get{_text}}{\pivot}{
+                                        \op{\strlength{\get{_text}}}{-}{\pivot}
+                                }
+                        }
+                }{
+                        \set{\get{_arrayname}_\i}{\get{_text}}
+#{setting \get{_arrayname}_\i to: \get{_text}<br>}
+                        \set{_text}{}
+                }
+        }
+}}
+ 
+# \replace{text}{from}{to} - return "text" with all instances of string "from"
+# replaced by "to"
+#
+# e.g., \replace{yarrrrrgh}{rrr}{aa} --> "yaaarrgh" (sans quotes)
+#
+\set{replace}{\quote{
+        \set{_text}{\1}
+        \set{_from}{\2}
+        \set{_to}{\3}
+        \set{_outtext}{}
+        \while{\get{_text}}{
+                \set{pivot}{\strindex{\get{_text}}{\get{_from}}}
+                \if{\pivot}{
+                        \set{_outtext}{
+                                \get{_outtext}\substr{\get{_text}}{0}{\pivot}\ge
+t{_to}
+                        }
+                        \inc{pivot}{\strlength{\get{_from}}}
+                        \set{_text}{
+                                \substr{\get{_text}}{\pivot}{
+                                        \op{\strlength{\get{_text}}}{-}{\pivot}
+                                }
+                        }
+                }{
+                        \set{_outtext}{\get{_outtext}\get{_text}}
+                        \set{_text}{}
+                }
+        }
+        \get{_outtext}
+}}
+</pre>
+
+html_head:
+
+<pre>
+# Starts off an HTML document.
+# Takes one argument, a title.
+# Optionally takes something for H1.
+# Does nothing if header's already been printed.
+ 
+\set{htmlhead}{\quote{
+  \if{\not{\isset{htmlheaded}}}{
+    \set{htmlheaded}{}
+    \conttype{\3}
+    <html>
+    <head>
+    <title>\1</title>
+    \2#
+    </head>
+  }
+}}
+ 
+# Do the Cookie Set thing
+\set{set_cookie}{\quote{
+  \set{__tmp_set_cookie}{\get{SERVERDOMAIN}}
+  \if{\not{\get{__tmp_set_cookie}}}{\set{__tmp_set_cookie}{\get{SERVERNAME}}}
+  {Set-Cookie: \1=\2; domain=\get{__tmp_set_cookie}; path=/}
+  \if{\3}{
+    \if{\eq{\3}{never}}{
+      {; expires=Fri, 31-Dec-99 23:59:59 GMT}
+    }{
+      \if{\ne{\3}{session}}{
+        {; expires=\3}
+      }
+    }
+  }
+  {\n}
+  \unset{__tmp_set_cookie}
+}}
+
+# End of an HTML document.
+ 
+\set{htmlfoot}{\quote{
+  \if{
+    \isset{footer}
+  }{
+    \footer
+  }{
+    </body>
+    </html>
+  }
+}}
+
+\set{is_netscape_two}{
+        \eq{\substr{\get{HTTP_USER_AGENT}}{0}{9}}{Mozilla/2}
+}
+</pre>
+
+..etc.
+
+<br><br>
+<B>Adding Primitives</B>
+
+<p>
+
+On the Chicago project in particular, and in any application in general, it
+will be desirable to add additional commands to GUML which execute C code
+instead of simply more GUML code.  This may be effected by adding appropriate
+entries to the header file <tt>guml.h</tt> and then writing a C function
+which accepts an array of arguments and returns a string which is the output
+of that command.  All the primitives with the exception of <tt>\if</tt> and
+<tt>\quote</tt> are implemented like this.
+
+<p>
+
+Such commands in existence include SQL interface and WWW processing
+directives.
+
+
+</BODY>
+</HTML>

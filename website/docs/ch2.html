@@ -1,0 +1,394 @@
+<HTML>
+<HEAD>
+<TITLE>Guml Reference page 2</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+
+<FONT SIZE=+3><b>II. Programming in GUML</b></FONT>
+<FONT SIZE=+2>
+<p><a href="#syntax">Syntax</a>
+<a href="#overview"><br>A Brief Overview Of Primitives</a>
+<a href="#mode"><br>Command vs. Text Mode</a>
+<a href="#note"><br>A Note on Data Types</a>
+
+</FONT>
+
+<P>
+
+<blockquote>
+
+Programming in GUML is best done understanding several aspects of the
+language, including its syntax, how it treats variables and some simple
+logical structures and operations.  In this section, we'll cover each
+of these and more (listed above) in detail.
+
+<P>
+
+To better introduce the programming of GUML, we will use several examples.
+If these seem confusing at first, this is likely because we'll be introducing
+variables and primitives before we have a chance to discuss them in depth.
+When in doubt, focus on the structure of the example, rather than its
+specific function.  We will cover variables, primitives and macros in due
+course.  Where appropriate, we provide counter-examples in PERL (note: we
+use the PERL "print" command to duplicate standard commands in GUML, as that
+is essentially GUML's basic function -- to evaluate commands and print their
+results).
+
+<P>
+
+Once you've completed Part II, you should be able to program in GUML without
+any difficulty.  Spend some time getting familiar with the primitives and
+GUMLs features before moving on to Part III and some more advanced methods
+of programming.
+
+</blockquote>
+
+<A NAME="syntax"><B>Syntax</B></a>
+
+<blockquote>
+
+When reading a file, the GUML interpreter scans input for certain characters
+which indicate that subsequent text is to be taken as a GUML command.
+Everything else--that input it decides isn't intended for it--is piped
+directly to output.  This enables the GUML programmer to embed HTML and
+JavaScript statements within GUML files.  Since these are clearly not
+intended for GUML's interpretation, they get passed right along without
+adulteration.
+
+<P>The special characters that GUML looks out for are:
+
+<blockquote>
+<tt>\</tt> - Backslash indicates the beginning of a GUML command.
+<br>
+<tt>{</tt> - Left brace opens a block of text as part of an argument to a GUML command.
+<br>
+<tt>}</tt> - Right brace ends a block of text inteded to be grouped as an argument.<br>
+<tt>#</tt> - Pound sign indicates the rest of the line is a comment, and should not be output or evaluated.
+</blockquote>
+
+<p>
+<!--
+<IMG SRC="Image1.gif" WIDTH=234 HEIGHT=332 ALIGN="LEFT" HSPACE=12> 
+(sidebar: "What is an argument?")
+-->
+<i><b>What is an argument?</b>
+<p>
+<blockquote>
+In GUML, as in most programming languages, an argument is a parameter which 
+helps a command to behave properly.<br>
+In the simplest case of mathematical operations, arguments are the numbers and 
+commands are the operators.  So "2+3" has the arguments "2" and "3", and the 
+command "+".<br>
+Using the example above, in GUML this would be: <tt>\op{2}{+}{3}</tt>.  In 
+this case, the command is the primitive "<tt>\op</tt>" (primitives are 
+discussed mor in depth in Part IV).  The three arguments give the kind of 
+operation (addition) and the numbers to add.<br>
+This is similar, although not directly analogous, to HTML's tags.  The 
+&lt;IMG&gt; tag, for example requires a "SRC" argument, and can have "BORDER", 
+"WIDTH", etc...<br></i>
+</blockquote>
+<p>
+
+If you wish to use any of these four special characters as plain text, you
+may precede any of them with a "<tt>\</tt>".  Viz., "<tt>\\</tt>" produces
+"<tt>\</tt>", "<tt>\{</tt>" produces "<tt>{</tt>", "<tt>\}</tt>" produces
+"<tt>}</tt>", and "<tt>\#</tt>" produces "<tt>#</tt>".  This latter one is
+especially useful in HTML where you wish to use special characters (i.e.
+&amp;#160; would need to be rendered as &amp;\#160;).
+
+<P>
+
+Using these special characters, the general form of a GUML command is:
+
+<blockquote><tt><i>\command{argument1}{argument2}...</i></tt></blockquote>
+
+This differs significantly from HTML tags and C functions insofar as there
+is not a bracket pair which serves to enclose all the arguments to the
+command, i.e.:
+
+<blockquote>
+HTML: <tt>&lt;IMG src="sample.gif"&gt;</tt>
+<br>
+PERL: <tt>&amp;SubRoutine(arg1, arg2);</tt>
+</blockquote>
+
+In GUML, there is no (practical) upper limit to the number of arguments for
+a command.  Generally, if too few arguments are specified, the remaining
+ones will be assumed to be the empty argument <tt>{}</tt>.  If too many are
+specified, the result of the extra ones will be disregarded, although they
+will be evaluated.  This is important, as extraneous, but evaluated,
+arguments that are syntactically incorrect will cause server errors due the
+inability of GUML to correctly parse the file.
+
+<P>
+
+GUML's parser allows commands to be nested to perform complex calculations
+or evaluations to render a page.  This means that the output of a command
+may be an argument to another command.  For example:
+
+<blockquote><tt>\op{2}{+}{\op{5}{-}{2}}</tt></blockquote>
+
+Here, the result of <tt>\op{5}{-}{2}</tt> (or 3) is used as the third
+argument for the first <tt>\op</tt>, so it evaluates as
+<tt>\op{2}{+}{3}</tt>, or 5.  Like arguments, there is no practical upper
+limit to the amount of command nesting, and consequently the complexity of
+an operation.  For debugging and readability purposes, it is suggested that,
+just as in C or other languages, reasonable attention be paid to the format
+of GUML code.  The above example could, and perhaps should, be rewritten as:
+
+<blockquote>
+
+<TABLE CELLSPACING=0 BORDER=0 CELLPADDING=7 WIDTH=590>
+<TR>
+	<TD WIDTH="50%" VALIGN="TOP"><tt><i><b>GUML</b></i></tt></TD>
+	<TD WIDTH="50%" VALIGN="TOP"><tt><i><b>PERL</b></i></tt></TD>
+</TR><TR>
+	<TD WIDTH="50%" VALIGN="TOP">
+<pre>
+\op{2}{+}{
+   \op{5}{-}{2}
+}
+</pre>
+	</TD>
+	<TD WIDTH="50%" VALIGN="TOP">
+<pre>
+print 2 + (5 - 2);
+</pre>
+	</TD>
+</TR>
+</TABLE>
+
+</blockquote>
+
+Functionally, this causes no problem as the additional whitespace characters
+(i.e. returns, tabs and spaces) are simply not interpreted by the GUML
+parser.  It is important to remember that any macro or primitive can be
+nested within another, a slightly more interesting (and useful) example is:
+
+<blockquote>
+
+<TABLE CELLSPACING=0 BORDER=0 CELLPADDING=7 WIDTH=590>
+<TR>
+	<TD WIDTH="50%" VALIGN="TOP"><tt><i><b>GUML</b></i></tt></TD>
+	<TD WIDTH="50%" VALIGN="TOP"><tt><i><b>PERL</b></i></tt></TD>
+</TR><TR>
+	<TD WIDTH="50%" VALIGN="TOP">
+<pre>
+\set{addme}{
+   \op{5}{-}{2}
+}
+\op{2}{+}{
+   \get{addme}
+}
+</pre>
+	</TD>
+	<TD WIDTH="50%" VALIGN="TOP">
+<pre>
+$addme = 5 - 2;
+print 2 + $addme;
+</pre>
+	</TD>
+</TR>
+</TABLE>
+
+</blockquote>
+
+Here, we set a variable, named "addme", to a value, then add it to the
+number 2.  Having used several examples with primitives and variables, let's
+take a quick spin around the various primitives within GUML.
+
+</blockquote>
+
+<A NAME="overview"><B>A Brief Overview Of Primitives</B></a>
+
+<blockquote>
+
+Primitives are commands which form the foundation of GUML.  How these
+commands work is defined directly in the source code of GUML, and they can
+be used by any file that is passed to the GUML parser.  This structure
+enables a high degree of programmability and customization as only the most
+vital and basic commands are part of the core GUML program.  This helps keep
+GUML efficient by preventing unneeded commands from being loaded into memory.
+
+<P>
+
+Here, we'll briefly introduce some of the primitives with a short description
+of their function.  In the primitives listed below, any primitive whose
+function is to test for a certain condition will return the value "true" or
+"" (for false) where appropriate.  For more in-depth examples and
+explanations, consult Part IV.
+
+<blockquote>
+
+<TABLE CELLSPACING=0 BORDER=0 CELLPADDING=7 WIDTH=541>
+<TR>
+	<TD WIDTH="21%" VALIGN="TOP"><B>Primitive</B></TD>
+	<TD WIDTH="79%" VALIGN="TOP"><B>Function</B></TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\cmode</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Places the GUML parser in "command mode"</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\tmode</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Places the GUML parser in "text mode"</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\quote</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Quotes text without expanding/parsing any contained GUML code</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\set</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Sets the a variable to a given value</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\isset</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Test if a given variable is set</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\unset</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Clear a variable setting</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\get</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Obtain the contents of a variable, or "" if the variable is unset</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\include</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Includes the contents of another file as part of the
+		currently-parsed file</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\htmlquote</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Quote text to avoid unwanted HTML parsing</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\index</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Test for the existence of a string within another string</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\substr</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Returns a requested subset of a given string</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\eq</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Tests for the equality of two strings</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\op</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Perform a binary operation (i.e. addition, subtraction)</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\fop</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Floating point operations</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\rand</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Outputs a random non-negative integer</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\money</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Strips a string of dollar signs and commas, converting dollar
+		amounts to a floating point value.</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\if</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Conditional statement primitive</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\while</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Looping statement primitive</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\sqlexec</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Executes a SQL command to interface with a database</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\sqlquote</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Quotes text to avoid unwanted SQL parsing</TD>
+</TR><TR>
+	<TD WIDTH="21%" VALIGN="TOP"><tt>\sqlrow</tt></TD>
+	<TD WIDTH="79%" VALIGN="TOP">
+		Retrieves the data from the next row of the results of a
+		<I>sqlexec</I> call</TD>
+
+
+</TR>
+</TABLE>
+
+</blockquote>
+
+In addition to this list and the reference in Part IV, we will introduce
+several of these primitives in detail in specific examples and applications
+of GUML in the following sections.
+
+</blockquote>
+
+<A NAME="mode"><B>Command vs. Text Mode</B></a>
+
+<blockquote>
+
+When parsing a file, processing an argument, or expanding a variable, GUML
+begins in command mode (a.k.a. cmode).  The main feature of this mode is that
+all whitespace is ignored, so one can put in blank lines, indentation, or
+tabs as one wishes without it being outputted.  In text mode (a.k.a., tmode),
+on the other hand, spaces, tabs, and newlines are outputted normally, as one
+would want in text.  When the group, argument, or variable ends, GUML returns
+to whatever mode it was in before, either cmode or tmode.
+
+<p>
+
+One can switch between modes by hand by using the <tt>\cmode</tt> and
+<tt>\tmode</tt> primitives.  Also, as soon as any text is encountered, text
+mode is automatically started.  As such, the distinction between modes is
+tenuous at best, and probably best forgotten--particularly in the case of
+GUML-generated HTML in which formatting will be ignored by the browser
+anyway.  Simply remember that everything that isn't a command will be
+outputted by the processor.
+
+<p>
+
+Leading spaces at the start of the line are ignored in either mode.  Use of a
+"control-space", a backslash followed by a space, can be used to force output
+of a space.  A backslash at the end of a line also forces leading spaced on
+the next line to be read in.
+
+</blockquote>
+
+<B><a name=note>A Note on Data Types</B></a>
+<blockquote>
+
+<P>Many languages have several different kinds of data types (i.e. integers, 
+strings, arrays, etc.).  This allows programmers to interact with and 
+manipulate data using functions and commands that make sense for that data 
+type (for example, multiplying strings doesn't make much sense).
+
+<P>In GUML there is only one data type, the string.  Functions which expect 
+numbers, like <tt>\op</tt>, first convert their input to numbers, perform the 
+requested calculation, then convert the result to a string.  In this way, we 
+need not worry about what type of data is in a variable, nor whether a 
+function is being called with the right type of input.  When a function tries 
+this conversion on a string which doesn't represent a number, like 
+&quot;blammo&quot;, the input is taken to be zero.  Thus, the result of the 
+command <tt>\op{work}{+}{toil}</tt> is the string &quot;0&quot;.
+<p>
+<i><B>What is a string?</B>
+<P>
+<blockquote>
+A string is a character or group of characters which is being treated as
+characters (as opposed to numbers.)  As in most programming languages, the
+positioning of characters in a string begins at 0;  for example, in the
+string &quot;<TT>ska</TT>&quot;, the character &quot;<TT>s</TT>&quot;
+is in the position 0, &quot;<TT>k</TT>&quot; is in the position 1,
+etc., when you index into (or refer to a specific character in) the string.
+The counting of the number of the characters (or length) still begins at 1,
+so that the length of &quot;<TT>ska</TT>&quot; is 3, although
+&quot;<TT>a</TT>&quot; is in the position 2.</i>
+</blockquote>
+</blockquote>
+
+<P>
+
+
+</BODY>
+</HTML>

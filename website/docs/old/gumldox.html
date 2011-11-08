@@ -1,0 +1,2322 @@
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<TITLE>1</TITLE>
+
+<META NAME="GENERATOR" CONTENT="Internet Assistant for Microsoft Word 2.04z">
+</HEAD>
+<BODY>
+<H1><FONT SIZE=5>GUML:</FONT></H1>
+<P>
+<FONT SIZE=2 FACE="Arial">A technical specifications document
+and reference manual.<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+</FONT>
+<P>
+<FONT FACE="Arial">Produced by CyberSight</FONT>
+<P>
+<FONT FACE="Arial">Confidential and Proprietary</FONT>
+<P>
+<FONT FACE="Arial">13 November, 1996<BR>
+</FONT>
+<P>
+<B><FONT FACE="Arial">Table of Contents<BR>
+</FONT></B>
+<P>
+I. Introduction 3What is GUML? 3Why use GUML? 3How does GUML work? 3II. Programming in GUML 4Syntax 4Command vs. Text Mode 7Variables 6Operators 11Statements 14Macros 16Error Handling 18III. Advanced Topics 22Header Files 22Recursion 23Loops 24Database Connectivity 25IV. Primitives and Macros 27V. Extending GUML 33Header Files 34Adding Primitives 35Apendex A: Quick Reference 37Appendix B: math_fmt 37Appendix C: Chicago Headers 37
+<P>
+<A NAME="_Toc372599809"><B><FONT SIZE=4>I. Introduction</FONT></B></A>
+<P>
+<FONT SIZE=1>What Is GUML?</FONT>
+<P>
+<FONT SIZE=1>Why Use GUML?</FONT>
+<P>
+<FONT SIZE=1>How Does GUML Work?<BR>
+</FONT>
+<P>
+<A NAME="_Toc372599810"><FONT SIZE=2>This document is directed
+towards the capable HTML programmer who may, or may not, have
+a more extensive background in a major programming language. 
+Some exposure to PERL or another language is assumed, as we do
+not cover many of the basics of scripting and programming.  Anyone
+with significant experience in PERL, C or Java, however, should
+find this document easy to digest.<BR>
+</FONT></A>
+<P>
+<FONT SIZE=2>In the case of some outstanding questions which may
+be unfamiliar to scripting and engineering novices, we've included
+sidebars that answer some questions which the experienced reader
+will wish to skip (i.e. &quot;What's an argument?&quot;).<BR>
+</FONT>
+<P>
+<B><FONT SIZE=2>What Is GUML?<BR>
+</FONT></B>
+<P>
+<FONT SIZE=2>GUML is a simple, user-extensible, macro-based, meta
+language for generating documents on-the-fly.  Specifically, it
+allows for rapid development of dynamic content in World Wide
+Web pages without requiring knowledge of C programming or the
+CGI interface.  GUML, simply, is an extension to HTML, opening
+up the necessary control for dynamic content to the World Wide
+Web publisher or designer.  These extensions take commonly used
+and needed programming tools and place them, with a simple language,
+in the hands of designers to make HTML more than a simple markup
+language.<BR>
+</FONT>
+<P>
+<A NAME="_Toc372599811"><B><FONT SIZE=2>Why Use GUML?</FONT></B></A>
+<BR>
+<P>
+<FONT SIZE=2>GUML is built from a small set of primitive functions,
+to which may be added any number of user-defined macros.  Additionally,
+application-specific primitives, such as database access or higher
+math functions, are easily incorporated into the core as needed.
+ Since GUML is based on robust technologies, like C, and has a
+highly flexibile nature allowing it to connect with a variety
+of databases, it provides a cross-platform solution to dynamic
+content on the World Wide Web.  This cross-platform nature enables
+the leveraging of content across multiple server platforms, multiple
+Web servers and multiple database servers. GUML is elegant, yet
+powerful-it frees the development of content from the confines
+of machinery.<BR>
+</FONT>
+<P>
+<A NAME="_Toc372599812"><B><FONT SIZE=2>How Does GUML Work?</FONT></B></A>
+<BR>
+<P>
+<FONT SIZE=2>The GUML interpreter is a CGI (Common Gateway Interface)
+application which is executed, most typically, through an http
+request to a Web server.  Along with the request, GUML is told
+which input file it needs to handle (i.e. 'page' on the Web) and
+proceeds to parse the file based upon GUMLs primitive functions
+and any defined macros.  A plain text HTML file is generated through
+this process and sent back to the user through the http server.
+ In the case of database access, GUML provides the bridge between
+the Web server and the database server, understanding how to communicate
+with each, therefore enabling content variant upon the contents
+of a database.</FONT>
+<P>
+<A NAME="_Toc372599813"><B><FONT SIZE=4>II. Programming in GUML</FONT></B></A>
+<P>
+<FONT SIZE=1>Syntax</FONT>
+<P>
+<FONT SIZE=1>A Brief Overview Of Primitives</FONT>
+<P>
+<FONT SIZE=1>Command vs. Text Mode</FONT>
+<P>
+<FONT SIZE=1>Variables</FONT>
+<P>
+<FONT SIZE=1>Operators</FONT>
+<P>
+<FONT SIZE=1>Conditional Statements</FONT>
+<P>
+<FONT SIZE=1>Macros</FONT>
+<P>
+<FONT SIZE=1>Error Handling<BR>
+</FONT>
+<P>
+<A NAME="_Toc372599814"><FONT SIZE=2>Programming in GUML is best
+done understanding several aspects of the language, including
+its syntax, how it treats variables and some simple logical structures
+and operations.  In this section, we'll cover each of these and
+more (listed above) in detail.<BR>
+</FONT></A>
+<P>
+<FONT SIZE=2>To better introduce the programming of GUML, we will
+use several examples.  If these seem confusing at first, this
+is likely because we'll be introducing variables and primitives
+before we have a chance to discuss them in depth.  When in doubt,
+focus on the structure of the example, rather than its specific
+function.  We will cover variables, primitives and macros in due
+course.  Where appropriate, we provide counter-examples in PERL
+(note: we use the PERL &quot;print&quot; command to duplicate
+standard commands in GUML, as that is essentially GUML's basic
+function - to evaluate commands and print their results).<BR>
+</FONT>
+<P>
+<FONT SIZE=2>Once you've completed Part II, you should be able
+to program in GUML without any difficulty.  Spend some time getting
+familiar with the primitives and GUMLs features before moving
+on to Part III and some more advanced methods of programming.</FONT>
+<P>
+<B><FONT SIZE=2>Syntax<BR>
+</FONT></B>
+<P>
+<FONT SIZE=2>When reading a file, the GUML interpreter scans input
+for certain characters which indicate that subsequent text is
+to be taken as a GUML command.  Everything else - that input it
+decides isn't intended for it - is piped directly to output. 
+This enables the GUML programmer to embed HTML and JavaScript
+statements within GUML files.  Since these are clearly not intended
+for GUML's interpretation, they get passed right along without
+adulteration.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>The special characters that GUML looks out for are:
+<BR>
+</FONT>
+<P>
+<FONT SIZE=2>\ Backslash indicates the beginning of a GUML command.</FONT>
+<P>
+<FONT SIZE=2>{ Left brace opens a block of text as part of an
+argument to a GUML command.</FONT>
+<P>
+<FONT SIZE=2>} Right brace ends a block of text inteded to be
+grouped as an argument.</FONT>
+<P>
+<FONT SIZE=2># Pound sign indicates the rest of the line is a
+comment, and should not be output or evaluated.</FONT>
+<P>
+<IMG SRC="IMG00001.GIF"><BR>
+<P>
+<FONT SIZE=2>If you wish to use any of these four special characters
+as plain text, you may precede any of them with a &quot;</FONT><TT><FONT SIZE=2 FACE="Courier New">\</FONT></TT><FONT SIZE=2>&quot;.
+ Viz., &quot;</FONT><TT><FONT SIZE=2 FACE="Courier New">\\</FONT></TT><FONT SIZE=2>&quot;
+produces &quot;</FONT><TT><FONT SIZE=2 FACE="Courier New">\</FONT></TT><FONT SIZE=2>&quot;,
+&quot;</FONT><TT><FONT SIZE=2 FACE="Courier New">\{</FONT></TT><FONT SIZE=2>&quot;
+produces &quot;</FONT><TT><FONT SIZE=2 FACE="Courier New">{</FONT></TT><FONT SIZE=2>&quot;,
+&quot;</FONT><TT><FONT SIZE=2 FACE="Courier New">\}</FONT></TT><FONT SIZE=2>&quot;
+produces &quot;</FONT><TT><FONT SIZE=2 FACE="Courier New">}</FONT></TT><FONT SIZE=2>&quot;,
+and &quot;</FONT><TT><FONT SIZE=2 FACE="Courier New">\#</FONT></TT><FONT SIZE=2>&quot;
+produces &quot;</FONT><TT><FONT SIZE=2 FACE="Courier New">#</FONT></TT><FONT SIZE=2>&quot;.
+ This latter one is especially useful in HTML where you wish to
+use special characters (i.e. &amp;#160; would need to be rendered
+as &amp;\#160;).<BR>
+</FONT>
+<P>
+<FONT SIZE=2>Using these special characters, the general form
+of a GUML command is:<BR>
+</FONT>
+<P>
+<TT><I><FONT SIZE=2 FACE="Courier Italic"> </FONT><FONT SIZE=2 FACE="Courier New">\command{argument1}{argument2}...
+<BR>
+</FONT></I></TT>
+<P>
+<FONT SIZE=2>This differs significantly from HTML tags and C functions
+insofar as there is not a bracket pair which serves to enclose
+all the arguments to the command, i.e.:<BR>
+</FONT>
+<P>
+<FONT SIZE=2> HTML: &lt;IMG src=&quot;sample.gif&quot;&gt;</FONT>
+<P>
+<FONT SIZE=2> PERL: &amp;SubRoutine(arg1, arg2);<BR>
+</FONT>
+<P>
+<FONT SIZE=2>In GUML, there is no (practical) upper limit to the
+number of arguments for a command.  Generally, if too few arguments
+are specified, the remaining ones will be assumed to be the empty
+argument </FONT><TT><FONT SIZE=2 FACE="Courier New">{}</FONT></TT><FONT SIZE=2>.
+ If too many are specified, the result of the extra ones will
+be disregarded, although they will be evaluated.  This is important,
+as extraneous, but evaluated, arguments that are syntactically
+incorrect will cause server errors due the inability of GUML to
+correctly parse the file.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>GUML's parser allows commands to be nested to perform
+complex calculations or evaluations to render a page.  This means
+that the output of a command may be an argument to another command.
+ For example:<BR>
+</FONT>
+<P>
+<FONT SIZE=2> </FONT><TT><FONT SIZE=2 FACE="Courier New">\op{2}{+}{\op{5}{-}{2}}
+<BR>
+</FONT></TT>
+<P>
+<FONT SIZE=2>Here, the result of </FONT><TT><FONT SIZE=2 FACE="Courier New">\op{5}{-}{2}</FONT></TT><FONT SIZE=2>
+(or 3) is used as the third argument for the first </FONT><TT><FONT SIZE=2 FACE="Courier New">\op</FONT></TT><FONT SIZE=2>,
+so it evaluates as </FONT><TT><FONT SIZE=2 FACE="Courier New">\op{2}{+}{3}</FONT></TT><FONT SIZE=2>,
+or 5.  Like arguments, there is no practical upper limit to the
+amount of command nesting, and consequently the complexity of
+an operation.  For debugging and readability purposes, it is suggested
+that, just as in C or other languages, reasonable attention be
+paid to the format of GUML code.  The above example could, and
+perhaps should, be rewritten as:<BR>
+</FONT>
+<TABLE>
+<TR><TD WIDTH=295><TT><I><FONT SIZE=2 FACE="Courier New">GUML</FONT></I></TT>
+</TD><TD WIDTH=295><I><FONT SIZE=2 FACE="Courier New">PERL</FONT></I>
+</TD></TR>
+<TR><TD WIDTH=295><TT><FONT SIZE=2 FACE="Courier New"> \op{2}{+}{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">  \op{5}{-}{2}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> }</FONT></TT>
+</TD><TD WIDTH=295><FONT SIZE=2 FACE="Courier New"> print 2 + (5 - 2);</FONT>
+</TD></TR>
+</TABLE>
+<P>
+<P>
+Functionally, this causes no problem as the additional whitespace
+characters (i.e. returns, tabs and spaces) are simply not interpreted
+by the GUML parser.  It is important to remember that any macro
+or primitive can be nested within another, a slightly more interesting
+(and useful) example is:<BR>
+
+<TABLE>
+<TR><TD WIDTH=295><I>GUML</I></TD><TD WIDTH=295><I>PERL</I></TD>
+</TR>
+<TR><TD WIDTH=295><TT><FONT SIZE=2 FACE="Courier New"> \set{addme}{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">  \op{5}{-}{2}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> }</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> \op{2}{+}{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">  \get{addme}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> }</FONT></TT>
+</TD><TD WIDTH=295><FONT SIZE=2 FACE="Courier New"> $addme = 5 - 2;</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> print 2 + $addme;</FONT></TT>
+</TD></TR>
+</TABLE>
+<P>
+<P>
+Here, we set a variable, named &quot;addme&quot;, to a value,
+then add it to the number 2.  Having used several examples with
+primitives and variables, let's take a quick spin around the various
+primitives within GUML.<BR>
+<P>
+<A NAME="_Toc372599816"><B>A Brief Overview Of Primitives<BR>
+</B></A>
+<P>
+Primitives are commands which form the foundation of GUML.  How
+these commands work is defined directly in the source code of
+GUML, and they can be used by any file that is passed to the GUML
+parser.  This structure enables a high degree of programmability
+and customization as only the most vital and basic commands are
+part of the core GUML program.  This helps keep GUML efficient
+by preventing unneeded commands from being loaded into memory.
+<BR>
+<P>
+Here, we'll briefly introduce each of the primitives with a short
+description of their function.  In the primitives listed below,
+any primitive whose function is to test for a certain condition
+will return the value &quot;true&quot; or &quot;&quot; (for false)
+where appropriate.  For more in-depth examples and explanations,
+consult Part IV.  <BR>
+
+<TABLE>
+<TR><TD WIDTH=114><B>Primitive</B></TD><TD WIDTH=427><B>Function</B>
+</TD></TR>
+<TR><TD WIDTH=114><TT><FONT SIZE=2 FACE="Courier New">\cmode</FONT></TT>
+</TD><TD WIDTH=427>Places the GUML parser in &quot;command mode&quot;
+</TD></TR>
+<TR><TD WIDTH=114><TT><I><FONT SIZE=2 FACE="Courier New">\email</FONT></I></TT>
+</TD><TD WIDTH=427><I>Sends electronic mail through the GUML parser</I>
+</TD></TR>
+<TR><TD WIDTH=114><TT><FONT SIZE=2 FACE="Courier New">\eq</FONT></TT>
+</TD><TD WIDTH=427>Tests for the equality of two strings</TD>
+</TR>
+<TR><TD WIDTH=114><TT><FONT SIZE=2 FACE="Courier New">\fileexists</FONT></TT>
+</TD><TD WIDTH=427>Tests for the existance of a file</TD></TR>
+<TR><TD WIDTH=114><TT><FONT SIZE=2 FACE="Courier New">\fixun</FONT></TT>
+</TD><TD WIDTH=427>Examines a string for unusual characters, returning &quot;true&quot; if clean
+</TD></TR>
+<TR><TD WIDTH=114><TT><FONT SIZE=2 FACE="Courier New">\fop</FONT></TT>
+</TD><TD WIDTH=427>Floating point operations</TD></TR>
+<TR><TD WIDTH=114><TT><FONT SIZE=2 FACE="Courier New">\get</FONT></TT>
+</TD><TD WIDTH=427>Obtain the contents of a variable, or &quot;&quot; if the variable is unset
+</TD></TR>
+<TR><TD WIDTH=114><TT><FONT SIZE=2 FACE="Courier New">\htadd</FONT></TT>
+</TD><TD WIDTH=427>Add an entry to an .htusers file</TD></TR>
+<TR><TD WIDTH=114><TT><FONT SIZE=2 FACE="Courier New">\htmlquote</FONT></TT>
+</TD><TD WIDTH=427>Quote text to avoid unwanted HTML parsing</TD>
+</TR>
+<TR><TD WIDTH=114><TT><FONT SIZE=2 FACE="Courier New">\if</FONT></TT>
+</TD><TD WIDTH=427>Conditional statement primitive</TD></TR>
+<TR><TD WIDTH=114><TT><FONT SIZE=2 FACE="Courier New">\include</FONT></TT>
+</TD><TD WIDTH=427>Includes the contents of another file as part of the currently-parsed file
+</TD></TR>
+<TR><TD WIDTH=114><TT><FONT SIZE=2 FACE="Courier New">\index</FONT></TT>
+</TD><TD WIDTH=427>Test for the existence of a string within another string
+</TD></TR>
+<TR><TD WIDTH=114><TT><FONT SIZE=2 FACE="Courier New">\isquery</FONT></TT>
+</TD><TD WIDTH=427>Determine if there is any data being posted from a form
+</TD></TR>
+<TR><TD WIDTH=114><TT><FONT SIZE=2 FACE="Courier New">\isset</FONT></TT>
+</TD><TD WIDTH=427>Test if a given variable is set</TD></TR>
+<TR><TD WIDTH=114><TT><FONT SIZE=2 FACE="Courier New">\money</FONT></TT>
+</TD><TD WIDTH=427>Strips a string of dollar signs and commas, converting dollar amounts to a floating point value.
+</TD></TR>
+<TR><TD WIDTH=114><TT><FONT SIZE=2 FACE="Courier New">\op</FONT></TT>
+</TD><TD WIDTH=427>Perform a binary operation (i.e. addition, subtraction)
+</TD></TR>
+<TR><TD WIDTH=114><TT><FONT SIZE=2 FACE="Courier New">\quote</FONT></TT>
+</TD><TD WIDTH=427>Quotes text without expanding/parsing any contained GUML code
+</TD></TR>
+<TR><TD WIDTH=114><TT><FONT SIZE=2 FACE="Courier New">\rand</FONT></TT>
+</TD><TD WIDTH=427>Outputs a random non-negative integer</TD>
+</TR>
+<TR><TD WIDTH=114><TT><FONT SIZE=2 FACE="Courier New">\set</FONT></TT>
+</TD><TD WIDTH=427>Sets the a variable to a given value</TD></TR>
+<TR><TD WIDTH=114><TT><FONT SIZE=2 FACE="Courier New">\sqlexec</FONT></TT>
+</TD><TD WIDTH=427>Executes a SQL command to interface with a database
+</TD></TR>
+<TR><TD WIDTH=114><TT><FONT SIZE=2 FACE="Courier New">\sqlquote</FONT></TT>
+</TD><TD WIDTH=427>Quotes text to avoid unwanted SQL parsing</TD>
+</TR>
+<TR><TD WIDTH=114><TT><FONT SIZE=2 FACE="Courier New">\sqlrow</FONT></TT>
+</TD><TD WIDTH=427>Retrieves the data from the next row of the results of a <I>sqlexec</I> call
+</TD></TR>
+<TR><TD WIDTH=114><TT><FONT SIZE=2 FACE="Courier New">\substr</FONT></TT>
+</TD><TD WIDTH=427>Returns a requested subset of a given string
+</TD></TR>
+<TR><TD WIDTH=114><TT><FONT SIZE=2 FACE="Courier New">\tmode</FONT></TT>
+</TD><TD WIDTH=427>Places the GUML parser in &quot;text mode&quot;
+</TD></TR>
+<TR><TD WIDTH=114><TT><FONT SIZE=2 FACE="Courier New">\unset</FONT></TT>
+</TD><TD WIDTH=427>Clear a variable setting</TD></TR>
+</TABLE>
+<P>
+<P>
+In addition to this list and the reference in Part IV, we will
+introduce several of these primitives in detail in specific examples
+and applications of GUML in the following sections.<BR>
+<P>
+<A NAME="_Toc372599815"><B>Command vs. Text Mode</B></A><BR>
+<P>
+When parsing a file, processing an argument, or expanding a variable,
+GUML begins in command mode (a.k.a. cmode).  The main feature
+of this mode is that all whitespace is ignored, so one can put
+in blank lines, indentation, or tabs as one wishes without it
+being outputted.  In text mode (a.k.a., tmode), on the other hand,
+spaces, tabs, and newlines are outputted normally, as one would
+want in text.  When the group, argument, or variable ends, GUML
+returns to whatever mode it was in before, either cmode or tmode.
+<BR>
+<P>
+One can switch between modes by hand by using the <TT><FONT SIZE=2 FACE="Courier New">\cmode</FONT></TT><FONT SIZE=2>
+and </FONT><TT><FONT SIZE=2 FACE="Courier New">\tmode</FONT></TT><FONT SIZE=2>
+primitives.  Also, as soon as any text is encountered, text mode
+is automatically started.  As such, the distinction between modes
+is tenuous at best, and probably best forgotten-particularly in
+the case of GUML-generated HTML in which formatting will be ignored
+by the browser anyway.  Simply remember that everything that isn't
+a command will be outputted by the processor.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>Leading spaces at the start of the line are ignored
+in either mode.  Use of a &quot;control-space&quot;, a backslash
+followed by a space, can be used to force output of a space. 
+A backslash at the end of a line also forces leading spaced on
+the next line to be read in.<BR>
+</FONT>
+<P>
+<B><FONT SIZE=2>Variables</FONT></B>
+<P>
+<IMG SRC="IMG00002.GIF"><BR>
+<P>
+<FONT SIZE=2>The values of variables in GUML are assigned and
+retrieved through the primitive functions </FONT><TT><FONT SIZE=2 FACE="Courier New">\set</FONT></TT><FONT SIZE=2>
+and </FONT><TT><FONT SIZE=2 FACE="Courier New">\get</FONT></TT><FONT SIZE=2>,
+and a special use of the &quot;\&quot; character.  The syntax
+of these commands is:<BR>
+</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\set{</FONT></TT><I><FONT SIZE=2>variable</FONT></I><TT><FONT SIZE=2 FACE="Courier New">}{</FONT></TT><I><FONT SIZE=2>value</FONT></I><TT><FONT SIZE=2 FACE="Courier New">}</FONT></TT><FONT SIZE=2>
+- Sets the value of the variable named <I>variable</I> to that
+given by <I>value</I></FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\get{</FONT></TT><I><FONT SIZE=2>variable</FONT></I><TT><FONT SIZE=2 FACE="Courier New">}</FONT></TT><FONT SIZE=2>
+- Gets the content of the variable named <I>variable</I>, or &quot;&quot;
+if it is unset</FONT>
+<P>
+<FONT SIZE=2>\<I>variable</I> - Gets the content of the variable
+named <I>variable</I> and parsers any GUML code inside<BR>
+</FONT>
+<P>
+<FONT SIZE=2>For example,<BR>
+</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> \set{b}{yadda} </FONT></TT><FONT SIZE=2>sets
+the value of variable <I>b</I> to the string &quot;yadda&quot;</FONT>
+<P>
+<FONT SIZE=2> </FONT><TT><FONT SIZE=2 FACE="Courier New">\get{a}</FONT></TT><FONT SIZE=2>
+ returns the empty string &quot;&quot;</FONT>
+<P>
+<FONT SIZE=2> </FONT><TT><FONT SIZE=2 FACE="Courier New">\b  </FONT></TT><FONT SIZE=2>
+returns &quot;yadda&quot;</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> \set{a}{\get{b}}</FONT></TT><FONT SIZE=2>
+sets the value of variable a to that of variable b</FONT>
+<P>
+<FONT SIZE=2> </FONT><TT><FONT SIZE=2 FACE="Courier New">\get{a}</FONT></TT><FONT SIZE=2>
+ returns the string &quot;yadda&quot;</FONT>
+<P>
+<FONT SIZE=2> </FONT><TT><FONT SIZE=2 FACE="Courier New">\get{b}</FONT></TT><FONT SIZE=2>
+ returns the string &quot;yadda&quot;<BR>
+</FONT>
+<P>
+<I><B><FONT SIZE=2>\get vs. \</FONT></B></I>
+<P>
+<FONT SIZE=2>This shows one way to set a variable, with the </FONT><TT><FONT SIZE=2 FACE="Courier New">\set</FONT></TT><FONT SIZE=2>
+primitive and two separate ways to retrieve the contents contained
+within a variable.  The primary difference between the two methods
+of variable retrieval are how their contents are handled by the
+GUML parser.  In the first case, using </FONT><TT><FONT SIZE=2 FACE="Courier New">\get</FONT></TT><FONT SIZE=2>,
+the GUML parser is instructed <I>not</I> to evaluate the contents
+of the variable - this is the most typical way to retrieve data
+and is the way that any user-entered data should <I>always</I>
+be obtained.  If the data contains any of the GUML special characters
+(&quot;\&quot;, &quot;{&quot;, &quot;}&quot; and &quot;#&quot;)
+then retrieving the data with the backslash operator is certain
+to produce unexpected, and unwanted, results.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>When you are absolutely certain that none of GUML's
+special characters will be in a variable's contents, you can use
+the backslash to retrieve the contents of a variable.  This is
+because, in short, accessing variables in this way will not only
+tell GUML to retrieve the contents (as </FONT><TT><FONT SIZE=2 FACE="Courier New">\get</FONT></TT><FONT SIZE=2>
+does) but also to parse the contents.  Consider the following
+snippet of code:<BR>
+</FONT>
+<TABLE>
+<TR><TD WIDTH=295><TT><I><FONT SIZE=2 FACE="Courier New">GUML</FONT></I></TT>
+</TD><TD WIDTH=295><I><FONT SIZE=2 FACE="Courier New">PERL</FONT></I>
+</TD></TR>
+<TR><TD WIDTH=295><TT><FONT SIZE=2 FACE="Courier New">\set{b}{zoiks}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\set{a}{\get{b}}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\set{b}{murp}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\get{a}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\a</FONT></TT>
+</TD><TD WIDTH=295><TT><I><FONT SIZE=2 FACE="Courier New"> </FONT></I><FONT SIZE=2 FACE="Courier New">$b = &quot;zoiks&quot;;</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> $a = $b;</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> $b = &quot;murp&quot;;</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> print '$a'; (approx.)</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> print $a;</FONT></TT>
+</TD></TR>
+</TABLE>
+<P>
+<P>
+This returns the string &quot;zoiks&quot; twice, because the command
+<TT><FONT SIZE=2 FACE="Courier New">\set{a}{\get{b}}</FONT></TT><FONT SIZE=2>
+sets the value of the variable a to the value given in the second
+argument of </FONT><TT><FONT SIZE=2 FACE="Courier New">\set</FONT></TT><FONT SIZE=2>.
+ In this case, this is the result of the command </FONT><TT><FONT SIZE=2 FACE="Courier New">\get{b}</FONT></TT><FONT SIZE=2>,
+or the string &quot;zoiks&quot;.  This is analogous to our earlier
+example of nested commands with the \op primitive.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>It's worthwhile to note that there's no direct correlation
+in PERL to the </FONT><TT><FONT SIZE=2 FACE="Courier New">\get{<I>var</I>}</FONT></TT><FONT SIZE=2>
+primitive.  The print command with quotes is similar, stating
+&quot;print the contents of this statement, but don't evaluate
+them.&quot;<BR>
+</FONT>
+<P>
+<FONT SIZE=2>Let's see how </FONT><TT><FONT SIZE=2 FACE="Courier New">\</FONT></TT><FONT SIZE=2>
+and </FONT><TT><FONT SIZE=2 FACE="Courier New">\get</FONT></TT><FONT SIZE=2>
+behave under different circumstances:<BR>
+</FONT>
+<TABLE>
+<TR><TD WIDTH=295><TT><I><FONT SIZE=2 FACE="Courier New">GUML</FONT></I></TT>
+</TD><TD WIDTH=295><I>PERL</I></TD></TR>
+<TR><TD WIDTH=295><TT><FONT SIZE=2 FACE="Courier New">\set{b}{zoiks}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\set{a}{\quote{\get{b}}}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\set{b}{murp}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\get{a}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\a</FONT></TT>
+</TD><TD WIDTH=295><TT><FONT SIZE=2 FACE="Courier New"> $b = &quot;zoiks&quot;;</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> sub a { return $b; }</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> $b = &quot;murp&quot;;</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> print '&amp;a'; (see above)</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> print &amp;a;</FONT></TT>
+</TD></TR>
+</TABLE>
+<P>
+<P>
+This outputs &quot;\get{b}&quot; and &quot;murp&quot; respectively.
+ In this case, we used the <TT><FONT SIZE=2 FACE="Courier New">\quote</FONT></TT><FONT SIZE=2>
+primitive to set the value of the variable '<I>a</I>' to the string
+&quot;\get{b}&quot;.  When run through </FONT><TT><FONT SIZE=2 FACE="Courier New">\get</FONT></TT><FONT SIZE=2>,
+GUML knew not to parse it and just returned &quot;\get{b}&quot;
+- as it should.  Using the backslash operator, GUML was instructed
+to expand the code within '<I>a</I>' - or to &quot;get and display
+the contents of '<I>b</I>'.&quot;  Hence, &quot;murp&quot;.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>This should blink a warning light for security. 
+Ultimately, the </FONT><TT><FONT SIZE=2 FACE="Courier New">\</FONT></TT><FONT SIZE=2>
+operator is a powerful means to allow designers to easily extend
+GUML's functionality through macros.  However, if used in conjunction
+with user-input data, it could create some serious problems. 
+For the most part, you are best off sticking with </FONT><TT><FONT SIZE=2 FACE="Courier New">\get{<I>var</I>}</FONT></TT><FONT SIZE=2>
+rather than </FONT><TT><FONT SIZE=2 FACE="Courier New">\<I>var</I></FONT></TT><FONT SIZE=2>.
+ The backslash operator is the door to create and use macros within
+GUML, discussed later.<BR>
+</FONT>
+<P>
+<I><B><FONT SIZE=2>Variable Scope</FONT></B></I>
+<P>
+<FONT SIZE=2>All variables have global scope; that is, there is
+only one instance of each variable within each request sent to
+the Web server.  The value of a variable may be set within any
+portion of a page, and </FONT><TT><FONT SIZE=2 FACE="Courier New">\set</FONT></TT><FONT SIZE=2>
+stores the value until another </FONT><TT><FONT SIZE=2 FACE="Courier New">\set</FONT></TT><FONT SIZE=2>
+changes the value.  Consider this:<BR>
+</FONT>
+<TABLE>
+<TR><TD WIDTH=295><TT><I><FONT SIZE=2 FACE="Courier New">GUML</FONT></I></TT>
+</TD><TD WIDTH=295><I><FONT SIZE=2 FACE="Courier New">PERL</FONT></I>
+</TD></TR>
+<TR><TD WIDTH=295><TT><FONT SIZE=2 FACE="Courier New"> \get{a}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> \set{a}{zoiks}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> \get{a}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> \set{a}{murp}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> \get{a}</FONT></TT>
+</TD><TD WIDTH=295><FONT SIZE=2 FACE="Courier New"> print $a;</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> $a = &quot;zoiks&quot;;</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> print $a;</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> $a = &quot;murp&quot;;</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> print $a;</FONT></TT>
+</TD></TR>
+</TABLE>
+<P>
+<P>
+This returns:  &quot;&quot;, &quot;zoiks&quot;, &quot;murp&quot;,
+as each <TT><FONT SIZE=2 FACE="Courier New">\get</FONT></TT><FONT SIZE=2>
+and </FONT><TT><FONT SIZE=2 FACE="Courier New">\set</FONT></TT><FONT SIZE=2>
+is encounters in succession.  This is to be expected, as variables
+can easily be overwritten.  <BR>
+</FONT>
+<P>
+<FONT SIZE=2>Variables are ephemeral, however, lasting only for
+a particular page request (i.e. if the same variable is used on
+two separate Web pages, there is no connectivity between its two
+instances).  Once GUML has delivered a file to the Web server
+to be displayed on your browser, it exits, clearing all of its
+variable settings, so even reloading the same page will not reuse
+old variables.  Using the above example, running a second time
+would generate the same exact output, rather than &quot;murp&quot;,
+&quot;zoiks&quot;, and &quot;murp&quot; since the last value of
+'<I>a</I>' isn't carried over to the second, and subsequent instance.
+<BR>
+</FONT>
+<P>
+<FONT SIZE=2>To create variables which are available in every
+GUML request, you should set the variable within a header file
+(see Part V for more on header files).  This effectively creates
+a constant, whose value you can change if need be.<BR>
+</FONT>
+<P>
+<I><B><FONT SIZE=2>Clearing Variables</FONT></B></I>
+<P>
+<FONT SIZE=2>If you have a variable that has a value which you
+wish to clear, the </FONT><TT><FONT SIZE=2 FACE="Courier New">\unset</FONT></TT><FONT SIZE=2>
+primitive instructs GUML to remove a variable from the collection
+of defined variables:<BR>
+</FONT>
+<P>
+<FONT SIZE=2> </FONT><TT><FONT SIZE=2 FACE="Courier New">\unset{</FONT></TT><I><FONT SIZE=2>variable</FONT></I><TT><FONT SIZE=2 FACE="Courier New">}</FONT></TT><FONT SIZE=2>
+- unsets the variable <I>variable</I> if it has already been set
+<BR>
+</FONT>
+<P>
+<FONT SIZE=2>The result of this operation is that subsequent calls
+to </FONT><TT><FONT SIZE=2 FACE="Courier New">\isset{</FONT></TT><I><FONT SIZE=2>var</FONT></I><TT><FONT SIZE=2 FACE="Courier New">}</FONT></TT><FONT SIZE=2>
+return &quot;&quot; until the command </FONT><TT><FONT SIZE=2 FACE="Courier New">\set{</FONT></TT><I><FONT SIZE=2>var</FONT></I><TT><FONT SIZE=2 FACE="Courier New">}{</FONT></TT><I><FONT SIZE=2>val</FONT></I><TT><FONT SIZE=2 FACE="Courier New">}</FONT></TT><FONT SIZE=2>
+is again invoked.  For example:<BR>
+</FONT>
+<TABLE>
+<TR><TD WIDTH=295><TT><I><FONT SIZE=2 FACE="Courier New">GUML</FONT></I></TT>
+</TD><TD WIDTH=295><TT><I><FONT SIZE=2 FACE="Courier New">PERL</FONT></I></TT>
+</TD></TR>
+<TR><TD WIDTH=295><TT><FONT SIZE=2 FACE="Courier New"> \get{a}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> \set{a}{zoiks}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> \get{a}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> \unset{a}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> \get{a}</FONT></TT>
+</TD><TD WIDTH=295><TT><FONT SIZE=2 FACE="Courier New"> print $a;</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> $a = &quot;zoiks&quot;;</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> print $a;</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> $a = &quot;&quot;;</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> print $a;</FONT></TT>
+</TD></TR>
+</TABLE>
+<P>
+<P>
+As you might suspect, this generates the output: &quot;&quot;,
+&quot;zoiks&quot;, &quot;&quot;.  <TT><FONT SIZE=2 FACE="Courier New">\Unset</FONT></TT><FONT SIZE=2>
+may seem a bit on the useless side, but when used in conjunction
+with header files, global variables (or semi-constants) and macros,
+the </FONT><TT><FONT SIZE=2 FACE="Courier New">\unset</FONT></TT><FONT SIZE=2>
+primitive enables greater levels of control over the behavior
+of your GUML code.<BR>
+</FONT>
+<P>
+<A NAME="_Toc372599817"><B><FONT SIZE=2>Operators</FONT></B></A>
+<BR>
+<P>
+<FONT SIZE=2>In GUML, integer arithmetic is performed via the
+</FONT><TT><FONT SIZE=2 FACE="Courier New">\op</FONT></TT><FONT SIZE=2>
+function.  Its syntax is:<BR>
+</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\op{<I>val1</I>}{<I>op</I>}{<I>val2</I>}</FONT></TT><FONT SIZE=2>
+- Perform the mathematical operation indicated by <I>op</I> on
+values <I>val1</I> and <I>val2<BR>
+</I></FONT>
+<P>
+<FONT SIZE=2>Here, <I>val1</I> and <I>val2</I> are expected to
+be strings representing numbers (e.g., &quot;23&quot; or &quot;-5&quot;,
+not &quot;three&quot;), and  <I>op</I> indicates which operation
+to perform on the numbers given.  Although, typically, GUML will
+be able to handle commands that lack the proper number of arguments
+(as noted in the Syntax section), the </FONT><TT><FONT SIZE=2 FACE="Courier New">\op</FONT></TT><FONT SIZE=2>
+command (and it's floating-point cousin, </FONT><TT><FONT SIZE=2 FACE="Courier New">\fop</FONT></TT><FONT SIZE=2>)
+are notable exceptions.  Each of these commands specifically requires
+that all three arguments are present, generating an error if not.
+<BR>
+</FONT>
+<P>
+<FONT SIZE=2>The following table outlines the functions performed
+by </FONT><TT><FONT SIZE=2 FACE="Courier New">\op</FONT></TT><FONT SIZE=2>:
+<BR>
+</FONT>
+<P>
+<FONT SIZE=2> <I>op</I> operation  returns<BR>
+</FONT>
+<P>
+<FONT SIZE=2> </FONT><TT><FONT SIZE=2 FACE="Courier New">+</FONT></TT><FONT SIZE=2>
+sum   <I>val1</I>+<I>val2</I></FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">-</FONT></TT><FONT SIZE=2>
+difference  <I>val1</I>-<I>val2</I></FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">*</FONT></TT><FONT SIZE=2>
+multiplication  <I>val1</I>*<I>val2</I></FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">/</FONT></TT><FONT SIZE=2>
+integer quotient  <I>val1</I>/<I>val2</I></FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">%</FONT></TT><FONT SIZE=2>
+modulus   integer remainder when <I>val1</I> is divided by <I>val2
+<BR>
+</I></FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">&lt;</FONT></TT><FONT SIZE=2>
+less than   &quot;true&quot; if <I>val1</I> is less than <I>val2</I>,
+else &quot;&quot;</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">&gt;</FONT></TT><FONT SIZE=2>
+greater than  &quot;true&quot; if <I>val1</I> is greater than
+<I>val</I>2, else &quot;&quot;</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">&lt;=</FONT></TT><FONT SIZE=2>
+less than or equal to &quot;true&quot; if <I>val1</I> is less
+than or equal to <I>val2</I>, else &quot;&quot;</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">&gt;=</FONT></TT><FONT SIZE=2>
+greater than or equal to &quot;true&quot; if <I>val1</I> is greater
+than or equal to <I>val2</I>, else &quot;&quot;</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">=</FONT></TT><FONT SIZE=2>
+equals   &quot;true&quot; if <I>val1</I> equals <I>val2</I>, else
+&quot;&quot;<BR>
+</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">|</FONT></TT><FONT SIZE=2>
+bitwise or  </FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">&amp;</FONT></TT><FONT SIZE=2>
+bitwise and  <I>see below</I></FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">^</FONT></TT><FONT SIZE=2>
+bitwise exclusive-or <BR>
+</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">v</FONT></TT><FONT SIZE=2>
+or </FONT><TT><FONT SIZE=2 FACE="Courier New">V</FONT></TT><FONT SIZE=2>
+validate number &quot;true&quot; if <I>val1</I> is a valid string
+representation of an integer, else &quot;&quot;<BR>
+</FONT>
+<P>
+<I><B><FONT SIZE=2>\op Notes</FONT></B></I>
+<UL>
+<LI><FONT SIZE=2>Note that </FONT><TT><FONT SIZE=2 FACE="Courier New">\eq</FONT></TT><FONT SIZE=2>,
+a primitive mentioned earlier, tests for string equality, while
+using </FONT><TT><FONT SIZE=2 FACE="Courier New">=</FONT></TT><FONT SIZE=2>
+tests for numerical equality; </FONT><TT><FONT SIZE=2 FACE="Courier New">\eq{012}{12}</FONT></TT><FONT SIZE=2>
+is false (returns &quot;&quot;) but </FONT><TT><FONT SIZE=2 FACE="Courier New">\op{012}{=}{12}</FONT></TT><FONT SIZE=2>
+is true.  This is analogous to the behavior PERL. </FONT>
+</UL>
+<P>
+<FONT SIZE=2></FONT>
+<UL>
+<LI><FONT SIZE=2>The </FONT><TT><FONT SIZE=2 FACE="Courier New">v</FONT></TT><FONT SIZE=2>
+operation exposes the peculiarity that </FONT><TT><FONT SIZE=2 FACE="Courier New">\op</FONT></TT><FONT SIZE=2>
+still requires a third argument even if it's not used.  The string
+&quot;0&quot; or &quot;unused&quot; is always a good choice, i.e.:</FONT>
+</UL>
+<P>
+<FONT SIZE=2></FONT>
+<TABLE>
+<TR><TD WIDTH=280><TT><I><FONT SIZE=2 FACE="Courier New">GUML</FONT></I></TT>
+</TD><TD WIDTH=280><I><FONT SIZE=2 FACE="Courier New">PERL</FONT></I>
+</TD></TR>
+<TR><TD WIDTH=280><TT><I><FONT SIZE=2 FACE="Courier New"> </FONT></I><FONT SIZE=2 FACE="Courier New">\op{4}{v}{unused}</FONT></TT>
+</TD><TD WIDTH=280><TT><FONT SIZE=2 FACE="Courier New"> print 4 =~ /\d+/; </FONT></TT>
+</TD></TR>
+<TR><TD WIDTH=280><TT><I><FONT SIZE=2 FACE="Courier New"> </FONT></I><FONT SIZE=2 FACE="Courier New">\op{pasta}{v}{unused}</FONT></TT>
+</TD><TD WIDTH=280><TT><FONT SIZE=2 FACE="Courier New"> print &quot;pasta&quot; =~ /\d+/</FONT></TT>
+</TD></TR>
+</TABLE>
+<P>
+<P>
+Naturally, you can use variables (with the <TT><FONT SIZE=2 FACE="Courier New">\get</FONT></TT><FONT SIZE=2>
+primitive) instead of numbers and words, as the utility of testing
+whether &quot;4&quot; is an integer or not is pretty minimal.
+ Test cases, like this, are best used in conjunction with conditional
+statements, discussed in-depth in the next section.<BR>
+</FONT>
+<P>
+<I><B><FONT SIZE=2>A Note on Data Types</FONT></B></I>
+<P>
+<FONT SIZE=2>Many languages have several different kinds of data
+types (i.e. integers, strings, arrays, etc.).  This allows programmers
+to interact with and manipulate data using functions and commands
+that make sense for that data type (for example, multiplying strings
+doesn't make much sense).<BR>
+</FONT>
+<P>
+<FONT SIZE=2>In GUML there is only one data type, the string.
+ Functions which expect numbers, like </FONT><TT><FONT SIZE=2 FACE="Courier New">\op</FONT></TT><FONT SIZE=2>,
+first convert their input to numbers, perform the requested calculation,
+then convert the result to a string.  In this way, we need not
+worry about what type of data is in a variable, nor whether a
+function is being called with the right type of input.  When a
+function tries this conversion on a string which doesn't represent
+a number, like &quot;blammo&quot;, the input is taken to be zero.
+ Thus, the result of the command </FONT><TT><FONT SIZE=2 FACE="Courier New">\op{work}{+}{toil}</FONT></TT><FONT SIZE=2>
+is the string &quot;0&quot;.<BR>
+</FONT>
+<P>
+<I><B><FONT SIZE=2>Bitwise Operations</FONT></B></I>
+<P>
+<FONT SIZE=2>The bitwise operations </FONT><TT><FONT SIZE=2 FACE="Courier New">|</FONT></TT><FONT SIZE=2>,
+</FONT><TT><FONT SIZE=2 FACE="Courier New">&amp;</FONT></TT><FONT SIZE=2>,
+and </FONT><TT><FONT SIZE=2 FACE="Courier New">^</FONT></TT><FONT SIZE=2>
+compare the binary representations of the numbers <I>val1</I>
+and <I>val2</I> and return a new number whose bits are the logical
+and, or, and exclusive-or of the bits in the input numbers.  These
+operations are included only to appease the veteran C programmer,
+and will likely find little practical use.  As such, for more
+details on these operations, the reader is referred to any introductory
+C text.<BR>
+</FONT>
+<P>
+<I><B><FONT SIZE=2>Floating Point Operations</FONT></B></I>
+<P>
+<FONT SIZE=2>Floating-point operations (those involving non-integral,
+or real numbers) are performed with the </FONT><TT><FONT SIZE=2 FACE="Courier New">\fop</FONT></TT><FONT SIZE=2>
+command, with syntax almost identical to that of </FONT><TT><FONT SIZE=2 FACE="Courier New">\op:
+<BR>
+</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\fop{<I>val1</I>}{<I>op</I>}{<I>val2</I>}{<I>digits</I>}</FONT></TT><FONT SIZE=2>
+- Perform the mathematical operation indicated by <I>op</I> on
+values <I>val1</I> and <I>val2</I>, with optional argument <I>digits</I>
+indicating the degree of accuracy.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>In addition those operations performed by </FONT><TT><FONT SIZE=2 FACE="Courier New">\op</FONT></TT><FONT SIZE=2>,
+above, the </FONT><TT><FONT SIZE=2 FACE="Courier New">\fop</FONT></TT><FONT SIZE=2>
+primitive supports the following:<BR>
+</FONT>
+<P>
+<I><FONT SIZE=2>op</FONT></I><FONT SIZE=2> operation  returns
+<BR>
+</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">/</FONT></TT><FONT SIZE=2>
+real quotient  the floating-point value <I>val1</I>/<I>val2</I></FONT>
+<P>
+<I><FONT SIZE=2>** </FONT></I><FONT SIZE=2>exponential the floating-point
+value <I>val1<SUP>val2<BR>
+</SUP></I></FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">f</FONT></TT><FONT SIZE=2>
+or </FONT><TT><FONT SIZE=2 FACE="Courier New">F</FONT></TT><FONT SIZE=2>
+floor   the &quot;floor&quot;, or integer part, of <I>val1</I></FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">c</FONT></TT><FONT SIZE=2>
+or </FONT><TT><FONT SIZE=2 FACE="Courier New">C</FONT></TT><FONT SIZE=2>
+ceiling   the &quot;ceiling&quot;, or next greatest integer, of
+<I>val1</I></FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">r</FONT></TT><FONT SIZE=2>
+or </FONT><TT><FONT SIZE=2 FACE="Courier New">R</FONT></TT><FONT SIZE=2>
+round   <I>val1</I> rounded to the nearest integer</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">v</FONT></TT><FONT SIZE=2>
+or </FONT><TT><FONT SIZE=2 FACE="Courier New">V</FONT></TT><FONT SIZE=2>
+validate number &quot;true&quot; if <I>val1</I> is a valid string
+representation of a   floating-point value, else &quot;&quot;</FONT>
+<P>
+<IMG SRC="IMG00003.GIF"><BR>
+<P>
+<I><B><FONT SIZE=2>\fop Notes </FONT></B></I>
+<UL>
+<LI><FONT SIZE=2>The modulus (</FONT><TT><FONT SIZE=2 FACE="Courier New">%</FONT></TT><FONT SIZE=2>)
+operator is not supported by the </FONT><TT><FONT SIZE=2 FACE="Courier New">\fop</FONT></TT><FONT SIZE=2>
+function.</FONT>
+</UL>
+<P>
+<FONT SIZE=2></FONT>
+<UL>
+<LI><FONT SIZE=2>As with the </FONT><TT><FONT SIZE=2 FACE="Courier New">v</FONT></TT><FONT SIZE=2>
+operation in </FONT><TT><FONT SIZE=2 FACE="Courier New">\op</FONT></TT><FONT SIZE=2>,
+the unary operators </FONT><TT><FONT SIZE=2 FACE="Courier New">f</FONT></TT><FONT SIZE=2>,
+</FONT><TT><FONT SIZE=2 FACE="Courier New">c</FONT></TT><FONT SIZE=2>,
+</FONT><TT><FONT SIZE=2 FACE="Courier New">r</FONT></TT><FONT SIZE=2>,
+and </FONT><TT><FONT SIZE=2 FACE="Courier New">v</FONT></TT><FONT SIZE=2>
+require a third argument to </FONT><TT><FONT SIZE=2 FACE="Courier New">\fop</FONT></TT><FONT SIZE=2>,
+even though this value is never used.</FONT>
+</UL>
+<P>
+<FONT SIZE=2></FONT>
+<UL>
+<LI><FONT SIZE=2>Though GUML does a respectable job of determining
+how many digits after the decimal point to return, a fourth argument
+may also be given to force the number of digits after the decimal
+place to <I>digits</I>.</FONT>
+</UL>
+<P>
+<FONT SIZE=2></FONT>
+<P>
+<I><B><FONT SIZE=2>The \money Primitive</FONT></B></I>
+<P>
+<FONT SIZE=2>Finally, in order to perform calculations with strings
+representing amounts of money, GUML uses a special primitive.
+ The \money command attempts to convert a &quot;money&quot;-type
+string (of the form $dd,ddd.cc) to a floating-point value (ddddd.cc)
+by removing the dollar signs and commas.  <BR>
+</FONT>
+<P>
+<FONT SIZE=2>If the string contains any character other than a
+number (0-9), a dollar sign ($), a comma (,), or a decimal point
+(a.k.a. period), the function returns the empty string &quot;&quot;;
+otherwise, the stripped and valid string is returned.  This command
+is useful for handling user-entered data which may, through egregious
+lack of foresight on behalf of the user, contain dollar signs
+and/or commas.  For example, the command<BR>
+</FONT>
+<TABLE>
+<TR><TD WIDTH=295><TT><I><FONT SIZE=2 FACE="Courier New">GUML</FONT></I></TT>
+</TD><TD WIDTH=295><I><FONT SIZE=2 FACE="Courier New">PERL</FONT></I>
+</TD></TR>
+<TR><TD WIDTH=295><TT><FONT SIZE=2 FACE="Courier New"> \fop{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">   \money{$10,240.37}}{+}{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">     \money{1725.1}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> }</FONT></TT>
+</TD><TD WIDTH=295><TT><FONT SIZE=2 FACE="Courier New"> $a = '$10,240.37';</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> $a =~ y/$,//d;</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> printf &quot;%5.3f&quot;, $a + 1725.1;</FONT></TT>
+</TD></TR>
+</TABLE>
+<P>
+<P>
+returns the string &quot;11965.47&quot;.  The <TT><FONT SIZE=2 FACE="Courier New">\money</FONT></TT><FONT SIZE=2>
+command does not enforce proper placement of commas or dollar
+signs (</FONT><TT><FONT SIZE=2 FACE="Courier New">\money{15,2,19$8,2.1$$,18,5}</FONT></TT><FONT SIZE=2>
+returns the string &quot;1521982.1185&quot;), nor does it complain
+if it encounters more than one decimal point (</FONT><TT><FONT SIZE=2 FACE="Courier New">\money{134.10.2.10}</FONT></TT><FONT SIZE=2>
+returns the string &quot;134.10.2.10&quot;).  This should not
+be construed as an abuse of grammar since, presumably, </FONT><TT><FONT SIZE=2 FACE="Courier New">\money</FONT></TT><FONT SIZE=2>
+will only be used in conjunction with other functions which verify
+that this output is indeed a proper number, such as:<BR>
+</FONT>
+<TABLE>
+<TR><TD WIDTH=295><TT><I><FONT SIZE=2 FACE="Courier New">GUML</FONT></I></TT>
+</TD><TD WIDTH=295><I><FONT SIZE=2 FACE="Courier New">PERL</FONT></I>
+</TD></TR>
+<TR><TD WIDTH=295><TT><FONT SIZE=2 FACE="Courier New"> \fop{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">   \money{$10,240.37}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">   {v}{blank}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> }</FONT></TT>
+</TD><TD WIDTH=295><FONT SIZE=2 FACE="Courier New"> $a = '$10,240.37';</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> $a =~ y/$,//d;</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> print $a =~ /^\d+\.\d+$/;</FONT></TT>
+</TD></TR>
+</TABLE>
+<P>
+<P>
+Additional testing could be done to ensure that it only had 2
+digits after the decimal point (or it could be forced through
+the \fop primitive to be truncated to 2 digits).<BR>
+<P>
+Having learned about primitives and variables, along with a wide
+variety of mathematical operations, it's time to take a look at
+conditional statements and see how to use them in conjunction
+with what we've learned so far.
+<P>
+<A NAME="_Toc372599818"><B>Conditional Statements</B></A><BR>
+<P>
+Conditionals allow flow control in your document.  This can create
+Web pages which have varying output based upon the outcome of
+one or more tests.  If someone is coming from Mexico, send them
+the page in Spanish, if they are a registered user, check for
+new content that might interest them, etc.  Through the use of
+conditionals, documents on the Web gain a power that HTML simply
+cannot give - they are no longer stuck doing just one thing. 
+There is one built-in conditional primitive, <TT><FONT SIZE=2 FACE="Courier New">\if</FONT></TT><FONT SIZE=2>.
+ Its syntax is:<BR>
+</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\if{<I>test</I>}{<I>then</I>}{<I>else</I>}</FONT></TT><FONT SIZE=2>
+ - expand either <I>then</I> or <I>else</I> (if given) according
+to the value of <I>test<BR>
+</I></FONT>
+<P>
+<FONT SIZE=2>If the string <I>test</I> is not the empty string
+&quot;&quot;, the second argument <I>then</I> is expanded and
+returned.  Otherwise, if the optional third argument <I>else</I>
+is given, it is expanded and returned; if no third argument is
+specified and <I>test</I> is &quot;&quot;, the </FONT><TT><FONT SIZE=2 FACE="Courier New">\if</FONT></TT><FONT SIZE=2>
+command returns the empty string &quot;&quot;.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>The </FONT><TT><FONT SIZE=2 FACE="Courier New">\if</FONT></TT><FONT SIZE=2>
+command is often used in conjunction with the </FONT><TT><FONT SIZE=2 FACE="Courier New">\isset</FONT></TT><FONT SIZE=2>
+command which, as the name suggests, determines whether a variable
+has been set yet:<BR>
+</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\isset{</FONT></TT><I><FONT SIZE=2>var</FONT></I><TT><FONT SIZE=2 FACE="Courier New">}</FONT></TT><FONT SIZE=2>
+- Returns the string &quot;true&quot; if the value of the variable
+named <I>var </I>has been set, otherwise returns the empty string
+&quot;&quot;.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>An example of such a use would be:<BR>
+</FONT>
+<TABLE>
+<TR><TD WIDTH=295><TT><I><FONT SIZE=2 FACE="Courier New">GUML</FONT></I></TT>
+</TD><TD WIDTH=295><I><FONT SIZE=2 FACE="Courier New">PERL</FONT></I>
+</TD></TR>
+<TR><TD WIDTH=295><TT><FONT SIZE=2 FACE="Courier New">\if{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">  \isset{USER}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">}{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">  Hello, user \get{USER}.</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">}{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">  You are a guest.</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> }</FONT></TT>
+</TD><TD WIDTH=295><FONT SIZE=2 FACE="Courier New"> if ($user) {</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">   print &quot;Hello, user $user.&quot;;</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> } else {</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">   print &quot;You are a guest.&quot;;</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> }</FONT></TT>
+</TD></TR>
+</TABLE>
+<P>
+which greets a user by name or informs them of their guesthood.
+<BR>
+<P>
+Just as the <TT><FONT SIZE=2 FACE="Courier New">\op</FONT></TT><FONT SIZE=2>
+command expects its input to be strings representing numbers,
+the </FONT><TT><FONT SIZE=2 FACE="Courier New">\if</FONT></TT><FONT SIZE=2>
+command expects a Boolean (or &quot;true or false&quot;) value
+as its first argument.  According to GUML, the string &quot;true&quot;
+is considered a &quot;true&quot; value, as is the string &quot;false&quot;.
+ In fact, any non-empty string (even &quot;0&quot;, unlike in
+PERL) given as the first argument causes </FONT><TT><FONT SIZE=2 FACE="Courier New">\if</FONT></TT><FONT SIZE=2>
+to expand its second argument.  Only when it receives an empty
+string in its first argument does </FONT><TT><FONT SIZE=2 FACE="Courier New">\if</FONT></TT><FONT SIZE=2>
+expand the optional third argument.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>Another GUML primitive which may be useful within
+a conditional statement is the </FONT><TT><FONT SIZE=2 FACE="Courier New">\rand</FONT></TT><FONT SIZE=2>
+function:<BR>
+</FONT>
+<P>
+<FONT SIZE=2> </FONT><TT><FONT SIZE=2 FACE="Courier New">\rand{</FONT></TT><I><FONT SIZE=2>n</FONT></I><TT><FONT SIZE=2 FACE="Courier New">}</FONT></TT><FONT SIZE=2>
+ - Returns a pseudo-random integer between 0 and <I>n</I>-1, inclusive.
+<BR>
+</FONT>
+<P>
+<FONT SIZE=2>For example, the command<BR>
+</FONT>
+<TABLE>
+<TR><TD WIDTH=295><TT><I><FONT SIZE=2 FACE="Courier New">GUML</FONT></I></TT>
+</TD><TD WIDTH=295><I><FONT SIZE=2 FACE="Courier New">PERL</FONT></I>
+</TD></TR>
+<TR><TD WIDTH=295><TT><FONT SIZE=2 FACE="Courier New"> \if{\eq{\rand{5}}{0}}{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">   boing!</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> }{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">   thwack</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> }</FONT></TT>
+</TD><TD WIDTH=295><FONT SIZE=2 FACE="Courier New">if (rand(5)) {</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">  print &quot;thwack&quot;; </FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">} else {</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">  print &quot;boing!&quot;;</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">}</FONT></TT>
+</TD></TR>
+</TABLE>
+<P>
+returns the string &quot;boing!&quot; with probability 1/5, and
+&quot;thwack&quot; with probability 4/5.  Using some of the primitives
+we learned earlier and by using nested conditionals, we can check
+to see if a number entered by a user can be used as currency or
+if it contains improper characters or the wrong number of digits
+after the decimal place:<BR>
+
+<TABLE>
+<TR><TD WIDTH=590><TT><I><FONT SIZE=2 FACE="Courier New">GUML</FONT></I></TT>
+</TD></TR>
+<TR><TD WIDTH=590><TT><FONT SIZE=2 FACE="Courier New"> \set{test}{$10,400.35}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> \if{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">   \money{\get{test}}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> }{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">   \if{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">     \op{\index{\get{test}}{.}}{=}{\op{\length{\get{test}}}{-}{3}}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">   }{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">     That is a valid dollar value.</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">   }{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">     You have too many digits after the decimal place.</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> }{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">   I'm sorry, but that's not a valid number.</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> } </FONT></TT>
+</TD></TR>
+<TR><TD WIDTH=590><TT><I><FONT SIZE=2 FACE="Courier New">PERL</FONT></I></TT>
+</TD></TR>
+<TR><TD WIDTH=590><TT><FONT SIZE=2 FACE="Courier New"> $test = &quot;$10,400.35&quot;;</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> $test =~ y/$,//d;  # Note: it would be better PERL to do: </FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">     # y/0-9.//cd; but we use this because it</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">     # is analogous to the \money{} primitive.</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> if ($test =~ /[^0-9.]/) {</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">   print &quot;I'm sorry, but that's not a valid number.&quot;;</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> } elsif (index($test, &quot;.&quot;) == length($test) - 3) {</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">   print &quot;That is a valid dollar value.&quot;;</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> } else {</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">   print &quot;You have too many digits after the decimal place.&quot;;</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> }</FONT></TT>
+</TD></TR>
+</TABLE>
+<P>
+<P>
+Since we set the <I>test</I> variable, we know what outcome there
+will be, but the GUML code, just like the PERL below it, walks
+through the various checks - first determining if it's made up
+of digits, the decimal point, commas and a dollar sign.  Next,
+it checks to make sure that the decimal point has only two digits
+after it.  This is a fairly certain set of tests, one additional
+one might include a check through the <TT><FONT SIZE=2 FACE="Courier New">\fop</FONT></TT><FONT SIZE=2>
+primitive to ensure that the number generated by </FONT><TT><FONT SIZE=2 FACE="Courier New">\money</FONT></TT><FONT SIZE=2>
+is, in fact, a floating-point number rather than an IP address,
+or some other oddly formatted number (i.e. 127.0.0.0 is not a
+valid number for currency).<BR>
+</FONT>
+<P>
+<FONT SIZE=2>Conditional statements can be used throughout a site
+to provide complex, interactive functionality to Web pages.  With
+no practical limit to the amount of nesting and testing that can
+occur, a wide variety of highly variant behaviors can be coded
+through GUML and the \if primitive.</FONT>
+<P>
+<A NAME="_Toc372599819"><B><FONT SIZE=2>Macros</FONT></B></A>
+<BR>
+<P>
+<FONT SIZE=2>An example of a macro definition using the </FONT><TT><FONT SIZE=2 FACE="Courier New">\op</FONT></TT><FONT SIZE=2>
+function is:<BR>
+</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\set{iplusplus}{\quote{\set{i}{\op{\i}{+}{1}}}}</FONT></TT><FONT SIZE=2>.
+<BR>
+</FONT>
+<P>
+<FONT SIZE=2>This creates a command which increases the value
+of the variable <I>i</I> by one.  Therefore,<BR>
+</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\set{i}{1} \get{i}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\iplusplus \get{i}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\iplusplus \get{i}<BR>
+</FONT></TT>
+<P>
+<FONT SIZE=2>generates </FONT><TT><FONT SIZE=2 FACE="Courier New">1</FONT></TT><FONT SIZE=2>,
+</FONT><TT><FONT SIZE=2 FACE="Courier New">2</FONT></TT><FONT SIZE=2>,
+and </FONT><TT><FONT SIZE=2 FACE="Courier New">3</FONT></TT><FONT SIZE=2>
+as output.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>Arguments may be passed to invoked variables just
+like to primitives, using the symbols </FONT><TT><FONT SIZE=2 FACE="Courier New">\1</FONT></TT><FONT SIZE=2>,
+</FONT><TT><FONT SIZE=2 FACE="Courier New">\2</FONT></TT><FONT SIZE=2>,
+</FONT><TT><FONT SIZE=2 FACE="Courier New">\3</FONT></TT><FONT SIZE=2>,
+and so on.  For instance, the command </FONT><TT><FONT SIZE=2 FACE="Courier New">\set{echo}{\quote{\1}}</FONT></TT><FONT SIZE=2>
+creates a macro </FONT><TT><FONT SIZE=2 FACE="Courier New">\echo</FONT></TT><FONT SIZE=2>
+which simply returns whatever was given in its first argument.
+ A comparatively more useful macro is defined by the command<BR>
+</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\set{inc}{\quote{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">  \set{\1}{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">    \op{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">      \get{\1}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">    }{+}{1}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">  }</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">}}<BR>
+</FONT></TT>
+<P>
+<FONT SIZE=2>Instead of writing a separate macro to increment
+the variable <I>j</I> by one, we may use </FONT><TT><FONT SIZE=2 FACE="Courier New">\inc{i}</FONT></TT><FONT SIZE=2>
+or </FONT><TT><FONT SIZE=2 FACE="Courier New">\inc{j}</FONT></TT><FONT SIZE=2>
+to add one to either <I>i</I> or <I>j</I>, respectively.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>Macros are defined in exactly the same way as variables,
+except that we must tell the interpreter not to expand the GUML
+code inside the definition.  This is done with the </FONT><TT><FONT SIZE=2 FACE="Courier New">\quote</FONT></TT><FONT SIZE=2>
+command:<BR>
+</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\quote{</FONT></TT><I><FONT SIZE=2>string</FONT></I><TT><FONT SIZE=2 FACE="Courier New">}</FONT></TT><FONT SIZE=2>
+ - returns the string <I>string</I> exactly as written, not expanding
+any GUML within.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>Consider the following snippet of code:<BR>
+</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\set{b}{zoiks}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\set{a}{\get{b}}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\set{b}{murp}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\a<BR>
+</FONT></TT>
+<P>
+<FONT SIZE=2>This returns the string &quot;zoiks&quot;, because
+the command </FONT><TT><FONT SIZE=2 FACE="Courier New">\set{a}{\get{b}}</FONT></TT><FONT SIZE=2>
+sets the value of the variable <I>a</I> to the value given in
+the second argument to </FONT><TT><FONT SIZE=2 FACE="Courier New">\set</FONT></TT><FONT SIZE=2>,
+which is, in this case, the result of the command </FONT><TT><FONT SIZE=2 FACE="Courier New">\get{b}</FONT></TT><FONT SIZE=2>-the
+string &quot;zoiks&quot;.  If we change this to:<BR>
+</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\set{b}{zoiks}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\set{a}{\quote{\get{b}}}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\set{b}{murp}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\a<BR>
+</FONT></TT>
+<P>
+<FONT SIZE=2>it instead returns the string &quot;murp&quot;. 
+In this case, the command </FONT><TT><FONT SIZE=2 FACE="Courier New">\set{a}{\quote{\get{b}}}</FONT></TT><FONT SIZE=2>
+sets the value of the variable <I>a</I> to the string &quot;\get{b}&quot;.
+ The command </FONT><TT><FONT SIZE=2 FACE="Courier New">\a</FONT></TT><FONT SIZE=2>
+tells the GUML interpreter to retrieve the contents of <I>a</I>
+and interpret any GUML code within.  The command </FONT><TT><FONT SIZE=2 FACE="Courier New">\get{a}</FONT></TT><FONT SIZE=2>,
+on the other hand, tells the interpreter <I>not</I> to expand
+any GUML code found inside, only to present the contents exactly
+as stored.  Thus, if a variable contains user-entered data, you
+should <I>always</I> retrieve it with the </FONT><TT><FONT SIZE=2 FACE="Courier New">\get</FONT></TT><FONT SIZE=2>
+function.  If the data contains any of the GUML meta-characters
+(</FONT><TT><FONT SIZE=2 FACE="Courier New">\</FONT></TT><FONT SIZE=2>,
+</FONT><TT><FONT SIZE=2 FACE="Courier New">{</FONT></TT><FONT SIZE=2>,
+</FONT><TT><FONT SIZE=2 FACE="Courier New">}</FONT></TT><FONT SIZE=2>,
+and </FONT><TT><FONT SIZE=2 FACE="Courier New">#</FONT></TT><FONT SIZE=2>),
+expanding it with the backslash operator is certain to produce
+unexpected results.  Again, only when you can be absolutely certain
+that none of GUML's special characters will be in a variable's
+contents should you consider using the backslash to retrieve data
+from a variable.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>For example, the file </FONT><TT><FONT SIZE=2 FACE="Courier New">headers/html_fmt</FONT></TT><FONT SIZE=2>
+includes the following definition:<BR>
+</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\set{conttype}{\quote{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">  \if{\not{\isset{conttyped}}}{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">    {Content-type: text/html\n\if{\1}{\1\n}\n}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">    \set{conttyped}{}# Don't
+let it happen more than once!</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">  }</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">}}<BR>
+</FONT></TT>
+<P>
+<FONT SIZE=2>Of course, the same result could be achieved by testing
+the variable <I>conttyped</I> for a certain value which the procedure
+sets.  In fact, when regarding the output only as a &quot;truth&quot;
+value, the functions </FONT><TT><FONT SIZE=2 FACE="Courier New">\get</FONT></TT><FONT SIZE=2>
+and </FONT><TT><FONT SIZE=2 FACE="Courier New">\isset</FONT></TT><FONT SIZE=2>
+are nearly identical, since </FONT><TT><FONT SIZE=2 FACE="Courier New">\get</FONT></TT><FONT SIZE=2>
+also returns an empty string when a variable has not yet been
+set. The key difference is when the argument is a variable that
+has been set to the empty string; </FONT><TT><FONT SIZE=2 FACE="Courier New">\get</FONT></TT><FONT SIZE=2>
+returns the empty string, while </FONT><TT><FONT SIZE=2 FACE="Courier New">\isset</FONT></TT><FONT SIZE=2>
+returns &quot;true&quot;.  Whether one tests for a variable's
+existence or its value is, for the most part, irrelevant and strictly
+a matter of personal preference and programming style.<BR>
+</FONT>
+<P>
+<A NAME="_Toc372599820"><B><FONT SIZE=2>Error Handling</FONT></B></A>
+<BR>
+<P>
+<FONT SIZE=2>GUML handles errors through two variables.  The controlling
+variable, </FONT><TT><FONT SIZE=2 FACE="Courier New">ERROR</FONT></TT><FONT SIZE=2>,
+is a special one.  Once it is set, all outstanding groups are
+automatically ended without prejudice.  The variable remains set
+and is expected to be outputted verbatim by the top level function.
+<BR>
+</FONT>
+<P>
+<FONT SIZE=2>Normally, </FONT><TT><FONT SIZE=2 FACE="Courier New">ERROR</FONT></TT><FONT SIZE=2>
+will be set by a macro, </FONT><TT><FONT SIZE=2 FACE="Courier New">\error</FONT></TT><FONT SIZE=2>,
+which will be triggered either by an internal error in the parser
+or by GUML code.  If an internal error in executing GUML is encountered,
+it will try to run </FONT><TT><FONT SIZE=2 FACE="Courier New">\error</FONT></TT><FONT SIZE=2>
+with an argument giving the type of error as a text string containing
+English.  If </FONT><TT><FONT SIZE=2 FACE="Courier New">\error</FONT></TT><FONT SIZE=2>
+is undefined, which could happen in the case of a grievous error,
+it prints a frantic message to that effect and kills the process.
+ Thus, it is a good idea to always have your formats incorporate
+an error processing command which will take care of setting </FONT><TT><FONT SIZE=2 FACE="Courier New">ERROR</FONT></TT><FONT SIZE=2>.
+ </FONT><TT><FONT SIZE=2 FACE="Courier New">headers/plain_fmt</FONT></TT><FONT SIZE=2>
+inputs the file </FONT><TT><FONT SIZE=2 FACE="Courier New">headers/error_fmt</FONT></TT><FONT SIZE=2>,
+which should contain an error-handling routine.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>One's own uses of </FONT><TT><FONT SIZE=2 FACE="Courier New">\error</FONT></TT><FONT SIZE=2>
+should be in GUML code when something has gone wrong requiring
+immediate cessation of expansion.  A message should be in the
+first argument, which will then be outputted.  For instance,<BR>
+</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\if{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">  \not{\isset{USER}}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">}{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">  \error{You must be registered
+to use this page!}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">}<BR>
+</FONT></TT>
+<P>
+<FONT SIZE=2>will block non-users from a document, with a notice
+as to why.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>In the case of a bad filename or a file-not-found
+error, the special GUML file</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">headers/file-not-found</FONT></TT><FONT SIZE=2>
+will be loaded.  This should contain instructions to set </FONT><TT><FONT SIZE=2 FACE="Courier New">ERROR</FONT></TT><FONT SIZE=2>
+appropriately.<BR>
+<BR>
+</FONT>
+<P>
+<FONT SIZE=2>9. Common Programming Pitfalls.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>Variables vs. Values<BR>
+</FONT>
+<P>
+<FONT SIZE=2>Possibly the first snare encountered by those learning
+to program in GUML is that of confusing variables with values,
+primarily by not using the </FONT><TT><FONT SIZE=2 FACE="Courier New">\get</FONT></TT><FONT SIZE=2>
+statement where one belongs:<BR>
+</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> \fop{this}{+}{that}</FONT></TT><FONT SIZE=2>
+ should be  </FONT><TT><FONT SIZE=2 FACE="Courier New">\fop{\get{this}}{+}{\get{that}}</FONT></TT>
+<P>
+<FONT SIZE=2>and</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> \isset{\get{foo}}</FONT></TT><FONT SIZE=2>
+ should be  </FONT><TT><FONT SIZE=2 FACE="Courier New">\isset{foo}
+<BR>
+</FONT></TT>
+<P>
+<FONT SIZE=2>Make note of this, as it can be a particularly insidious
+error to track down.<BR>
+<BR>
+</FONT>
+<P>
+<FONT SIZE=2>Bracketing<BR>
+</FONT>
+<P>
+<FONT SIZE=2>A handy feature of some text editors like Emacs and
+Jove is automatic visual bracket matching.  When the user types
+a closing bracket (or brace or parenthesis), the opening bracket
+which matches it briefly flashes, or a warning appears if none
+does.  This prevents all sorts of bracket mismatches, but it can
+lead to laziness on behalf of the programmer.  For instance, when
+retrieving the value of a variable as an argument to a macro it's
+rather easy to forget to close off the </FONT><TT><FONT SIZE=2 FACE="Courier New">\get</FONT></TT><FONT SIZE=2>
+command.  If left unnoticed, one may produce the following:<BR>
+</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> \fop{\get{this}{+}{\get{that}}}
+<BR>
+</FONT></TT>
+<P>
+<FONT SIZE=2>At first glance, everything seems in order here-since
+the keywords and arguments are compartmentalized, it's difficult
+to notice that one close bracket is misplaced.  In the example,
+</FONT><TT><FONT SIZE=2 FACE="Courier New">\fop</FONT></TT><FONT SIZE=2>
+receives only one argument, namely the contents of the variable
+<I>this</I>.  This is because inside </FONT><TT><FONT SIZE=2 FACE="Courier New">\fop</FONT></TT><FONT SIZE=2>'s
+brackets lies the command </FONT><TT><FONT SIZE=2 FACE="Courier New">\get{this}{+}{\get{that}}</FONT></TT><FONT SIZE=2>.
+ The </FONT><TT><FONT SIZE=2 FACE="Courier New">\get</FONT></TT><FONT SIZE=2>
+macro looks up the value of the variable name given in its first
+argument, and ignores the rest of the arguments.  The top-level
+</FONT><TT><FONT SIZE=2 FACE="Courier New">\fop</FONT></TT><FONT SIZE=2>,
+on the other hand, was expecting three or four arguments and received
+only one.  The error in this case will likely be a runtime error
+on the part of the GUML processor, which can be presented by a
+web browser as a &quot;malformed header error&quot; if it's expecting
+GUML to produce HTML or other MIME type output.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>A better way to format the </FONT><TT><FONT SIZE=2 FACE="Courier New">\fop</FONT></TT><FONT SIZE=2>
+operator, particularly when simple sums are replaced with sums
+of products of differences (and so on..) is: <BR>
+</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\fop{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">  \get{this}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">}{+}{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">  \get{that}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">}<BR>
+</FONT></TT>
+<P>
+<FONT SIZE=2>By putting the bracketed data on a new line, it is
+significantly easier to visually scan for matching brackets.<BR>
+<BR>
+</FONT>
+<P>
+<FONT SIZE=2>The </FONT><TT><FONT SIZE=2 FACE="Courier New">\while</FONT></TT><FONT SIZE=2>
+macro<BR>
+</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\while{</FONT></TT><I><FONT SIZE=2>test</FONT></I><TT><FONT SIZE=2 FACE="Courier New">}{</FONT></TT><I><FONT SIZE=2>body</FONT></I><TT><FONT SIZE=2 FACE="Courier New">}</FONT></TT><FONT SIZE=2>
+ - Expands <I>body</I> if <I>test</I> expands to a true value,
+then repeats.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>The string <I>test</I> is a </FONT><TT><FONT SIZE=2 FACE="Courier New">\quote</FONT></TT><FONT SIZE=2>'ed
+GUML test case, expected to return an empty string if the test
+is false.  The string <I>body </I>is </FONT><TT><FONT SIZE=2 FACE="Courier New">\quote</FONT></TT><FONT SIZE=2>'ed
+GUML commands to be performed each time <I>test</I> tests true.
+ Hopefully, something in the <I>body</I> command string will eventually
+cause <I>test</I> to expand to the empty string &quot;&quot;.
+<BR>
+</FONT>
+<P>
+<FONT SIZE=2>GUML's </FONT><TT><FONT SIZE=2 FACE="Courier New">\while</FONT></TT><FONT SIZE=2>
+loop is not a primitive function, but rather a macro defined in
+the file </FONT><TT><FONT SIZE=2 FACE="Courier New">headers/plain_fmt</FONT></TT><FONT SIZE=2>.
+ Unless told to do otherwise, the parser will try to expand a
+macro's arguments before passing them to the macro.  For instance,
+when you do </FONT><TT><FONT SIZE=2 FACE="Courier New">\op{\get{a}}{+}{1}</FONT></TT><FONT SIZE=2>,
+the value of <I>a</I> is retrieved and sent to the </FONT><TT><FONT SIZE=2 FACE="Courier New">\op</FONT></TT><FONT SIZE=2>
+primitive-the </FONT><TT><FONT SIZE=2 FACE="Courier New">\op</FONT></TT><FONT SIZE=2>
+function isn't given &quot;</FONT><TT><FONT SIZE=2 FACE="Courier New">\get{a}</FONT></TT><FONT SIZE=2>&quot;
+for its first argument.  Because of this, the syntax for a </FONT><TT><FONT SIZE=2 FACE="Courier New">\while</FONT></TT><FONT SIZE=2>
+loop is a little confusing; in order for the </FONT><TT><FONT SIZE=2 FACE="Courier New">\while</FONT></TT><FONT SIZE=2>
+loop to work properly, its arguments must be </FONT><TT><FONT SIZE=2 FACE="Courier New">\quote</FONT></TT><FONT SIZE=2>'ed
+GUML code.  Consider the following snippet of code:<BR>
+</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\set{i}{0}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\while{\op{\i}{&lt;}{5}}{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> \i\n</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> \set{i}{\op{\i}{+}{1}}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">}<BR>
+</FONT></TT>
+<P>
+<FONT SIZE=2>Since the arguments are expanded <I>before</I> being
+passed to the </FONT><TT><FONT SIZE=2 FACE="Courier New">\while</FONT></TT><FONT SIZE=2>
+macro, the code actually looks like this immediately before the
+</FONT><TT><FONT SIZE=2 FACE="Courier New">\while</FONT></TT><FONT SIZE=2>
+macro is expanded:<BR>
+</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\while{true}{0</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">}<BR>
+</FONT></TT>
+<P>
+<FONT SIZE=2>When executed, this code will spew the string &quot;0&quot;
+followed by a newline until the interpreter decides it's had enough,
+presents an error message to this effect, and aborts rather unceremoniously.
+ Of course, the proper way to write the loop is like this:<BR>
+</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\set{i}{0}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\while{\quote{\op{\i}{&lt;}{5}}}{\quote{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> \i\n</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> \set{i}{\op{\i}{+}{1}}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">}}<BR>
+</FONT></TT>
+<P>
+<FONT SIZE=2>In each iteration of the loop, the </FONT><TT><FONT SIZE=2 FACE="Courier New">\while</FONT></TT><FONT SIZE=2>
+macro expands the test case, tests it for a &quot;truth&quot;
+value, then either invokes another </FONT><TT><FONT SIZE=2 FACE="Courier New">\while</FONT></TT><FONT SIZE=2>
+with the same arguments or stops.  Because the </FONT><TT><FONT SIZE=2 FACE="Courier New">\while</FONT></TT><FONT SIZE=2>
+macro is defined recursively, and because an un-</FONT><TT><FONT SIZE=2 FACE="Courier New">\quote</FONT></TT><FONT SIZE=2>'ed
+test case usually expands to &quot;true&quot; before being passed
+to the macro, infinite loops are a common plight to the novice
+GUML programmer.<BR>
+<BR>
+</FONT>
+<P>
+<FONT SIZE=2>10. Technical points.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>The GUML interpreter is very picky about certain
+things.  It would behoove you to exercise caution by keeping these
+in mind.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>Spaces are ignored (a) after the text of the name
+of a macro or command which has no arguments, (b) at the start
+of any line, or (c) in command mode (along with tabs and newlines).
+<BR>
+</FONT>
+<P>
+<FONT SIZE=2>A comment character, </FONT><TT><FONT SIZE=2 FACE="Courier New">#</FONT></TT><FONT SIZE=2>,
+at the end of a line suppresses output of a newline.  This may
+be desirable if one is in text mode and does not want newlines.
+ It shows up extensively in those macros which present text with
+a strict required format.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>There must be <I>no</I> space before the left brace
+of an argument to a command.  Any such space breaks the argument
+off into a separate group.  Even placing a comment character directly
+after the name of a command or the right brace of an argument
+breaks the chain of arguments.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>The arguments to a macro, </FONT><TT><FONT SIZE=2 FACE="Courier New">\1</FONT></TT><FONT SIZE=2>
+and up, may be used as arguments within other primitives and other
+macros, but if quoted and then later invoked, they will obviously
+be reset with whatever new arguments are passed.  If no arguments
+are passed, they will all be the empty string &quot;&quot;.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>When an internal error occurs, command mode is automatically
+entered and all arguments are instantly lost.  Variables may still
+be accessed if the </FONT><TT><FONT SIZE=2 FACE="Courier New">\error</FONT></TT><FONT SIZE=2>
+macro needs to use them.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>Macro names may be at most 99 characters and contain
+only letters and the underscore character _.  Variable names in
+general, however, may be of unlimited length and contain any characters.
+<BR>
+</FONT>
+<P>
+<FONT SIZE=2>Attempting to get an unset variable returns the empty
+string; attempting to invoke an unset variable causes an internal
+error.</FONT>
+<P>
+<A NAME="_Toc372599821"><B><FONT SIZE=4>III. Advanced Topics</FONT></B></A>
+<P>
+<FONT SIZE=1>Header Files</FONT>
+<P>
+<FONT SIZE=1>Recursion</FONT>
+<P>
+<FONT SIZE=1>Loops</FONT>
+<P>
+<FONT SIZE=1>Database Connectivity<BR>
+</FONT>
+<P>
+<A NAME="_Toc372599822"><B><FONT SIZE=2>Header Files</FONT></B></A>
+<BR>
+<P>
+<FONT SIZE=2>To prevent a profusion of repeated function definitions,
+GUML is equipped with a primitive which allows data to be read
+in from another file.  The command </FONT><TT><FONT SIZE=2 FACE="Courier New">\include{</FONT></TT><I><FONT SIZE=2>filename</FONT></I><TT><FONT SIZE=2 FACE="Courier New">}</FONT></TT><FONT SIZE=2>
+reads in the text from the file named <I>filename</I>, interpreting
+it exactly as if it had been cut and pasted into the original
+file.  Thus, a macro which is used in many programs need only
+be defined once.  This allows libraries of function definitions
+to be constructed and accessed easily, facilitating the extensibility
+which is the wellspring of GUML's power.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>The files located in the </FONT><TT><FONT SIZE=2 FACE="Courier New">headers</FONT></TT><FONT SIZE=2>
+directory each contain a number of macros that simplify life,
+all built up in terms of the primitives.  These macro definitions
+are loaded by using the </FONT><TT><FONT SIZE=2 FACE="Courier New">\include</FONT></TT><FONT SIZE=2>
+command, as described previously.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>Specifically, the file </FONT><TT><FONT SIZE=2 FACE="Courier New">headers/plain_fmt</FONT></TT><FONT SIZE=2>
+specifies all of the plain format commands; the file </FONT><TT><FONT SIZE=2 FACE="Courier New">headers/html_fmt</FONT></TT><FONT SIZE=2>
+contains a standard set of HTML command macros; the file </FONT><TT><FONT SIZE=2 FACE="Courier New">headers/chicago</FONT></TT><FONT SIZE=2>
+is a series of GUML macros designed specifically for the Chicago
+project; the file </FONT><TT><FONT SIZE=2 FACE="Courier New">headers/formulae</FONT></TT><FONT SIZE=2>
+contains the mathematical functions used in computations in the
+Chicago project; and the file </FONT><TT><FONT SIZE=2 FACE="Courier New">headers/dave_fmt</FONT></TT><FONT SIZE=2>
+contains additional numeric and string manipulation routines.
+<BR>
+</FONT>
+<P>
+<FONT SIZE=2>Full descriptions of all macros in the header files
+is appended.<BR>
+</FONT>
+<P>
+<A NAME="_Toc372599823"><B><FONT SIZE=2>Recursion</FONT></B></A>
+<BR>
+<P>
+<FONT SIZE=2>Here are some sample macros which illustrate the
+capabilities of GUML.  We assume two macros from the plain format,
+</FONT><TT><FONT SIZE=2 FACE="Courier New">\n</FONT></TT><FONT SIZE=2>
+(newline) and </FONT><TT><FONT SIZE=2 FACE="Courier New">\ne</FONT></TT><FONT SIZE=2>
+(not-equals), are defined.  First, the macro </FONT><TT><FONT SIZE=2 FACE="Courier New">\rectangle</FONT></TT><FONT SIZE=2>
+produces a rectangle of </FONT><TT><FONT SIZE=2 FACE="Courier New">*</FONT></TT><FONT SIZE=2>'s
+with parameters specified.<BR>
+</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\set{starbar}{\quote{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">  \if{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">    \op{\1}{&gt;}{0}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">  }{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">    {*}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">    \starbar{\op{\1}{-}{1}}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">  }</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">}}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> </FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\set{rectangle}{\quote{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">  \if{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">    \op{\2}{&gt;}{0}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">  }{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">    \starbar{\1}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">    \n</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">    \rectangle{\1}{\op{\2}{-}{1}}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">  }</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">}}<BR>
+</FONT></TT>
+<P>
+<FONT SIZE=2>You may test this with </FONT><TT><FONT SIZE=2 FACE="Courier New">\rectangle{\rand{40}}{\rand{8}}</FONT></TT><FONT SIZE=2>.
+ Note that using this recursion method you may inadvertently create
+an infinite loop; to guard against these cases, the parser automatically
+frantically kills the process with an abrupt message if a certain
+large maximum recursion depth is reached.<BR>
+</FONT>
+<P>
+<A NAME="_Toc372599824"><B><FONT SIZE=2>Loops</FONT></B></A><BR>
+<P>
+<FONT SIZE=2>One may also simulate arrays in GUML.  The macro
+</FONT><TT><FONT SIZE=2 FACE="Courier New">\backandforth</FONT></TT><FONT SIZE=2>
+prints a sequence</FONT>
+<P>
+<FONT SIZE=2>of ten random one-digit numbers, and then prints
+them in reverse order.<BR>
+</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\set{doloop}{\quote{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">  \if{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">    \ne{\1}{\2}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">  }{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">    \set{_doloop_tmp}{\4}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">    \_doloop_tmp{\1}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">    \doloop{\op{\1}{+}{\3}}{\2}{\3}{\4}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">  }</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">}}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New"> </FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\set{backandforth}{\quote{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">  \doloop{0}{20}{1}{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">    \quote{\set{array_\1}{\rand{10}}\get{array_\1}\
+}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">  }</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">  \n</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">  \doloop{19}{-1}{-1}{\quote{\get{array_\1}\
+}}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">  \n</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">}}<BR>
+</FONT></TT>
+<P>
+<FONT SIZE=2>Note that ``associative arrays'' may be formed in
+essentially the same way.<BR>
+</FONT>
+<P>
+<A NAME="_Toc372599825"><B><FONT SIZE=2>Database Connectivity</FONT></B></A>
+<BR>
+<P>
+<FONT SIZE=2>Interface to the Sybase database is effected via
+two commands, </FONT><TT><FONT SIZE=2 FACE="Courier New">\sqlexec</FONT></TT><FONT SIZE=2>
+and </FONT><TT><FONT SIZE=2 FACE="Courier New">\sqlrow</FONT></TT><FONT SIZE=2>.
+ </FONT><TT><FONT SIZE=2 FACE="Courier New">\sqlexec</FONT></TT><FONT SIZE=2>
+sends its first argument to Sybase.  If it is supposed to return
+exactly one batch, one then uses </FONT><TT><FONT SIZE=2 FACE="Courier New">\sqlrow</FONT></TT><FONT SIZE=2>
+to retrieve the results row-by-row.  It takes as arguments a series
+of variables which are then loaded with the respective columns.
+ A blank entry means that column is ignored.  </FONT><TT><FONT SIZE=2 FACE="Courier New">\sqlrow</FONT></TT><FONT SIZE=2>
+returns a true value on success, a false value if no more values
+could be found and none were loaded.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>The following sample code uses the macro </FONT><TT><FONT SIZE=2 FACE="Courier New">\while</FONT></TT><FONT SIZE=2>
+defined in the plain format:<BR>
+</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\sqlexec{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">  select userID, name from
+userProfile</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">}<BR>
+</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\while{\quote{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">  \sqlrow{id}{nm}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">}}{\quote{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">  User `\get{id}' is named
+`\get{nm}'.</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">}}<BR>
+</FONT></TT>
+<P>
+<A NAME="_Toc372599826"><B><FONT SIZE=4>IV. Primitives and Macros</FONT></B></A>
+<P>
+<FONT SIZE=1>Primitives</FONT>
+<P>
+<FONT SIZE=1>   Strings</FONT>
+<P>
+<FONT SIZE=1>      Dates</FONT>
+<P>
+<FONT SIZE=1>   Math</FONT>
+<P>
+<FONT SIZE=1>   File Handling</FONT>
+<P>
+<FONT SIZE=1>   Sendmail</FONT>
+<P>
+<FONT SIZE=1>Macros</FONT>
+<P>
+<B><FONT SIZE=2>Primitives</FONT></B>
+<HR>
+<P>
+<I><B><FONT SIZE=2>What is a string?</FONT></B></I>
+<HR>
+<HR>
+<HR>
+<P>
+<FONT SIZE=2>A string is a character or group of characters which
+is being treated as characters (as opposed to numbers.)  As in
+most programming languages, the positioning of characters in a
+string begins at 0;  for example, in the string &quot;</FONT><TT><FONT SIZE=2 FACE="Courier New">ska</FONT></TT><FONT SIZE=2>&quot;,
+the character &quot;</FONT><TT><FONT SIZE=2 FACE="Courier New">s</FONT></TT><FONT SIZE=2>&quot;
+is in the position </FONT><TT><FONT SIZE=2 FACE="Courier New">0,
+</FONT></TT><FONT SIZE=2>&quot;</FONT><TT><FONT SIZE=2 FACE="Courier New">k</FONT></TT><FONT SIZE=2>&quot;
+is in the position </FONT><TT><FONT SIZE=2 FACE="Courier New">1,
+</FONT></TT><FONT SIZE=2>etc., when you index into (or refer to
+a specific character in) the string.  The counting of the number
+of the characters (or length) still begins at 1, so that the length
+of &quot;</FONT><TT><FONT SIZE=2 FACE="Courier New">ska</FONT></TT><FONT SIZE=2>&quot;
+is 3, although &quot;</FONT><TT><FONT SIZE=2 FACE="Courier New">a</FONT></TT><FONT SIZE=2>&quot;
+is in the position </FONT><TT><FONT SIZE=2 FACE="Courier New">2.</FONT></TT>
+<HR>
+<HR>
+<P>
+<B><FONT SIZE=2 FACE="Arial">String Primitives<BR>
+<BR>
+</FONT></B>
+<P>
+<FONT SIZE=2>The following is a list of basic string primitives
+in GUML.  <BR>
+</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\strlength{<I>string</I>}</FONT></TT><FONT SIZE=2>
+- Returns the length of </FONT><TT><I><FONT SIZE=2 FACE="Courier New">string</FONT></I></TT><FONT SIZE=2>.
+<BR>
+</FONT>
+<P>
+<FONT SIZE=2>Example:    </FONT><TT><FONT SIZE=2 FACE="Courier New">\strlength{two}</FONT></TT>
+<P>
+<FONT SIZE=2>Returns:    </FONT><TT><FONT SIZE=2 FACE="Courier New">3
+<BR>
+</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\strindex{<I>string1</I>}{<I>string2</I>}</FONT></TT><FONT SIZE=2>
+- Returns the starting character position of </FONT><TT><I><FONT SIZE=2 FACE="Courier New">string2</FONT></I></TT><FONT SIZE=2>
+within </FONT><TT><I><FONT SIZE=2 FACE="Courier New">string1</FONT></I></TT><FONT SIZE=2>.
+ Returns NULL if not found.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>Example:   </FONT><TT><FONT SIZE=2 FACE="Courier New">\strindex{bladda}{adda}</FONT></TT>
+<P>
+<FONT SIZE=2>Returns:    </FONT><TT><FONT SIZE=2 FACE="Courier New">2
+<BR>
+<BR>
+</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\substr{<I>string</I>}{<I>startpos</I>}{<I>length</I>}</FONT></TT><FONT SIZE=2>
+ - Returns substring of length </FONT><TT><I><FONT SIZE=2 FACE="Courier New">length</FONT></I></TT><FONT SIZE=2>
+starting at the character position of </FONT><TT><I><FONT SIZE=2 FACE="Courier New">startpos</FONT></I></TT><FONT SIZE=2>.
+ Returns NULL if not found.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>Example:    </FONT><TT><FONT SIZE=2 FACE="Courier New">\substr{yarf}{1}{3}</FONT></TT>
+<P>
+<FONT SIZE=2>Returns:    </FONT><TT><FONT SIZE=2 FACE="Courier New">arf
+<BR>
+</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\strip{<I>string1</I>}{<I>string2</I>}</FONT></TT><FONT SIZE=2>
+- Returns </FONT><TT><I><FONT SIZE=2 FACE="Courier New">string1</FONT></I></TT><FONT SIZE=2>
+after having stripped all of the individual characters in  </FONT><TT><I><FONT SIZE=2 FACE="Courier New">string2</FONT></I></TT><FONT SIZE=2>.
+<BR>
+</FONT>
+<P>
+<FONT SIZE=2>Example:    </FONT><TT><FONT SIZE=2 FACE="Courier New">\strip{whatever}{ev}</FONT></TT>
+<P>
+<FONT SIZE=2>Returns:    </FONT><TT><FONT SIZE=2 FACE="Courier New">whatr
+<BR>
+</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\strtok{<I>string</I>}{<I>token</I>}</FONT></TT><FONT SIZE=2>
+- Returns the </FONT><TT><I><FONT SIZE=2 FACE="Courier New">string</FONT></I></TT><FONT SIZE=2>
+up until </FONT><TT><I><FONT SIZE=2 FACE="Courier New">token</FONT></I></TT><FONT SIZE=2>.
+ Returns the entire string if not found.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>Example:    </FONT><TT><FONT SIZE=2 FACE="Courier New">\strtok{rida-bike}{-}</FONT></TT>
+<P>
+<FONT SIZE=2>Returns:    </FONT><TT><FONT SIZE=2 FACE="Courier New">rida
+<BR>
+</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\strupper{<I>string</I>}</FONT></TT><FONT SIZE=2>
+- Returns the capitalized </FONT><TT><I><FONT SIZE=2 FACE="Courier New">string</FONT></I></TT><FONT SIZE=2>.
+<BR>
+</FONT>
+<P>
+<FONT SIZE=2>Example:    </FONT><TT><FONT SIZE=2 FACE="Courier New">\strupper{no}</FONT></TT>
+<P>
+<FONT SIZE=2>Returns:    </FONT><TT><FONT SIZE=2 FACE="Courier New">NO
+<BR>
+</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\strlower{<I>string</I>}</FONT></TT><FONT SIZE=2>
+- Returns the </FONT><TT><I><FONT SIZE=2 FACE="Courier New">string</FONT></I></TT><FONT SIZE=2>
+in lower case.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>Example:    </FONT><TT><FONT SIZE=2 FACE="Courier New">\strlower{HAhaHA}</FONT></TT>
+<P>
+<FONT SIZE=2>Returns:    </FONT><TT><FONT SIZE=2 FACE="Courier New">hahaha
+<BR>
+</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\date{<I>format</I>}{<I>time</I>}</FONT></TT><FONT SIZE=2>
+- Without any arguments, returns a date of the format:  May 04,
+1998.  The optional format string is the same as the C format
+string for date (which is detailed in the man pages for &quot;date&quot;).
+ The second optional argument is the time to covert (as in &quot;854523817&quot;&#133;see
+</FONT><TT><FONT SIZE=2 FACE="Courier New">\time</FONT></TT><FONT SIZE=2>
+for more info), which defaults to the current time.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>Example: </FONT><TT><FONT SIZE=2 FACE="Courier New">\date</FONT></TT>
+<P>
+<FONT SIZE=2>Returns:    </FONT><TT><FONT SIZE=2 FACE="Courier New">May
+04, 1998<BR>
+</FONT></TT>
+<P>
+<FONT SIZE=2>Example: </FONT><TT><FONT SIZE=2 FACE="Courier New">\date{%B
+%e, %Y}</FONT></TT>
+<P>
+<FONT SIZE=2>Returns:    </FONT><TT><FONT SIZE=2 FACE="Courier New">May
+4, 1998<BR>
+</FONT></TT>
+<P>
+<FONT SIZE=2>Example: </FONT><TT><FONT SIZE=2 FACE="Courier New">\date{
+DATE: %m/%d/%y%nTIME: %H:%M:%S}</FONT></TT>
+<P>
+<FONT SIZE=2>Returns:   DATE: 08/01/76</FONT>
+<P>
+<FONT SIZE=2>                TIME: 14:45:05<BR>
+</FONT>
+<P>
+<FONT SIZE=2>Example: </FONT><TT><FONT SIZE=2 FACE="Courier New">\date{}{894310665}</FONT></TT>
+<P>
+<FONT SIZE=2>Returns:   </FONT><TT><FONT SIZE=2 FACE="Courier New">May
+4, 1998<BR>
+</FONT></TT>
+<P>
+<I><FONT SIZE=2>Note that date formatting strings may not work
+under NT platforms the same as they do for UNIX platforms.<BR>
+</FONT></I>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\time{<I>format</I>}{<I>seconds</I>}</FONT></TT><FONT SIZE=2>
+- Without any arguments, returns the number of seconds since Jan
+1st, 1970 0:00 GMT.    The optional parameters exist so that you
+may give it the number of seconds and a date format string, and
+</FONT><TT><FONT SIZE=2 FACE="Courier New">time</FONT></TT><FONT SIZE=2>
+will give you the date.  See </FONT><TT><FONT SIZE=2 FACE="Courier New">\date
+</FONT></TT><FONT SIZE=2>for more information on date format strings.
+<BR>
+</FONT>
+<P>
+<FONT SIZE=2>Example: </FONT><TT><FONT SIZE=2 FACE="Courier New">\time</FONT></TT>
+<P>
+<FONT SIZE=2>Returns:    </FONT><TT><FONT SIZE=2 FACE="Courier New">894310768
+<BR>
+<BR>
+</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\sqlquote{<I>string</I>}</FONT></TT><FONT SIZE=2>
+- Quotes a string.  That is, replaces double-quotes with backslashed
+double-quotes.   See Database Connectivity (section III) for more
+information on using GUML with databases.<BR>
+</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\htmlquote{<I>string</I>}</FONT></TT><FONT SIZE=2>
+- Quotes a string or a block of text to avoid any unwanted HTML
+parsing. <BR>
+<BR>
+</FONT>
+<P>
+<B><FONT SIZE=2 FACE="Arial">Math Primitives<BR>
+</FONT></B>
+<P>
+<FONT SIZE=2>If you've read Section II on Operators,  you already
+know how to use most GUML math primitives, and can look there
+for more in-depth information.  The following is provided as a
+quick reference. <BR>
+</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\op{<I>val1</I>}{<I>op</I></FONT></TT><FONT SIZE=2>
+</FONT><TT><FONT SIZE=2 FACE="Courier New">}{<I>val2</I>}</FONT></TT><FONT SIZE=2>-
+Performs an integer operation.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>Example:    </FONT><TT><FONT SIZE=2 FACE="Courier New">\op{1}{+}{12}</FONT></TT>
+<P>
+<FONT SIZE=2>Returns:    </FONT><TT><FONT SIZE=2 FACE="Courier New">13
+<BR>
+</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\fop{<I>val1</I>}{<I>op</I></FONT></TT><FONT SIZE=2>
+</FONT><TT><FONT SIZE=2 FACE="Courier New">}{<I>val2</I>}</FONT></TT><FONT SIZE=2>-
+Performs a floating-point operation.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>Example:    </FONT><TT><FONT SIZE=2 FACE="Courier New">\fop{1.666}{+}{12}</FONT></TT>
+<P>
+<FONT SIZE=2>Returns:    </FONT><TT><FONT SIZE=2 FACE="Courier New">13.666
+<BR>
+</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\rand{<I>num</I>}</FONT></TT><FONT SIZE=2>-
+Returns a psuedo-random integer between 0 and </FONT><TT><I><FONT SIZE=2 FACE="Courier New">num</FONT></I></TT><FONT SIZE=2>
+-1, inclusive.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>Example:    </FONT><TT><FONT SIZE=2 FACE="Courier New">\rand{7}
+<BR>
+</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\money{<I>string</I>}</FONT></TT><FONT SIZE=2>-
+Converts a money string into a floating point value by removing
+dollar signs and commas.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>Example:    </FONT><TT><FONT SIZE=2 FACE="Courier New">\money{$12,123.60}</FONT></TT>
+<P>
+<FONT SIZE=2>Returns:    </FONT><TT><FONT SIZE=2 FACE="Courier New">12123.60
+<BR>
+<BR>
+<BR>
+<BR>
+</FONT></TT>
+<P>
+<B><FONT SIZE=2 FACE="Arial">File Handling Primitives<BR>
+<BR>
+</FONT></B>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\open{<I>filename</I>}</FONT></TT><FONT SIZE=2>-
+Opens a file called </FONT><TT><I><FONT SIZE=2 FACE="Courier New">filename.</FONT></I></TT><FONT SIZE=2>
+Returns NULL if fails.</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\output{<I>filename</I>}</FONT></TT><FONT SIZE=2>-
+Opens a file for output. </FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\append{<I>filename</I>}</FONT></TT><FONT SIZE=2>-
+Opens a file for appending to.</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\close{<I>filename</I>}</FONT></TT><FONT SIZE=2>-
+Closes a file called </FONT><TT><I><FONT SIZE=2 FACE="Courier New">filename.
+<BR>
+</FONT></I></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\isopen{<I>filename</I>}</FONT></TT><FONT SIZE=2>-
+Returns true if </FONT><TT><I><FONT SIZE=2 FACE="Courier New">filename</FONT></I></TT><FONT SIZE=2>
+is open, NULL if not.<BR>
+</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\writeline{<I>filehandle</I>}{<I>string</I>}</FONT></TT><FONT SIZE=2>-
+Outputs the contents of </FONT><TT><I><FONT SIZE=2 FACE="Courier New">string</FONT></I><FONT SIZE=2 FACE="Courier New">
+</FONT></TT><FONT SIZE=2>to the opened file.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>Example:    </FONT><TT><FONT SIZE=2 FACE="Courier New">\writeline{\output{test.log}}{I'm
+a file!}</FONT></TT>
+<P>
+<FONT SIZE=2>Writes to the file called test.log:    </FONT><TT><FONT SIZE=2 FACE="Courier New">I'm
+a file!<BR>
+</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\readline{<I>filehandle</I>}</FONT></TT><FONT SIZE=2>-
+Reads a file to end-of-line.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>Example:    </FONT><TT><FONT SIZE=2 FACE="Courier New">\open{readme.txt}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">        \readline{readme.txt}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">        \close{readme.txt}
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+</FONT></TT>
+<P>
+<B><FONT SIZE=2 FACE="Arial">Sendmail Primitives<BR>
+</FONT></B>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\email{<I>address</I>}{<I>messagebody</I></FONT></TT><FONT SIZE=2>}
+-   Emails the contents of </FONT><TT><I><FONT SIZE=2 FACE="Courier New">messagebody</FONT></I></TT><FONT SIZE=2>
+ to the email </FONT><TT><I><FONT SIZE=2 FACE="Courier New">address</FONT></I></TT><FONT SIZE=2>.
+ Lets you build the header in </FONT><TT><I><FONT SIZE=2 FACE="Courier New">messagebody.
+<BR>
+</FONT></I></TT>
+<P>
+<FONT SIZE=2>Example:   <BR>
+</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\email{schmuck@whereever.com}{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">From: </FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">MIME-Version: 1.0</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">To: schmuck@whereever.com</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">Subject: Hello!</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">Content-type: text/plain;
+charset=us-ascii</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">Content-Transfer-Encoding:
+7bit<BR>
+</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">Hello, shmuck!<BR>
+</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">}<BR>
+</FONT></TT>
+<P>
+<FONT SIZE=2>By building your own header, you may also build multi-part
+mail messages, like so:<BR>
+</FONT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\set{boundary}{}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\set{i}{0}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\while{\op{\i}{&lt;}{24}}{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">   \set{boundary}{\get{boundary}\rand{10}}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">   \inc{i}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">}<BR>
+</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">\email{schmuck@whereever.com}{</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">From: </FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">MIME-Version: 1.0</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">To: schmuck@whereever.com</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">Subject: You've got a graphic!</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">Content-Type: multipart/alternative;
+boundary=&quot;--------\get{boundary}&quot;<BR>
+</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">--------------\get{boundary}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">Content-type: text/plain;
+charset=us-ascii</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">Content-Transfer-Encoding:
+7bit<BR>
+</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">Hello, shmuck!  You've got
+a card!<BR>
+</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">--------------\get{boundary}</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">Content-type: text/html; charset=us-ascii</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">Content-Transfer-Encoding:
+7bit<BR>
+</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">&lt;HTML&gt;</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">&lt;BODY BGCOLOR=&quot;\#ffffff&quot;&gt;</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">&lt;CENTER&gt;</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">&lt;P&gt;</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">&lt;IMG SRC=&quot;http://www.someplace.com/card.gif&quot;&gt;&lt;P&gt;&lt;BR&gt;</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">&lt;/CENTER&gt;</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">&lt;/BODY&gt;</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">&lt;/HTML&gt;<BR>
+</FONT></TT>
+<P>
+<TT><FONT SIZE=2 FACE="Courier New">--------------\get{boundary}-</FONT></TT>
+<P>
+<A NAME="_Toc372599827"><I><FONT SIZE=2>Note that the email functionality
+is only available in UNIX versions of GUML, and not supported
+in the PC-version, PUML</FONT></I><FONT SIZE=2>.<BR>
+</FONT></A>
+<P>
+<FONT SIZE=2>V. Extending GUML</FONT>
+<P>
+<FONT SIZE=1>Header Files</FONT>
+<P>
+<FONT SIZE=1>Adding Primitives<BR>
+</FONT>
+<P>
+<A NAME="_Toc372599828"><B><FONT SIZE=2>Header Files</FONT></B></A>
+<P>
+<A NAME="_Toc372599829"><B><FONT SIZE=2>Adding Primitives</FONT></B></A>
+<BR>
+<P>
+<FONT SIZE=2>On the Chicago project in particular, and in any
+application in general, it will be desirable to add additional
+commands to GUML which execute C code instead of simply more GUML
+code.  This may be effected by adding appropriate entries to the
+header file </FONT><TT><FONT SIZE=2 FACE="Courier New">guml.h</FONT></TT><FONT SIZE=2>
+and then writing a C function which accepts an array of arguments
+and returns a string which is the output of that command.  All
+the primitives with the exception of </FONT><TT><FONT SIZE=2 FACE="Courier New">\if</FONT></TT><FONT SIZE=2>
+and </FONT><TT><FONT SIZE=2 FACE="Courier New">\quote</FONT></TT><FONT SIZE=2>
+are implemented like this.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>Such commands in existence include SQL interface
+and WWW processing directives.<BR>
+<BR>
+</FONT>
+<P>
+<A NAME="_Toc372599830"><B><FONT SIZE=4>Appendix A: Quick Reference</FONT></B></A>
+<P>
+<A NAME="_Toc372599831"><B><FONT SIZE=2>Appendix B: math_fmt</FONT></B></A>
+<P>
+<A NAME="_Toc372599832"><B><FONT SIZE=2>Appendix C: Chicago Headers</FONT></B></A>
+<BR>
+<BR>
+<BR>
+</BODY>
+</HTML>

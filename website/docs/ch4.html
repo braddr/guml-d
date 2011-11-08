@@ -1,0 +1,194 @@
+<HTML>
+<HEAD>
+<TITLE>Guml Reference page 4</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<FONT SIZE=+3><b>IV. Operators</b></FONT>
+<FONT SIZE=+2>
+<p><a href="#int">Integer Operations</a>
+<br><a href="#op"><b><tt>\op</tt></b> Notes</a>
+<br><a href="#bitwise">Bitwise Operations</a>
+<br><a href="#float">Floating Point Operations</a>
+<br><a href="#fop"><b><tt>\fop</tt></b> Notes</a>
+<br><a href="#money">The <b><tt>\money</tt></b> Primitive</a>
+<br><a href="#money">The <b><tt>\rand</tt></b> Primitive</a>
+</FONT>
+<p>
+<a name="int"><b>Integer Operations</b></a>
+<blockquote>
+<P>In GUML, integer arithmetic is performed via the <tt>\op</tt> function.  Its syntax is:<tt><P>\op{<I>val1</I>}{<I>op</I>}{<I>val2</I>}</tt> - Perform the mathematical operation indicated by <I>op</I> on values <I>val1</I> and <I>val2
+</I>
+
+<P>Here, <I>val1</I> and <I>val2</I> are expected to be strings representing numbers (e.g., &quot;23&quot; or &quot;-5&quot;, not &quot;three&quot;), and  <I>op</I> indicates which operation to perform on the numbers given.  Although, typically, GUML will be able to handle commands that lack the proper number of arguments (as noted in the Syntax section), the <tt>\op</tt> command (and it's floating-point cousin, <tt>\fop</tt>) are notable exceptions.  Each of these commands specifically requires that all three arguments are present, generating an error if not.
+
+<P>The following table outlines the functions performed by <tt>\op</tt>:
+
+<blockquote>
+<P>&#9;<I>op</I>&#9;operation&#9;&#9;returns
+
+<P>&#9;<tt>+</tt>&#9;sum&#9;&#9;&#9;<I>val1</I>+<I>val2
+
+
+</I><tt><P>-</tt>&#9;difference&#9;&#9;<I>val1</I>-<I>val2
+
+
+</I><tt><P>*</tt>&#9;multiplication&#9;&#9;<I>val1</I>*<I>val2
+</I><tt><P>/</tt>&#9;integer quotient&#9;&#9;<I>val1</I>/<I>val2
+</I><tt><P>%</tt>&#9;modulus&#9;&#9;&#9;integer remainder when <I>val1</I> is divided by <I>val2
+</I>
+<tt><P>&lt;</tt>&#9;less than&#9;&#9;&#9;&quot;true&quot; if <I>val1</I> is less than <I>val2</I>, else &quot;&quot;
+<tt><P>&gt;</tt>&#9;greater than&#9;&#9;&quot;true&quot; if <I>val1</I> is greater than <I>val</I>2, else &quot;&quot;
+<tt><P>&lt;=</tt>&#9;less than or equal to&#9;&quot;true&quot; if <I>val1</I> is less than or equal to <I>val2</I>, else &quot;&quot;
+<tt><P>&gt;=</tt>&#9;greater than or equal to&#9;&quot;true&quot; if <I>val1</I> is greater than or equal to <I>val2</I>, else &quot;&quot;
+<tt><P>=</tt>&#9;equals&#9;&#9;&#9;&quot;true&quot; if <I>val1</I> equals <I>val2</I>, else &quot;&quot;
+
+<tt><P>|</tt>&#9;bitwise or&#9;&#9;
+<tt><P>&amp;</tt>&#9;bitwise and&#9;&#9;<I>see below
+</I><tt><P>^</tt>&#9;bitwise exclusive-or&#9;
+
+<tt><P>v</tt> or <tt>V</tt>&#9;validate number&#9;&quot;true&quot; if <I>val1</I> is a valid string representation of an&#9;integer, else &quot;&quot;
+</blockquote>
+</blockquote>
+
+<a name="op"><B><P>\op Notes</B></a>
+<blockquote>
+
+<UL>
+</tt><LI>Note that <tt>\eq</tt>, a primitive mentioned earlier, tests for string equality, while using <tt>=</tt> tests for numerical equality; <tt>\eq{012}{12}</tt> is false (returns &quot;&quot;) but <tt>\op{012}{=}{12}</tt> is true.  This is analogous to the behavior PERL. </LI></UL>
+<UL>
+<LI>The <tt>v</tt> operation exposes the peculiarity that <tt>\op</tt> still requires a third argument even if it’s not used.  The string &quot;0&quot; or &quot;unused&quot; is always a good choice, i.e.:</LI></UL>
+<blockquote>
+<P ALIGN="RIGHT"><TABLE CELLSPACING=0 BORDER=0 CELLPADDING=7 WIDTH=559>
+<TR><TD WIDTH="50%" VALIGN="TOP">
+<I><tt><P>GUML</I></tt></TD>
+<TD WIDTH="50%" VALIGN="TOP">
+<I><tt><P>PERL</I></tt></TD>
+</TR>
+<TR><TD WIDTH="50%" VALIGN="TOP">
+<tt><P>&#9;\op{4}{v}{unused}</tt></TD>
+<TD WIDTH="50%" VALIGN="TOP">
+<tt><P>&#9;print 4 =~ /\d+/;&#9;</tt></TD>
+</TR>
+<TR><TD WIDTH="50%" VALIGN="TOP">
+<tt><P>&#9;\op{pasta}{v}{unused}</tt></TD>
+<TD WIDTH="50%" VALIGN="TOP">
+<tt><P>&#9;print &quot;pasta&quot; =~ /\d+/</tt></TD>
+</TR>
+</TABLE>
+</blockquote>
+<P>Naturally, you can use variables (with the <tt>\get</tt> primitive) instead of numbers and words, as the utility of testing whether &quot;4&quot; is an integer or not is pretty minimal.  Test cases, like this, are best used in conjunction with conditional statements, discussed in-depth in the next section.
+
+</blockquote>
+
+<a name="bitwise"><B><P>Bitwise Operations</B></a>
+<blockquote>
+
+<P>The bitwise operations <tt>|</tt>, <tt>&amp;</tt>, and <tt>^</tt> compare the binary representations of the numbers <I>val1</I> and <I>val2</I> and return a new number whose bits are the logical and, or, and exclusive-or of the bits in the input numbers.  These operations are included only to appease the veteran C programmer, and will likely find little practical use.  As such, for more details on these operations, the reader is referred to any introductory C text.
+
+</blockquote>
+<a name="float"><B><P>Floating Point Operations</B></a>
+<blockquote>
+
+<P>Floating-point operations (those involving non-integral, or real numbers) are performed with the <tt>\fop</tt> command, with syntax almost identical to that of <tt>\op:
+<P>\fop{<I>val1</I>}{<I>op</I>}{<I>val2</I>}{<I>digits</I>}</tt> - Perform the mathematical operation indicated by <I>op</I> on values <I>val1</I> and <I>val2</I>, with optional argument <I>digits</I> indicating the degree of accuracy.
+
+<P>In addition those operations performed by <tt>\op</tt>, above, the <tt>\fop</tt> primitive supports the following:
+<blockquote>
+<I><P>op</I>&#9;operation&#9;&#9;returns
+
+<tt><P>/</tt>&#9;real quotient&#9;&#9;the floating-point value <I>val1</I>/<I>val2
+
+<P>**&#9;</I>exponential&#9;the floating-point value <I>val1<SUP>val2</I>
+</SUP>
+
+<tt><P>f</tt> or <tt>F</tt>&#9;floor&#9;&#9;&#9;the &quot;floor&quot;, or integer part, of <I>val1</I>
+<tt><P>c</tt> or <tt>C</tt>&#9;ceiling&#9;&#9;&#9;the &quot;ceiling&quot;, or next greatest integer, of <I>val1</I>
+<tt><P>log</tt> or <tt>log10</tt>&#9;the natural log or log base 10 of <I>val1</I>
+<tt><P>r</tt> or <tt>R</tt>&#9;round&#9;&#9;&#9;<I>val1</I> rounded to the nearest integer
+<tt><P>v</tt> or <tt>V</tt>&#9;validate number&#9;&quot;true&quot; if <I>val1</I> is a valid string representation of a&#9;&#9;&#9;floating-point value, else &quot;&quot;
+</blockquote>
+<br>
+
+<!--
+(sidebar: "What is a unary operator") 
+<IMG SRC="Image3.gif" WIDTH=236 HEIGHT=159 ALIGN="LEFT" HSPACE=12>
+-->
+
+<i><b>What's a unary operator?</b><br>
+<blockquote>
+A unary operator is an operator that requires only one argument.  With most
+mathematical operations, you use binary operators ("+" requires that you add 
+two numbers together).  Unary operators need only one number to work properly
+(i.e. "What is the nearest integer to 3.14159?" instead of "What is 3 + 1?")<br></i>
+</blockquote>
+</blockquote>
+<a name="fop"><B><P>\fop Notes</B></a>
+<blockquote>
+
+<UL>
+<LI>The modulus (<tt>%</tt>) operator is not supported by the <tt>\fop</tt> function.</LI></UL>
+
+<UL>
+<LI>As with the <tt>v</tt> operation in <tt>\op</tt>, the unary operators <tt>f</tt>, <tt>c</tt>, <tt>r</tt>, and <tt>v</tt> require a third argument to <tt>\fop</tt>, even though this value is never used.</LI></UL>
+
+<UL>
+<LI>Though GUML does a respectable job of determining how many digits after the decimal point to return, a fourth argument may also be given to force the number of digits after the decimal place to <I>digits</I>.</LI></UL>
+
+</blockquote>
+<a name="money"><B><P>The \money Primitive</B></a>
+<blockquote>
+
+<P>Finally, in order to perform calculations with strings representing amounts of money, GUML uses a special primitive.  The \money command attempts to convert a &quot;money&quot;-type string (of the form $dd,ddd.cc) to a floating-point value (ddddd.cc) by removing the dollar signs and commas.  
+
+<P>If the string contains any character other than a number (0-9), a dollar sign ($), a comma (,), or a decimal point (a.k.a. period), the function returns the empty string &quot;&quot;; otherwise, the stripped and valid string is returned.  This command is useful for handling user-entered data which may, through egregious lack of foresight on behalf of the user, contain dollar signs and/or commas.  For example, the command
+<blockquote>
+<TABLE CELLSPACING=0 BORDER=0 CELLPADDING=7 WIDTH=590>
+<TR><TD WIDTH="50%" VALIGN="TOP">
+<I><tt><P>GUML</I></tt></TD>
+<TD WIDTH="50%" VALIGN="TOP">
+<I><tt><P>PERL</I></tt></TD>
+</TR>
+<TR><TD WIDTH="50%" VALIGN="TOP">
+<tt><P>&#9;\fop{
+<P>&#9;  \money{$10,240.37}}{+}{
+<P>&#9;    \money{1725.1}
+<P>&#9;}</tt></TD>
+<TD WIDTH="50%" VALIGN="TOP">
+<tt><P>&#9;$a = ‘$10,240.37’;
+<P>&#9;$a =~ y/$,//d;
+<P>&#9;printf &quot;%5.3f&quot;, $a + 1725.1;</tt></TD>
+</TR>
+</TABLE>
+</blockquote>
+
+<P>returns the string &quot;11965.47&quot;.  The <tt>\money</tt> command does not enforce proper placement of commas or dollar signs (<tt>\money{15,2,19$8,2.1$$,18,5}</tt> returns the string &quot;1521982.1185&quot;), nor does it complain if it encounters more than one decimal point (<tt>\money{134.10.2.10}</tt> returns the string &quot;134.10.2.10&quot;).  This should not be construed as an abuse of grammar since, presumably, <tt>\money</tt> will only be used in conjunction with other functions which verify that this output is indeed a proper number, such as:
+<blockquote>
+<TABLE CELLSPACING=0 BORDER=0 CELLPADDING=7 WIDTH=590>
+<TR><TD WIDTH="50%" VALIGN="TOP">
+<I><tt><P>GUML</I></tt></TD>
+<TD WIDTH="50%" VALIGN="TOP">
+<I><tt><P>PERL</I></tt></TD>
+</TR>
+<TR><TD WIDTH="50%" VALIGN="TOP">
+<tt><P>&#9;\fop{
+<P>&#9;  \money{$10,240.37}
+<P>&#9;  {v}{blank}
+<P>&#9;}</tt></TD>
+<TD WIDTH="50%" VALIGN="TOP">
+<tt><P>&#9;$a = ‘$10,240.37’;
+<P>&#9;$a =~ y/$,//d;
+<P>&#9;print $a =~ /^\d+\.\d+$/;</tt></TD>
+</TR>
+</TABLE>
+</blockquote>
+<P>Additional testing could be done to ensure that it only had 2 digits after the decimal point (or it could be forced through the \fop primitive to be truncated to 2 digits).
+
+</blockquote>
+
+<a name="rand"><B><P>The \rand Primitive</B></a>
+<blockquote>
+
+The <tt>\rand</tt> primitive takes one argument which is the upper limit of the
+random number which is returned.  <tt>\rand</tt> returns a random number 
+between zero and the upper limit minus one.  For example <tt>\rand{30}</tt> 
+will return a random number between 0 and 29.

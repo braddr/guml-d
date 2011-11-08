@@ -1,0 +1,360 @@
+<HTML>
+<HEAD>
+<TITLE>Guml Reference - Chapter 4</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+
+<FONT SIZE=+3><b>IV. Primitives and Macros</b></FONT>
+<p>
+<FONT SIZE=+2>
+Primitives<br>
+Macros<br>
+</FONT>
+
+<li>Primitives
+<li>Strings
+<li>Dates
+<li>Math
+<li>File Handling
+<li>Sendmail
+<li>Macros
+
+<p>
+
+<B><FONT SIZE=+1>Primitives</FONT></B>
+<P>
+
+<I><B>What is a string?</B></I>
+<P>
+
+A string is a character or group of characters which is being treated as
+characters (as opposed to numbers.)  As in most programming languages, the
+positioning of characters in a string begins at 0;  for example, in the
+string &quot;<TT>ska</TT>&quot;, the character &quot;<TT>s</TT>&quot;
+is in the position 0, &quot;<TT>k</TT>&quot; is in the position 1,
+etc., when you index into (or refer to a specific character in) the string.
+The counting of the number of the characters (or length) still begins at 1,
+so that the length of &quot;<TT>ska</TT>&quot; is 3, although
+&quot;<TT>a</TT>&quot; is in the position 2.
+
+<P>
+<B><FONT SIZE=+1>String Primitives</FONT></B>
+<P>
+
+The following is a list of basic string primitives in GUML.
+
+<TT>\strlength{<I>string</I>}</TT>
+	- Returns the length of <TT><I>string</I></TT>
+
+<blockquote>
+Example: <TT>\strlength{two}</TT>
+<P>
+Returns: <TT>3</TT>
+</blockquote>
+
+<TT>\strindex{<I>string1</I>}{<I>string2</I>}</TT>
+	- Returns the starting character position of <TT><I>string2</I></TT>
+	  within <TT><I>string1</I></TT>.  Returns the empty string if not found.
+
+<blockquote>
+Example: <TT>\strindex{bladda}{adda}</TT>
+<P>
+Returns: <TT>2</TT>
+</blockquote>
+
+<TT>\substr{<I>string</I>}{<I>startpos</I>}{<I>length</I>}</TT>
+	- Returns substring of length <TT><I>length</I></TT> starting at the
+	  character position of <TT><I>startpos</I></TT>.  Returns the empty
+	  string if not found.
+
+<blockquote>
+Example: <TT>\substr{yarf}{1}{3}</TT>
+<P>
+Returns: <TT>arf</TT>
+</blockquote>
+
+<TT>\strip{<I>string1</I>}{<I>string2</I>}</TT>
+	- Returns <TT><I>string1</I></TT> after having stripped all of the
+	  individual characters in <TT><I>string2</I></TT>.
+
+<blockquote>
+Example: <TT>\strip{whatever}{ev}</TT>
+<P>
+Returns: <TT>whatr</TT>
+</blockquote>
+
+<TT>\strtok{<I>string</I>}{<I>token</I>}</TT>
+	- Returns the <TT><I>string</I></TT> up until <TT><I>token</I></TT>.
+	  Returns the entire string if not found.
+
+<blockquote>
+Example: <TT>\strtok{rida-bike}{-}</TT>
+<P>
+Returns: <TT>rida</TT>
+</blockquote>
+
+<TT>\strupper{<I>string</I>}</TT>
+	- Returns the capitalized <TT><I>string</I></TT>.
+
+<blockquote>
+Example: <TT>\strupper{no}</TT>
+<P>
+Returns: <TT>NO</TT>
+</blockquote>
+
+<TT>\strlower{<I>string</I>}</TT>
+	- Returns the <TT><I>string</I></TT> in lower case.
+
+<blockquote>
+Example: <TT>\strlower{HAhaHA}</TT>
+<P>
+Returns: <TT>hahaha</TT>
+</blockquote>
+
+<TT>\date{<I>format</I>}{<I>time</I>}</TT>
+	- Without any arguments, returns a date of the format: May 04, 1998.
+	  The optional format string is the same as the C format string for date
+	  (which is detailed in the man pages for &quot;date&quot;).  The second
+	  optional argument is the unix time (seconds since Jan 01, 1970 0:00 GMT)
+	  to convert (as in &quot;854523817&quot;--see <TT>\time</TT> for more
+	  info), which defaults to the current time.
+
+<blockquote>
+Example: <TT>\date</TT>
+<P>
+Returns: <TT>May 04, 1998</TT>
+<P>
+Example: <TT>\date{%B %e, %Y}</TT>
+<P>
+Returns: <TT>May 4, 1998</TT>
+<P>
+Example: <TT>\date{DATE: %m/%d/%y -- TIME: %H:%M:%S}</TT>
+<P>
+Returns: <TT>DATE: 08/01/76 -- TIME: 14:45:05</TT>
+<P>
+Example: <TT>\date{}{865719873}</TT>
+<P>
+Returns: June 07, 1997
+<P>
+<I>Note that date formatting strings may not work under NT platforms the
+same as they do for UNIX platforms.</I>
+
+</blockquote>
+
+<TT>\time{<I>format</I>}{<I>seconds</I>}</TT>
+	- Without any arguments, returns the number of seconds since Jan 1st,
+	  1970 0:00 GMT.  The optional parameters exist so that you may give it
+	  the number of seconds and a date format string, and <TT>time</TT> will
+	  give you the date.  See <TT>\date</TT>for more information on date
+	  format strings.
+
+<blockquote>
+Example: <TT>\time</TT>
+<P>
+Returns: <TT>894310768</TT>
+</blockquote>
+
+<TT>\sqlquote{<I>string</I>}</TT>
+	- Quotes a string.  That is, replaces the single quote character
+	  &quot;<TT>'</TT>&quot; with two single quotes &quot;<tt>''</tt>&quot;.
+	  See Database Connectivity (section III) for more information on using
+	  GUML with databases.
+
+<blockquote>
+Example: <TT>\sqlquote{ain't ain't a word!}</TT>
+<P>
+Result: <TT>ain''t ain''t a word!</TT>
+</blockquote>
+
+<TT>\htmlquote{<I>string</I>}</TT>
+	- Quotes a string or a block of text to avoid any unwanted HTML parsing.
+
+<blockquote>
+Example: <TT>\htmlquote{&lt;img src=&quot;blah.jpg&quot;&gt;}</TT>
+<P>
+Result: <TT>&amp;lt;img src=&amp;quot;blah.jpg&amp;quot;&amp;gt;</TT>
+</blockquote>
+
+<br><br>
+
+<B>Math Primitives</B>
+<P>
+If you've read Section II on Operators,  you already
+know how to use most GUML math primitives, and can look there
+for more in-depth information.  The following is provided as a
+quick reference.
+
+<P>
+
+<TT>\op{<I>val1</I>}{<I>op</I>}{<I>val2</I>}</TT>
+	- Performs an integer operation.
+
+<blockquote>
+Example: <TT>\op{1}{+}{12}</TT>
+<P>
+Returns: <TT>13</TT>
+</blockquote>
+
+<TT>\fop{<I>val1</I>}{<I>op</I>}{<I>val2</I>}</TT>
+	- Performs a floating-point operation.
+
+<blockquote>
+Example: <TT>\fop{1.666}{+}{12}</TT>
+<P>
+Returns: <TT>13.666</TT>
+</blockquote>
+
+<TT>\rand{<I>num</I>}</TT>
+	- Returns a psuedo-random integer between 0 and <TT><I>num</I></TT>-1,
+	  inclusive.
+
+<blockquote>
+Example: <TT>\rand{7}</TT>
+<p>
+Returns: Any number from 0 to 6, each with equal probability.
+</blockquote>
+
+<TT>\money{<I>string</I>}</TT>
+	- Converts a money string into a floating point value by removing
+	  dollar signs and commas.
+
+<blockquote>
+Example: <TT>\money{$12,123.60}</TT>
+<P>
+Returns: <TT>12123.60</TT>
+</blockquote>
+
+<BR>
+<BR>
+<B>File Handling Primitives</B>
+<P>
+
+<TT>\open{<I>filename</I>}</TT>
+	- Opens a file called <TT><I>filename</I></TT> for reading.  Returns a
+	  filehandle string if successful, the empty string if not.
+<P>
+<TT>\output{<I>filename</I>}</TT>
+	- Opens the file <TT><I>filename</I></TT> for output.  Returns a
+	  filehandle string if successful, the empty string if not.
+<P>
+<TT>\append{<I>filename</I>}</TT>
+	- Opens a file for appending to.  Returns a filehandle
+	  string if successful, the empty string if not.
+<P>
+<TT>\close{<I>filehandle</I>}</TT>
+	- Closes the file indicated by the filehandle <TT><I>filehandle</I></TT>.
+<P>
+<TT>\isopen{<I>filehandle</I>}</TT>
+	- Returns true if the file indicated by the filehandle
+	  <TT><I>filehandle</I></TT> is open, the empty string if not.
+<P>
+<TT>\readline{<I>filehandle</I>}</TT>
+	- Reads a line of text in from the file indicated by the filehandle
+	  <TT><I>filehandle</I></TT>.  If there is no text left in the file,
+	  it is closed.
+<P>
+<TT>\writeline{<I>filehandle</I>}{<I>string</I>}</TT>
+	- Outputs the contents of <TT><I>string</I></TT> to the opened file.
+
+<blockquote>
+Example:
+
+<blockquote>
+<pre>
+\set{infile}{\open{infile.txt}}
+\if{\not{\isopen{\get{infile}}}}{
+  \error{sorry, the file "infile.txt" doesn't exist!}
+}
+
+\set{outfile}{\open{outfile.txt}}
+\if{\isopen{\get{infile}}}{
+  \error{sorry, the file "outfile.txt" already exists!}
+}
+
+\close{\get{outfile}}
+\set{outfile}{\output{outfile.txt}}
+\while{\isopen{\get{infile}}}{
+  \writeline{\get{outfile}}{\readline{\get{infile}}}
+}
+</pre>
+</blockquote>
+
+Result: The file <tt>infile.txt</tt> (if it exists) is copied to the file
+<tt>outfile.txt</tt> (if it doesn't already exist).
+
+</blockquote>
+
+<BR><BR>
+<B>Sendmail Primitives</B>
+<P>
+
+<TT>\email{<I>address</I>}{<I>messagebody</I></TT>}
+	- Emails the contents of <TT><I>messagebody</I></TT> to the email address
+	  <TT><I>address</I></TT>.  Lets you build the header in
+	  <TT><I>messagebody</I></TT>.
+
+<blockquote>
+Example:
+<blockquote>
+<pre>
+\email{schmuck@whereever.com}{
+  From:
+  To: schmuck@whereever.com
+  Subject: Hello!
+
+  Hello, shmuck!
+}
+</pre>
+</blockquote>
+
+By building your own header, you may also build multi-part mail messages,
+like so:
+
+<blockquote>
+<pre>
+\set{boundary}{}
+\set{i}{0}
+\while{\op{\i}{&lt;}{24}}{
+  \set{boundary}{\get{boundary}\rand{10}}
+  \inc{i}
+}
+
+\email{schmuck@whereever.com}{
+  From:
+  MIME-Version: 1.0
+  To: schmuck@whereever.com
+  Subject: You've got a graphic!
+  Content-Type: multipart/alternative; boundary=&quot;--------\get{boundary}&quot;
+
+  --------------\get{boundary}
+  Content-type: text/plain; charset=us-ascii
+  Content-Transfer-Encoding: 7bit
+
+  Hello, shmuck!  You've got a card!
+
+  --------------\get{boundary}
+  Content-type: text/html; charset=us-ascii
+  Content-Transfer-Encoding: 7bit
+
+  &lt;HTML&gt;
+  &lt;BODY BGCOLOR=&quot;\#ffffff&quot;&gt;
+  &lt;CENTER&gt;
+  &lt;P&gt;
+  &lt;IMG SRC=&quot;http://www.someplace.com/card.gif&quot;&gt;
+  &lt;P&gt;
+  &lt;/CENTER&gt;
+  &lt;/BODY&gt;
+  &lt;/HTML&gt;
+
+  --------------\get{boundary}-
+}
+</pre>
+</blockquote>
+
+</blockquote>
+
+<I>Note that the email functionality is only available in UNIX versions of
+GUML, and not supported in the PC-version, PUML</I>.
+
+</BODY>
+</HTML>
