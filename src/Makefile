@@ -4,7 +4,7 @@
 # TUXEDO = yes
  
 # define for fastcgi, comment out otherwise
-FASTCGI = yes
+# FASTCGI = yes
 
 # define for purify compilation
 # PURIFY = yes
@@ -186,9 +186,8 @@ endif
 
 ifeq (${DB},MYSQL)
 DB_OBJS = mysql.o
-MYSQL_HOME = /usr/local/mysql
-DB_CFLAGS  = -DUSE_MYSQL -I${MYSQL_HOME}/include/mysql
-DB_LIBS    = -L${MYSQL_HOME}/lib/mysql -lmysqlclient -lm -lnsl
+DB_CFLAGS  = -DUSE_MYSQL
+DB_LIBS    = -lmysqlclient
 ifneq (${OS},LINUX)
     DB_LIBS += -lsocket
 endif
@@ -246,7 +245,7 @@ endif
 
 LIBS = ${OS_LIBS} ${DB_LIBS} ${OTHER_LIBS}
 ifdef FASTCGI
-LIBS += -L/home/www-data/fcgi-src/fcgi-dev-kit/devkit_2.2.0/libfcgi -lfcgi
+LIBS += -lfcgi
 ifeq (${OS},SOLARIS_26)
 LIBS += -lsocket -lnsl
 endif
@@ -267,20 +266,18 @@ test_hash: test_hash.o hash_table.o
 	$(CC) $(CFLAGS) -o test_hash test_hash.o hash_table.o
 
 bestguml: bestguml.o $(O_FILES)
-ifdef TUXEDO
-	buildclient -v -w -o bestguml -f bestguml.o `for x in $(O_FILES); do echo -f $$x; done` `for x in $(LIBS); do echo -l $$x; done`
-else
-	$(FINAL_CC) -o bestguml bestguml.o $(O_FILES) $(LIBS)
-endif
+	dmd -ofbestguml bestguml.o $(O_FILES) $(addprefix -L,$(LIBS))
 
 #stub: stub.o
 #	${CC} $(CFLAGS) -o stub stub.o
 
 stub.o: stub.c local.h
 
-bestguml.o: bestguml.c global.h local.h
+bestguml.o: bestguml.d global.h local.h
+	dmd -c -gc $<
 
-setup.o: setup.c global.h local.h
+setup.o: setup.d global.h local.h
+	dmd -c -gc $<
 
 test_hash.o: test_hash.c global.h
 

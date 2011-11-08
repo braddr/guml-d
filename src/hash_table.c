@@ -98,7 +98,7 @@ INLINE void calc_hash_increment(unsigned long *hash_value, char c)
     *hash_value = (*hash_value << 4) + c;
 }
 
-unsigned long calc_hash(char *str)
+unsigned long calc_hash(const char *str)
 {
     unsigned long hashval = 0/*, g*/;
     int len;
@@ -111,7 +111,7 @@ unsigned long calc_hash(char *str)
     return hashval;
 }
 
-HashNode *find_hash_node(char *key, unsigned long hash)
+HashNode *find_hash_node(const char *key, unsigned long hash)
 {
     int bucket = hash % HASH_WIDTH;
     unsigned int i = 0;
@@ -126,7 +126,7 @@ HashNode *find_hash_node(char *key, unsigned long hash)
         return NULL;
 }
 
-Data *find_hash_data(char *key, unsigned long hash)
+Data *find_hash_data(const char *key, unsigned long hash)
 {
     HashNode *tmp = find_hash_node(key, hash);
 
@@ -176,7 +176,7 @@ int insert_hash(char *key, Data *data, unsigned long hash, unsigned long flags)
     return 0;
 }
 
-void delete_hash(char *key, unsigned long hash)
+void delete_hash(const char *key, unsigned long hash)
 {
     int bucket = hash % HASH_WIDTH;
     unsigned int i = 0;

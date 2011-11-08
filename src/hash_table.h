@@ -21,15 +21,15 @@ typedef struct hash_struct
     unsigned long flags;
 } HashNode;
 
-extern unsigned long calc_hash(char *str);
+extern unsigned long calc_hash(const char *str);
 extern void init_engine(void);
 extern void push_stack(Data *data);
 extern Data *pop_stack(void);
 extern void shrink_stack(void);
-extern HashNode *find_hash_node(char *key, unsigned long hash);
-extern Data *find_hash_data(char *key, unsigned long hash);
+extern HashNode *find_hash_node(const char *key, unsigned long hash);
+extern Data *find_hash_data(const char *key, unsigned long hash);
 extern void insert_hash(char *key, Data *data, unsigned long hash, unsigned long flags);
-extern void delete_hash(char *key, unsigned long hash);
+extern void delete_hash(const char *key, unsigned long hash);
 extern void clean_hash(unsigned long flags);
 
 #ifdef DEBUG_STACK

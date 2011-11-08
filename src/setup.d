@@ -1,20 +1,49 @@
-/* six.c */
-/* main entry point for site */
+module setup;
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+import data;
+import hashtable;
 
-#include "global.h"
+import core.stdc.config;
+import core.stdc.stdio;
+import core.stdc.stdlib;
+import core.stdc.string;
 
-extern char **guml_env;
+extern(C)
+{
+    extern char **guml_env;
 
-#ifdef FASTCGI
-extern FCGX_Stream *fcgi_in;
-extern FCGX_ParamArray fcgi_envp;
-#endif
+    version (FASTCGI)
+    {
+        extern FCGX_Stream* fcgi_in;
+        extern FCGX_ParamArray fcgi_envp;
+    }
 
-#ifdef BRADDR_TESTING
+    extern Data *create_string(char *str, int no_dup);
+    extern void add_string_size(Data *s1, char *s2, c_ulong s2_len);
+
+    extern c_ulong calc_hash(const char *str);
+    extern int insert_hash(char *key, Data *data, c_ulong hash, c_ulong flags);
+
+    extern char *http_decode(char *);
+}
+
+char* GETENV(const char* e)
+{
+    version (FASTCGI)
+        return FCGX_GetParam(e, fcgi_envp);
+    else
+        return getenv(e);
+}
+
+Data* create_string(string s, int no_dup)
+{
+    assert(!no_dup);
+    return create_string(cast(char*)s.ptr, 0);
+}
+
+version (none)
+{
+
 void read_startup_config_file(void)
 {
     Data output;
@@ -31,27 +60,31 @@ void read_startup_config_file(void)
 
 void read_per_page_hit_config_file(void)
 {
-    Data results, *ptr;
-    char *buf;
+    Data  results;
+    Data* ptr;
+    char* buf;
 
-    results.data = NULL;
+    results.data = null;
     results.length = 0;
 
     ptr = find_hash_data("SERVERNAME", calc_hash("SERVERNAME"));
-    buf = malloc(strlen(ptr->data)+10);
-    sprintf (buf, "/headers/%s", ptr->data);
+    buf = malloc(strlen(ptr.data)+10);
+    sprintf (buf, "/headers/%s", ptr.data);
     guml_file_include(&results, &buf, 1);
     free(buf);
 }
-#endif
 
-void setup_commandline (int argc, char *argv[])
+}
+
+void setup_commandline (string[] args)
 {
     printf("command line usage disabled\n");
     exit(1);
-#if 0
+version(none)
+{
     int i;
-    char n[8], filename[256];
+    char[8] n;
+    char[256] filename;
 
     filename[0] = 0;
     if (argc > 1)
@@ -70,13 +103,14 @@ void setup_commandline (int argc, char *argv[])
             insert_hash(strdup(n), create_string(argv[i], 0), calc_hash(n), HASH_ARG);
         }
     }
-#endif
+}
 }
 
 void setup_args ()
 {
-#if defined(ARG_HANDLE_USE_ONLY_GET_FORMAT)
-    char *env_ptr, *str, *p, *q;
+version(ARG_HANDLE_USE_ONLY_GET_FORMAT)
+{
+    char* env_ptr, str, p, q;
 
     env_ptr = GETENV ("QUERY_STRING");
     if (env_ptr)
@@ -93,12 +127,15 @@ void setup_args ()
                 q++;
                 insert_hash(strdup(http_decode(p)), create_string(http_decode(q), 0), calc_hash(p), HASH_FORM);
             }
-            p = strtok (NULL, "&");
+            p = strtok (null, "&");
         }
         free(str);
     }
-#elif defined(ARG_HANDLE_BOTH_FORMATS)
-    char *env_ptr, *str, *str2, *p, *q, n[8];
+}
+else version(ARG_HANDLE_BOTH_FORMATS)
+{
+    char* env_ptr, str, str2, p, q;
+    char[8] n;
     int i;
 
     env_ptr = GETENV ("QUERY_STRING");
@@ -113,7 +150,7 @@ void setup_args ()
         {
             sprintf (n, "ARG_%d", i);
             insert_hash(strdup(n), create_string(p, 0), calc_hash(n), HASH_ARG);
-            p = strtok (NULL, " ");
+            p = strtok (null, " ");
             i++;
         }
         free (str);
@@ -128,12 +165,15 @@ void setup_args ()
                 q++; 
                 insert_hash(strdup(http_decode(p)), create_string(http_decode(q), 0), calc_hash(p), HASH_FORM);
             }
-            p = strtok (NULL, "&");
+            p = strtok (null, "&");
         }
         free(str2);
     }
-#else
-    char *env_ptr, *str, *p, n[8];
+}
+else
+{
+    char* env_ptr, str, p;
+    char[8] n;
     int i;
 
     env_ptr = GETENV ("QUERY_STRING");
@@ -145,19 +185,19 @@ void setup_args ()
         i = 1;
         while (p && i < 10000)
         {
-            sprintf (n, "ARG_%d", i);
-            insert_hash(strdup(n), create_string(p, 0), calc_hash(n), HASH_ARG);
-            p = strtok (NULL, " ");
+            sprintf (n.ptr, "ARG_%d", i);
+            insert_hash(strdup(n.ptr), create_string(p, 0), calc_hash(n.ptr), HASH_ARG);
+            p = strtok (null, " ");
             i++;
         }
         free (str);
     }
-#endif
+}
 }
 
-void setup_form_args (void)
+void setup_form_args ()
 {
-    char *data, *p, *q;
+    char* data, p, q;
     int cl;
 
     data = GETENV ("CONTENT_LENGTH");
@@ -166,13 +206,13 @@ void setup_form_args (void)
         cl = atoi (data);
         if (cl)
         {
-            data = malloc ((cl + 1) * sizeof (char));
+            data = cast(char*)malloc ((cl + 1) * char.sizeof);
 
-#ifdef FASTCGI
+version (FASTCGI)
             FCGX_GetStr (data, cl, fcgi_in);
-#else
+else
             fread (data, 1, cl, stdin);
-#endif
+
             data[cl]=0;
 
             // keep an unmodified copy
@@ -188,16 +228,16 @@ void setup_form_args (void)
                     q++;
                     insert_hash(strdup(p), create_string(http_decode(q), 0), calc_hash(p), HASH_FORM);
                 }
-                p = strtok (NULL, "&");
+                p = strtok (null, "&");
             }
             free (data);
         }
     }
 }
 
-void setup_cookie_args (void)
+void setup_cookie_args ()
 {
-    char *env_str, *str, *p;
+    char* env_str, str, p;
     int i;
 
     env_str = GETENV("HTTP_COOKIE");
@@ -210,13 +250,13 @@ void setup_cookie_args (void)
         {
             char *q;
 
-            if ((q = strchr (p, '=')) != NULL)
+            if ((q = strchr (p, '=')) != null)
             {
                 *q = 0;
                 q++;
                 insert_hash(strdup(p), create_string(q, 0), calc_hash(p), HASH_COOKIE);
             }
-            p = strtok (NULL, ";");
+            p = strtok (null, ";");
             if (p)
                 p++;
             i++;
@@ -232,7 +272,7 @@ void setup_cookie_args (void)
  */
 void setup_extract_parts(char *pi, char *pt)
 {
-    char *pi_ptr, *pt_ptr, *pi_last_slash, *pt_last_slash;
+    char* pi_ptr, pt_ptr, pi_last_slash, pt_last_slash;
     Data *data;
 
     /* examples:
@@ -272,9 +312,9 @@ void setup_extract_parts(char *pi, char *pt)
         pt_ptr++;
 
     /* BASE_DIR will be the data between pt and pt_ptr, inclusive */
-    data = (Data*)malloc(sizeof(Data));
-    data->data = NULL;
-    data->length = 0;
+    data = cast(Data*)malloc(Data.sizeof);
+    data.data = null;
+    data.length = 0;
     add_string_size(data, pt, pt_ptr-pt+1);
     insert_hash(strdup("BASE_DIR"), data, calc_hash("BASE_DIR"), HASH_ENV);
 
@@ -282,33 +322,16 @@ void setup_extract_parts(char *pi, char *pt)
     insert_hash(strdup("FILENAME"), create_string(pt_ptr, 0), calc_hash("FILENAME"), HASH_ENV);
 
     /* PATH will be the data between pt_ptr and pt_last_lash, inclusive */
-    data = (Data*)malloc(sizeof(Data));
-    data->data = NULL;
-    data->length = 0;
+    data = cast(Data*)malloc(Data.sizeof);
+    data.data = null;
+    data.length = 0;
     add_string_size(data, pt_ptr, pt_last_slash-pt_ptr+1);
     insert_hash(strdup("PATH"), data, calc_hash("PATH"), HASH_ENV);
 }
 
-#if 0
-    used to be used between making sure that PATH_INFO and PATH_TRANSLATED both exist
-
-    char filename[256];
-    if (!GETENV("REDIRECT_STATUS") && !GETENV("HTTP_REDIRECT_STATUS"))
-    {   /* not a redirect, setup from local.h */
-        insert_hash(strdup("BASE_DIR"), create_string(GUMLROOT, 0), calc_hash("BASE_DIR"), HASH_ENV);
-        insert_hash(strdup("FILENAME"), create_string(pi, 0), calc_hash("FILENAME"), HASH_ENV);
-
-        strcpy (filename, pi);
-        if (strrchr (filename, '/') != NULL)
-            *strrchr (filename, '/') = 0;
-        insert_hash(strdup("PATH"), create_string(filename, 0), calc_hash("PATH"), HASH_ENV);
-        return;
-    }
-#endif
-
 void setup_path_and_filename ()
 {
-    char *pi, *pt;
+    char* pi, pt;
 
     pi = GETENV ("PATH_INFO");
     pt = GETENV ("PATH_TRANSLATED");
@@ -330,36 +353,31 @@ void setup_path_and_filename ()
 
     /* unknown method of getting path from environment */
     return;
-#if 0
-    insert_hash(strdup("BASE_DIR"), create_string(GUMLROOT, 0), calc_hash("BASE_DIR"), HASH_ENV);
-    insert_hash(strdup("FILENAME"), create_string("/file-not-found", 0), calc_hash("FILENAME"), HASH_ENV);
-    insert_hash(strdup("PATH"), create_string("/", 0), calc_hash("PATH"), HASH_ENV);
-#endif
 }
 
-void setup_environment (int argc, char *argv[])
+void setup_environment (string[] args)
 {
-    char servername[256], *tmp;
+    char[256] servername;
+    char* tmp;
     int iscomm;
-#if defined(DEBUG_ENV)
-    FILE *fp;
-#endif
+    version (DEBUG_ENV) FILE *fp;
 
-#if defined(DEBUG_ENV)
-    if ((fp = fopen("/tmp/guml-environ", "a")) != NULL)
+    version (DEBUG_ENV)
     {
-        for (int i=0; guml_env[i]; i++)
-            fprintf(fp, "%s\n", guml_env[i]); 
-        fclose(fp);
+        if ((fp = fopen("/tmp/guml-environ", "a")) != null)
+        {
+            for (int i=0; guml_env[i]; i++)
+                fprintf(fp, "%s\n", guml_env[i]); 
+            fclose(fp);
+        }
     }
-#endif
 
     /* find out if we're off the "command line" */
     tmp = GETENV ("REQUEST_METHOD");
     if (tmp)
         insert_hash(strdup("REQUEST_METHOD"), create_string(tmp, 0), calc_hash("REQUEST_METHOD"), HASH_ENV);
 
-    iscomm = (tmp == NULL);
+    iscomm = (tmp == null);
     if (iscomm)
         insert_hash(strdup("USER"), create_string("manual", 0), calc_hash("USER"), HASH_ENV);
     else
@@ -371,28 +389,28 @@ void setup_environment (int argc, char *argv[])
 
     servername[0] = 0;
     if (iscomm)
-        strcpy (servername, "localhost");
+        strcpy (servername.ptr, "localhost");
     else
     {
         tmp = GETENV ("SERVER_NAME");
         if (tmp)
         {
-            strncpy (servername, tmp, 240);
+            strncpy (servername.ptr, tmp, 240);
             servername[240] = 0;
-            insert_hash(strdup("SERVERDOMAIN"), create_string(servername, 0), calc_hash("SERVERDOMAIN"), HASH_ENV);
+            insert_hash(strdup("SERVERDOMAIN"), create_string(servername.ptr, 0), calc_hash("SERVERDOMAIN"), HASH_ENV);
         }
         tmp = GETENV ("SERVER_PORT");
         if (tmp)
             if (atoi (tmp) != 80 && atoi (tmp) != 443)
             {
-                strcat (servername, ":");
-                strcat (servername, tmp);
+                strcat (servername.ptr, ":");
+                strcat (servername.ptr, tmp);
             }
     }
-    insert_hash(strdup("SERVERNAME"), create_string(servername, 0), calc_hash("SERVERNAME"), HASH_ENV);
+    insert_hash(strdup("SERVERNAME"), create_string(servername.ptr, 0), calc_hash("SERVERNAME"), HASH_ENV);
 
     if (iscomm)
-        setup_commandline(argc, argv);
+        setup_commandline(args);
     else
     {
         setup_args ();

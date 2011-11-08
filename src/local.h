@@ -226,7 +226,7 @@
 #define ARG_HANDLE_USE_ONLY_GET_FORMAT
 
 #ifdef USE_MYSQL
-#define DB_HOST		"localhost"
+#define DB_HOST		"slice-1.puremagic.com"
 #define DB_DB		"dwebsite"
 #define DB_USERID	"dwebsite"
 #define DB_PASSWORD	"fn0rd3"

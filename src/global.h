@@ -81,12 +81,12 @@ extern void init_hash_table(void);
 extern void push_stack(Data *data);
 extern Data *pop_stack(void);
 extern void shrink_stack(void);
-extern Data *find_hash_data(char *key, unsigned long hash);
+extern Data *find_hash_data(const char *key, unsigned long hash);
 extern int  insert_hash(char *key, Data *data, unsigned long hash, unsigned long flags);
-extern void delete_hash(char *key, unsigned long hash);
+extern void delete_hash(const char *key, unsigned long hash);
 extern void clean_hash(unsigned long flags);
-extern HashNode *find_hash_node(char *key, unsigned long hash);
-extern unsigned long calc_hash(char *str);
+extern HashNode *find_hash_node(const char *key, unsigned long hash);
+extern unsigned long calc_hash(const char *str);
 
 #ifdef DEBUG_STACK
 extern void stack_info(void);
@@ -103,7 +103,7 @@ extern void read_per_page_hit_config_file(void);
 #endif
 
 /* string_utils.c */
-extern void writelog(char *msg, ...);
+extern void writelog(const char *msg, ...);
 extern Data *create_string(char *str, int no_dup);
 extern char *strip_space (char *buffer);
 extern char *rtrim (char *buffer);

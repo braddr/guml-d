@@ -8,7 +8,7 @@
 #include "global.h"
 
 /* get time as text string */
-void writelog(char *msg, ...)
+void writelog(const char *msg, ...)
 {
     struct timeval tp;
     char str[1024];
