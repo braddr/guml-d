@@ -113,7 +113,7 @@ int clean_filehandles(void)
         free(tmp);
         num_closed++;
     }
-	filestack = NULL;
+    filestack = NULL;
     return num_closed;
 }
 
@@ -133,7 +133,7 @@ char *guml_filehandle_close (Data *out_string, char **args, int nargs)
             else
                prev->nextfile = ptr->nextfile;
 
-	    fclose(ptr->fileptr);
+            fclose(ptr->fileptr);
             free (ptr->filename);
             free (ptr);
             break;

@@ -177,9 +177,7 @@ double guml_calc_parseexpr (char *expr, int level)
             {
                 switch (level)
                 {
-
-                        /* bitwise - should probably test for integers first! */
-
+                    /* bitwise - should probably test for integers first! */
                     case 0:
                         if (c == '|' || c == '^' || c == '&')
                         {
@@ -216,9 +214,8 @@ double guml_calc_parseexpr (char *expr, int level)
                         }
                         break;
 
-                        /* additive operations +, - (binary and unary), and %
-                           note that % is *REAL* modulus, not stupid c version.. */
-
+                    /* additive operations +, - (binary and unary), and %
+                       note that % is *REAL* modulus, not stupid c version.. */
                     case 1:
                         if (c == '+')
                         {
@@ -261,8 +258,7 @@ double guml_calc_parseexpr (char *expr, int level)
                         }
                         break;
 
-                        /* multiplicative operations * and / */
-
+                    /* multiplicative operations * and / */
                     case 2:
                         if (c == '*')
                         {
@@ -293,8 +289,7 @@ double guml_calc_parseexpr (char *expr, int level)
                         }
                         break;
 
-                        /* exponentiation! ("**") */
-
+                    /* exponentiation! ("**") */
                     case 3:
                         if (c == '*')
                         {
@@ -379,13 +374,15 @@ char *guml_calculator (Data *out_string, char *args[], int nargs)
     }
 }
 
-/*
-   void main(int argc, char *argv[]) {
-   char *args[2] = { strdup(argv[1]), NULL };
+#if 0
+void main(int argc, char *argv[])
+{
+    char *args[2] = { strdup(argv[1]), NULL };
 
-   if(argc>1) {
-   printf("%s\n",guml_calculator(args,1));
-   }
-   else printf("Usage: calc expression\n");
-   }
- */
+    if(argc>1)
+        printf("%s\n",guml_calculator(args,1));
+    else
+        printf("Usage: calc expression\n");
+}
+#endif
+

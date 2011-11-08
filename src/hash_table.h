@@ -1,24 +1,24 @@
 #ifndef __NEW_ENV_H
 #define __NEW_ENV_H
 
-#define STACK_INCREMENT	16
-#define STACK_MASK	(unsigned long)(-STACK_INCREMENT)
-#define HASH_WIDTH	509
-#define HASH_DEPTH	16
-#define HASH_MASK	(unsigned long)(-HASH_DEPTH)
+#define STACK_INCREMENT 16
+#define STACK_MASK     (unsigned long)(-STACK_INCREMENT)
+#define HASH_WIDTH      509
+#define HASH_DEPTH      16
+#define HASH_MASK      (unsigned long)(-HASH_DEPTH)
 
 typedef struct data_struct
 {
-	char *data;
-	unsigned long length;
+    char *data;
+    unsigned long length;
 } Data;
 
 typedef struct hash_struct
 {
-	Data *data;
-	char *key;
-	unsigned long hash;
-	unsigned long flags;
+    Data *data;
+    char *key;
+    unsigned long hash;
+    unsigned long flags;
 } HashNode;
 
 extern unsigned long calc_hash(char *str);

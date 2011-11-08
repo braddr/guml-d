@@ -166,10 +166,10 @@ char *guml_sqlrow (Data *out_string, char *args[], int nargs)
         return NULL;
 
     for (i = 0; i < mysql_num_fields(res) && i < nargs; i++)
-		if (row[i])
-        	insert_hash(strdup(args[i]), create_string(row[i], 0), calc_hash(args[i]), 0);
-		else
-        	insert_hash(strdup(args[i]), create_string("", 0), calc_hash(args[i]), 0);
+        if (row[i])
+            insert_hash(strdup(args[i]), create_string(row[i], 0), calc_hash(args[i]), 0);
+        else
+            insert_hash(strdup(args[i]), create_string("", 0), calc_hash(args[i]), 0);
 
     add_string_size (out_string, "true", 4);
     return NULL;

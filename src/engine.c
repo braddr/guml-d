@@ -17,7 +17,7 @@ typedef enum
 }
 wsw;
 
-#define MAXDEPTH	100
+#define MAXDEPTH 100
 
 Data err_string;
 int modetrigger;

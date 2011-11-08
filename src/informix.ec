@@ -249,9 +249,9 @@ char *guml_sqlexec(Data *out_string, char *args[], int nargs)
     debug_sql = find_hash_data("DEBUG_SQL", calc_hash("DEBUG_SQL"));
     if (debug_sql && debug_sql->data)
     {
-	writelog("sqlexec:");
-	for (i = 0; i < nargs; i++)
-	    writelog("    %s\n", args[i]); 
+        writelog("sqlexec:");
+        for (i = 0; i < nargs; i++)
+            writelog("    %s\n", args[i]); 
     }
 #endif
 

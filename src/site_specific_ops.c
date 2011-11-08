@@ -12,7 +12,7 @@
 
 char *molson_encode_password (Data *out_string, char *args[], int nargs)
 {
-    char salts[65]="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789./";  /* acceptable salts */
+    char salts[65] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789./";  /* acceptable salts */
     char salt[3];
     unsigned long tt;
     int doffs;

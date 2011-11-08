@@ -252,24 +252,24 @@ void setup_extract_parts(char *pi, char *pt)
 
     /* work backwards to find filename from pi */
     while (pi < pi_ptr && *pi_ptr != '/')
-	pi_ptr--;
+        pi_ptr--;
     pi_last_slash = pi_ptr;
 
     /* work backwards to find filename from pt */
     while (pt < pt_ptr && *pt_ptr != '/')
-	pt_ptr--;
+        pt_ptr--;
     pt_last_slash = pt_ptr;
 
     /* work backwards while the two strings are the same */
     while (pi < pi_ptr && pt < pt_ptr && *pt_ptr == *pi_ptr)
     {
-	pi_ptr--;
-	pt_ptr--;
+        pi_ptr--;
+        pt_ptr--;
     }
     if (*pi_ptr != '/')
-	pi_ptr++;
+        pi_ptr++;
     if (*pt_ptr != '/')
-	pt_ptr++;
+        pt_ptr++;
 
     /* BASE_DIR will be the data between pt and pt_ptr, inclusive */
     data = (Data*)malloc(sizeof(Data));
@@ -302,7 +302,7 @@ void setup_extract_parts(char *pi, char *pt)
         if (strrchr (filename, '/') != NULL)
             *strrchr (filename, '/') = 0;
         insert_hash(strdup("PATH"), create_string(filename, 0), calc_hash("PATH"), HASH_ENV);
-	return;
+        return;
     }
 #endif
 
@@ -392,7 +392,7 @@ void setup_environment (int argc, char *argv[])
     insert_hash(strdup("SERVERNAME"), create_string(servername, 0), calc_hash("SERVERNAME"), HASH_ENV);
 
     if (iscomm)
-	setup_commandline(argc, argv);
+        setup_commandline(argc, argv);
     else
     {
         setup_args ();

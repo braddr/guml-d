@@ -38,7 +38,7 @@ struct command commlist[] =
     {"htmlquote",	{guml_htmlquote},		CMD_ARGS },
     {"httpdecode",	{guml_httpdecode},		CMD_ARGS },
     {"httpencode",	{guml_httpencode},		CMD_ARGS },
-    {"if",		{.c_arg_param = guml_if},			CMD_ARGS | CMD_PARAMS | CMD_QUOTED },
+    {"if",		{.c_arg_param = guml_if},	CMD_ARGS | CMD_PARAMS | CMD_QUOTED },
     {"include",		{guml_file_include},		CMD_ARGS },
 #ifdef USE_FILE_HANDLE_OPS
     {"isopen",		{guml_filehandle_isopen},	CMD_ARGS },
@@ -51,8 +51,8 @@ struct command commlist[] =
     {"open",		{guml_filehandle_open},		CMD_ARGS },
     {"output",		{guml_filehandle_output},	CMD_ARGS },
 #endif
-    {"param",		{.c_arg_param = guml_param},			CMD_ARGS | CMD_PARAMS },
-    {"paramcount",	{.c_arg_param = guml_paramcount},		CMD_ARGS | CMD_PARAMS },
+    {"param",		{.c_arg_param = guml_param},	CMD_ARGS | CMD_PARAMS },
+    {"paramcount",	{.c_arg_param = guml_paramcount}, CMD_ARGS | CMD_PARAMS },
 #ifdef USE_ORACLE
     {"plsqlcall",	{guml_plsqlcall},		CMD_ARGS },
 #endif
@@ -61,7 +61,7 @@ struct command commlist[] =
 #ifdef USE_FILE_HANDLE_OPS
     {"readline",	{guml_filehandle_readline},	CMD_ARGS },
 #endif
-    {"sendmail",		{guml_sendmail},		CMD_ARGS },
+    {"sendmail",	{guml_sendmail},		CMD_ARGS },
     {"set",		{guml_set},			CMD_ARGS },
     {"shell",		{guml_shell},			CMD_ARGS },
     {"shutdownguml",	{guml_shutdownguml},		CMD_ARGS },
@@ -70,7 +70,7 @@ struct command commlist[] =
     {"sqlrow",		{guml_sqlrow},			CMD_ARGS },
 #endif
     {"sqlquote",	{guml_sqlquote},		CMD_ARGS },
-    {"strcmp",      {guml_strcmp},          CMD_ARGS },
+    {"strcmp",          {guml_strcmp},                  CMD_ARGS },
     {"strindex",	{guml_index},			CMD_ARGS },
     {"strip",		{guml_strip},			CMD_ARGS },
     {"strlength",	{guml_length},			CMD_ARGS },
@@ -86,7 +86,7 @@ struct command commlist[] =
     {"tuxedoresults",	{guml_tuxedo_results},		CMD_ARGS },
 #endif
     {"unset",		{guml_unset},			CMD_ARGS },
-    {"while",		{.c_arg_param = guml_while},			CMD_ARGS | CMD_PARAMS | CMD_QUOTED },
+    {"while",		{.c_arg_param = guml_while},	CMD_ARGS | CMD_PARAMS | CMD_QUOTED },
 #ifdef USE_FILE_HANDLE_OPS
     {"writeline",	{guml_filehandle_writeline},	CMD_ARGS },
 #endif
