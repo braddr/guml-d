@@ -103,3 +103,19 @@ void init_commands(void)
         insert_hash(strdup(commlist[i].thecomm), (Data*)(&commlist[i]), calc_hash(commlist[i].thecomm),
                     HASH_BUILTIN | HASH_READONLY);
 }
+
+char* command_invoke(struct command* c, Data* out_string, char** args, int nargs, char**params, int nparams)
+{
+    if (c->cmd_flags & CMD_ARGS)
+        if (c->cmd_flags & CMD_PARAMS)
+            return (*c->cmd.c_arg_param)(out_string, args, nargs, params, nparams);
+        else
+            return (*c->cmd.c_arg)(out_string, args, nargs);
+    else
+        return "Unknown function type, no args or params";
+}
+
+int command_wants_quoted(struct command* c)
+{
+    return c->cmd_flags & CMD_QUOTED;
+}

@@ -100,7 +100,7 @@ void add_char (Data *str, char c)
 }
 
 /* add s2 to the end of s1 */
-void add_string (Data *s1, char *s2)
+void add_string (Data *s1, const char *s2)
 {
     int s2_len = strlen(s2);
 
@@ -112,7 +112,7 @@ void add_string (Data *s1, char *s2)
 }
 
 /* add s2 to the end of s1 */
-void add_string_size (Data *s1, char *s2, unsigned long s2_len)
+void add_string_size (Data *s1, const char *s2, unsigned long s2_len)
 {
     if (!s2_len)
         return;

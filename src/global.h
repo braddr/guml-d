@@ -107,14 +107,16 @@ extern void writelog(const char *msg, ...);
 extern Data *create_string(char *str, int no_dup);
 extern char *strip_space (char *buffer);
 extern char *rtrim (char *buffer);
-extern void add_string_size(Data *s1, char *s2, unsigned long s2_len);
+extern void add_string_size(Data *s1, const char *s2, unsigned long s2_len);
 extern void add_string_data(Data *s1, Data *s2);
-extern void add_string(Data *s1, char *s2);
+extern void add_string(Data *s1, const char *s2);
 extern void add_char(Data *s1, char c);
 extern int  split_string(char *str, char split, char **w1, char **w2);
 
 /* commands.c */
 extern void init_commands(void);
+extern char* invoke_command(struct command* c, Data* out_string, char** args, int nargs, char**params, int nparams);
+extern int command_wants_quoted(struct command* c);
 
 /* engine.c */
 extern void guml_backend(Data *out_string, char **ins, char *params[], int numparams);

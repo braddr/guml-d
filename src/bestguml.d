@@ -1,6 +1,7 @@
 module bestguml;
 
 import data;
+import engine;
 import setup;
 
 import core.stdc.config;
@@ -28,7 +29,7 @@ extern(C)
     extern void writelog(const char *msg, ...);
     extern Data *create_string(char *str, int no_dup);
     extern void add_string(Data *s1, char *s2);
-    extern void guml_backend(Data *out_string, char **ins, char *params[], int numparams);
+    //extern void guml_backend(Data *out_string, char **ins, char *params[], int numparams);
     extern char* guml_file_include(Data* out_string, char** args, int nargs);
 
     extern void init_hash_table();
@@ -38,7 +39,6 @@ extern(C)
     extern c_ulong calc_hash(const char *str);
 
     extern void init_commands();
-    extern void init_engine();
     extern char *sql_init();
     extern char *sql_shutdown();
 }

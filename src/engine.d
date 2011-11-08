@@ -1,55 +1,70 @@
-/* engine.c */
-/* parser for guml */
+module engine;
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
-#include <signal.h>
+import data;
+import hashtable;
 
-#include "global.h"
+import core.stdc.config;
+import core.stdc.string;
+import core.stdc.stdio;
+import core.stdc.stdlib;
 
-extern struct command commlist[];
+extern(C)
+{
+    __gshared Data err_string;
+    __gshared int modetrigger;
 
-typedef enum
+    struct command {}
+
+    extern void add_char(Data *s1, char c);
+    extern void add_string(Data *s1, const char *s2);
+    extern void add_string_size(Data *s1, const char *s2, c_ulong s2_len);
+
+    extern void calc_hash_increment(c_ulong *hash_value, char c);
+    extern HashNode *find_hash_node(const char *key, c_ulong hash);
+
+    extern char* command_invoke(command* c, Data* out_string, char** args, int nargs, char **params, int nparams);
+    extern int command_wants_quoted(command* c);
+}
+
+// really belong in commands.d, once that's ported to d
+enum CMD_ARGS   = 0x00000001;
+enum CMD_PARAMS = 0x00000002;
+enum CMD_QUOTED = 0x00000004;
+
+enum wsw
 {
     cmode, smode, tmode
 }
-wsw;
 
-#define MAXDEPTH 100
+enum MAXDEPTH = 100;
 
-Data err_string;
-int modetrigger;
 int depth;
-int debug;
 int fatal_error;
 int free_err_res;
 
-void init_engine(void)
+void init_engine()
 {
-    err_string.data = NULL;
+    err_string.data = null;
     err_string.length = 0;
     modetrigger  = 0;
     depth        = 0;
-    debug        = 0;
     fatal_error  = 0;
     free_err_res = 0;
 }
 
-#define dump_accumulate(__from, __to, __num) \
-    do { \
-        if (__num) \
-        { \
-            add_string_size(__from, __to-__num, __num); \
-            __num = 0; \
-        } \
-    } while (0)
-
-char *guml_parse_params (char **ins, char **params, int numparams, char ***args, int *nargs, int quoted)
+void dump_accumulate(Data* from, char* to, ref size_t num)
 {
-    char *cur, *err = NULL;
-    unsigned long accumulate = 0;
+    if (num)
+    {
+        add_string_size(from, to-num, num);
+        num = 0;
+    }
+}
+
+char* guml_parse_params (char **ins, char **params, int numparams, char ***args, int *nargs, int quoted)
+{
+    char* cur, err = null;
+    size_t accumulate = 0;
 
     cur = *ins;
 
@@ -59,9 +74,9 @@ char *guml_parse_params (char **ins, char **params, int numparams, char ***args,
     {
         Data t;
 
-        t.data = NULL;
+        t.data = null;
         t.length = 0;
-        *args = realloc (*args, sizeof (char *) * ((*nargs) + 1));
+        *args = cast(char**) realloc (*args, (char*).sizeof * ((*nargs) + 1));
 
         cur++;
         if (quoted)
@@ -126,33 +141,33 @@ char *guml_parse_params (char **ins, char **params, int numparams, char ***args,
             guml_backend (&t, &cur, params, numparams);
             (*args)[*nargs] = t.data;
             if (fatal_error)
-                return NULL;
+                return null;
         }
 
-        if ((*args)[*nargs] == NULL)
+        if ((*args)[*nargs] == null)
         {
-            (*args)[*nargs] = malloc (1);
+            (*args)[*nargs] = cast(char*) malloc (1);
             (*args)[*nargs][0] = 0;
         }
 
         (*nargs)++;
 
         if (*cur != '}')
-            return "Missing } in parameter parsing";
+            return cast(char*)("Missing } in parameter parsing".ptr);
 
         cur++;
     }
 
     *ins = cur;
-    return NULL;
+    return null;
 }
 
-void guml_backend (Data *out_string, char **ins, char *params[], int numparams)
+extern(C) void guml_backend (Data *out_string, char **ins, char **params, int numparams)
 {
-    unsigned long accumulate = 0;
+    size_t accumulate = 0;
     int quit = 0, notws = 1, line = 1;
     char *cur;
-    wsw wsmode = cmode;
+    wsw wsmode = wsw.cmode;
 
     depth++;
     if (depth >= MAXDEPTH)
@@ -170,7 +185,7 @@ void guml_backend (Data *out_string, char **ins, char *params[], int numparams)
             case '\n':
                 line++;
                 notws = 0;
-                if (wsmode == tmode)
+                if (wsmode == wsw.tmode)
                     accumulate++;
                 else
                     dump_accumulate(out_string, cur, accumulate);
@@ -181,7 +196,7 @@ void guml_backend (Data *out_string, char **ins, char *params[], int numparams)
             case '\r':
             case '\t':
             case '\v':
-                if (notws && (wsmode == tmode))
+                if (notws && (wsmode == wsw.tmode))
                     accumulate++;
                 else
                     dump_accumulate(out_string, cur, accumulate);
@@ -216,8 +231,8 @@ void guml_backend (Data *out_string, char **ins, char *params[], int numparams)
             case '\\':
                 dump_accumulate(out_string, cur, accumulate);
                 {
-                    char command[100];
-                    unsigned long hash_value = 0;
+                    char[100] commandstr;
+                    c_ulong hash_value = 0;
                     int i;
 
                     notws = 1;
@@ -225,24 +240,28 @@ void guml_backend (Data *out_string, char **ins, char *params[], int numparams)
                     cur++;
                     while (*cur && ((*cur >= 'A' && *cur <= 'Z') || (*cur >= 'a' && *cur <= 'z') || *cur == '_') && i < 99)
                     {
-                        command[i] = *cur;
+                        commandstr[i] = *cur;
                         calc_hash_increment(&hash_value, *cur);
                         i++;
                         cur++;
                     }
-                    command[i] = 0;
+                    commandstr[i] = 0;
 
-                    if (*command)
+                    if (commandstr[0])
                     {
-                        struct command *mycmd = NULL;
+                        command *mycmd = null;
                         HashNode *myfunction;
                         int quoteargs = 0, nargs = 0;
-                        char **args = NULL, *err;
+                        char** args = null;
+                        char* err;
 
-                        if ((myfunction = find_hash_node(command, hash_value)) != NULL)
-                            if (myfunction->flags & HASH_BUILTIN &&
-                                (mycmd = ((struct command*)(myfunction->data)))->cmd_flags & CMD_QUOTED)
-                                quoteargs = 1;
+                        if ((myfunction = find_hash_node(commandstr.ptr, hash_value)) != null)
+                            if (myfunction.flags & HASH_BUILTIN)
+                            {
+                                mycmd = cast(command*)(myfunction.data);
+                                if (command_wants_quoted(mycmd))
+                                    quoteargs = 1;
+                            }
 
                         err = guml_parse_params (&cur, params, numparams, &args, &nargs, quoteargs);
                         if (err || fatal_error)
@@ -256,37 +275,30 @@ void guml_backend (Data *out_string, char **ins, char *params[], int numparams)
                                 add_string(&err_string, err);
                                 add_char(&err_string, '\n');
                             }
-                            sprintf(tmp, "   ... while parsing parameters for '%s' at line %d.\n", command, line);
-                            add_string(&err_string, tmp);
+                            sprintf(tmp.ptr, "   ... while parsing parameters for '%s' at line %d.\n".ptr, commandstr.ptr, line);
+                            add_string(&err_string, tmp.ptr);
                             goto cleanup_params;
                         }
 
                         if (myfunction)
                         {
-                            if (myfunction->flags & HASH_BUILTIN)
+                            if (myfunction.flags & HASH_BUILTIN)
                             {
-                                if (mycmd->cmd_flags & CMD_ARGS)
-                                    if (mycmd->cmd_flags & CMD_PARAMS)
-                                        err = (*mycmd->cmd.c_arg_param)(out_string, args, nargs, params, numparams);
-                                    else
-                                        err = (*mycmd->cmd.c_arg)(out_string, args, nargs);
-                                else
-                                    err = "Unknown function type, no args or params";
+                                err = command_invoke(mycmd, out_string, args, nargs, params, numparams);
 
                                 if (modetrigger != 0)
                                 {
-                                    wsmode = modetrigger == 1 ? cmode : tmode;
+                                    wsmode = modetrigger == 1 ? wsw.cmode : wsw.tmode;
                                     modetrigger = 0;
                                 }
-
                             }
                             else
                             {
                                 Data *env_data;
-                                char *env_str, *str;
+                                char* env_str, str;
 
-                                env_data = myfunction->data;
-                                if (env_data && (env_str = env_data->data))
+                                env_data = myfunction.data;
+                                if (env_data && ((env_str = env_data.data) != null))
                                 {
                                     str = strdup(env_str);
                                     env_str = str;
@@ -301,8 +313,8 @@ void guml_backend (Data *out_string, char **ins, char *params[], int numparams)
 
                             if (!fatal_error)
                                 fatal_error = 1;
-                            sprintf (buffer, "Undefined macro \"%s\" invoked.\n", command);
-                            add_string (&err_string, buffer);
+                            sprintf (buffer.ptr, "Undefined macro \"%s\" invoked.\n", commandstr);
+                            add_string (&err_string, buffer.ptr);
                         }
 
                         if (err || fatal_error)
@@ -319,9 +331,9 @@ void guml_backend (Data *out_string, char **ins, char *params[], int numparams)
                                         add_string (&err_string, err);
                                         break;
                                     case 1:
-                                        add_string (&err_string, *((char**)err));
-                                        free(*((char**)err));
-                                        *((char**)err) = NULL;
+                                        add_string (&err_string, *(cast(char**)err));
+                                        free(*(cast(char**)err));
+                                        *(cast(char**)err) = null;
                                         free_err_res = 0;
                                         break;
                                     case 2:
@@ -336,15 +348,15 @@ void guml_backend (Data *out_string, char **ins, char *params[], int numparams)
                                 add_char (&err_string, '\n');
                             }
                             add_string_size(&err_string, "   ... while processing '", 25);
-                            add_string(&err_string, command);
-                            if (!strcmp(command, "include"))
+                            add_string(&err_string, commandstr.ptr);
+                            if (!strcmp(commandstr.ptr, "include"))
                             {
                                 add_string_size(&err_string, "' of file '", 11);
                                 add_string(&err_string, args[0]);
                             }
                             add_string_size(&err_string, "' at line ", 10);
-                            sprintf(tmp, "%d", line);
-                            add_string(&err_string, tmp);
+                            sprintf(tmp.ptr, "%d", line);
+                            add_string(&err_string, tmp.ptr);
                             add_string_size(&err_string, ".\n", 2);
                         }
 
@@ -358,21 +370,21 @@ void guml_backend (Data *out_string, char **ins, char *params[], int numparams)
                     {
                         while (*cur && *cur >= '0' && *cur <= '9' && i < 99)
                         {
-                            command[i] = *cur;
+                            commandstr[i] = *cur;
                             i++;
                             cur++;
                         }
-                        command[i] = 0;
-                        if (*command)
+                        commandstr[i] = 0;
+                        if (commandstr[0])
                         {
                             cur--;
-                            i = atoi (command) - 1;
+                            i = atoi (commandstr.ptr) - 1;
                             if (i >= 0 && i < numparams)
                                 add_string (out_string, params[i]);
                         }
                         else
                         {
-                            wsmode = tmode;
+                            wsmode = wsw.tmode;
                             accumulate++;
                         }
                     }
@@ -380,7 +392,7 @@ void guml_backend (Data *out_string, char **ins, char *params[], int numparams)
                 break;
 
             default:
-                wsmode = tmode;
+                wsmode = wsw.tmode;
                 notws = 1;
                 accumulate++;
         }

@@ -254,6 +254,10 @@ ifdef TUXEDO
 LIBS += -L$(ROOTDIR)/../lib -lcsrv -L$(ROOTDIR)/../tpmsg -ltpmsg
 endif
 
+.SUFFIXES: .d
+.d.o:
+	dmd -c -gc $<
+
 all: test_hash bestguml
 
 install: all
@@ -274,16 +278,14 @@ bestguml: bestguml.o $(O_FILES)
 stub.o: stub.c local.h
 
 bestguml.o: bestguml.d global.h local.h
-	dmd -c -gc $<
 
 setup.o: setup.d global.h local.h
-	dmd -c -gc $<
 
 test_hash.o: test_hash.c global.h
 
 commands.o: commands.c global.h local.h
 
-engine.o: engine.c global.h local.h
+engine.o: engine.d global.h local.h
 
 env.o: env.c global.h local.h
 
