@@ -6,10 +6,8 @@
 #include <string.h>
 #include <signal.h>
 #include <time.h>
-#ifndef WIN32
-#  include <unistd.h>
-#  include <sys/resource.h>
-#endif
+#include <unistd.h>
+#include <sys/resource.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 

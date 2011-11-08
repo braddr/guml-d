@@ -259,11 +259,7 @@ char *guml_fop (Data *out_string, char *args[], int nargs)
             break;
         case 'r':
         case 'R':
-#ifdef WIN32
-            c = floor (a + 0.5);
-#else
             c = rint (a);
-#endif
             break;
         case 'v':
         case 'V':

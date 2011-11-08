@@ -12,7 +12,7 @@
 
 #include "local.h"
 
-#if defined(__SUNPRO_C) || defined(__SUNPRO_CC) || defined(WIN32)
+#if defined(__SUNPRO_C) || defined(__SUNPRO_CC)
 #define INLINE
 #define srandom srand
 #define random  rand

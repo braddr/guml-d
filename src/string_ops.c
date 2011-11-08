@@ -157,24 +157,16 @@ char *guml_date (Data *out_string, char *args[], int nargs)
 /* return to you /that/ unix time..  pretty swell, eh? */
 char *guml_time (Data *out_string, char *args[], int nargs)
 {
-#ifndef WIN32
 #ifndef strptime
     char *strptime(const char *, const char *, struct tm*);
 #endif
     struct tm tms;
-#endif
     char buffer[64];
     time_t ttime;
 
-#ifdef WIN32
-    if (nargs != 0)
-        return "\\time requires no parameters";
-#else
     if (nargs != 0 && nargs != 2)
         return "\\time requires 0 or 2 parameters";
-#endif
 
-#ifndef WIN32
     if (nargs < 2 || *args[0] == '\0')
         ttime = time (NULL);
     else
@@ -182,9 +174,6 @@ char *guml_time (Data *out_string, char *args[], int nargs)
         strptime (args[1], args[0], &tms);
         ttime = mktime (&tms);
     }
-#else
-    ttime = time (NULL);
-#endif
 
     sprintf (buffer, "%li", (long) ttime);
     add_string (out_string, buffer);

@@ -1,13 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#ifdef WIN32
-#  include <process.h>
-#  include <time.h>
-#else
-#  include <unistd.h>
-#  include <sys/time.h>
-#endif
+#include <unistd.h>
+#include <sys/time.h>
 #include <stdarg.h>
 
 #include "global.h"
@@ -15,28 +10,20 @@
 /* get time as text string */
 void writelog(char *msg, ...)
 {
-#ifndef WIN32
     struct timeval tp;
     char str[1024];
-#endif
     static int mypid = -1;
     FILE   *fp;
     va_list ap;
 
     if (mypid == -1)
-#ifdef WIN32
-        mypid = _getpid();
-#else
         mypid = getpid();
-#endif
  
     if ((fp = fopen(LOGFILE, "a")) != NULL)
     {
-#ifndef WIN32
         gettimeofday(&tp, NULL);
         sprintf(str, "%05d - %ld.%06ld", mypid, tp.tv_sec, tp.tv_usec);
         fprintf(fp, "%s - ", str);
-#endif
         va_start(ap, msg);
         vfprintf(fp, msg, ap);
         va_end(ap);
@@ -48,11 +35,11 @@ void writelog(char *msg, ...)
 
 Data *create_string(char *str, int no_dup)
 {
-        Data *tmp = malloc(sizeof(Data));
+    Data *tmp = malloc(sizeof(Data));
 
-        tmp->data = no_dup ? str : strdup(str);
-        tmp->length = strlen(str)+1;
-        return tmp;
+    tmp->data = no_dup ? str : strdup(str);
+    tmp->length = strlen(str)+1;
+    return tmp;
 }
 
 char *strip_space (char *buffer)

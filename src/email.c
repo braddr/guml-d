@@ -22,18 +22,10 @@ char *guml_email (Data *out_string, char *args[], int nargs)
     else
         sprintf (cmdstr, "/usr/lib/sendmail %s >> %s/email.log", args[0], FILE_WRITE_DIR);
 
-#ifdef WIN32
-    if ((fp = _popen (cmdstr, "w")) != NULL)
-#else
     if ((fp = popen (cmdstr, "w")) != NULL)
-#endif
     {
         fprintf (fp, "%s\n", args[1]);
-#ifdef WIN32
-        _pclose (fp);
-#else
         pclose (fp);
-#endif
         add_string_size (out_string, "true", 4);
     }
 
@@ -48,18 +40,10 @@ char *guml_sendmail (Data *out_string, char *args[], int nargs)
     if (nargs > 2)
         return "\\sendmail requires exactly one parameter, the text of the message";
 
-#ifdef WIN32
-    if ((fp = _popen (cmdstr, "w")) != NULL)
-#else
     if ((fp = popen (cmdstr, "w")) != NULL)
-#endif
     {
         fprintf (fp, "%s\n", args[0]);
-#ifdef WIN32
-        _pclose (fp);
-#else
         pclose (fp);
-#endif
         add_string_size (out_string, "true", 4);
     }
 
@@ -74,20 +58,12 @@ char *guml_shell (Data *out_string, char *args[], int nargs)
     if (nargs != 1)
         return "\\shell requires only 1 parameter";
  
-#ifdef WIN32
-    if ((fp = _popen(args[0]), "r")) != NULL)
-#else
     if ((fp = popen(args[0], "r")) != NULL)
-#endif
     {
         while (fgets(buf, 1000, fp) != NULL)
             add_string(out_string, buf);
  
-#ifdef WIN32
-        _pclose(fp);
-#else
         pclose(fp);
-#endif
     }
     return NULL;
 }
