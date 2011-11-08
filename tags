@@ -1,0 +1,594 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/darren@hiebert.com/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.0.1	//
+ACCTROOT	local.h	105;"	d
+ACCTROOT	local.h	118;"	d
+ACCTROOT	local.h	131;"	d
+ACCTROOT	local.h	140;"	d
+ACCTROOT	local.h	156;"	d
+ACCTROOT	local.h	169;"	d
+ACCTROOT	local.h	172;"	d
+ACCTROOT	local.h	189;"	d
+ACCTROOT	local.h	194;"	d
+ACCTROOT	local.h	20;"	d
+ACCTROOT	local.h	211;"	d
+ACCTROOT	local.h	26;"	d
+ACCTROOT	local.h	39;"	d
+ACCTROOT	local.h	50;"	d
+ACCTROOT	local.h	5;"	d
+ACCTROOT	local.h	64;"	d
+ACCTROOT	local.h	77;"	d
+ACCTROOT	local.h	83;"	d
+ACCTROOT	local.h	89;"	d
+ARG_HANDLE_BOTH_FORMATS	local.h	18;"	d
+ARG_HANDLE_USE_ONLY_GET_FORMAT	local.h	42;"	d
+ARG_HANDLE_USE_ONLY_GET_FORMAT	local.h	60;"	d
+ARG_HANDLE_USE_ONLY_GET_FORMAT	local.h	68;"	d
+CALC_NUMLEVELS	calculator.c	59;"	d	file:
+CC	Makefile	/^CC := purify ${CC}$/;"	m
+CC	Makefile	/^CC := quantify ${CC}$/;"	m
+CC	Makefile	/^CC = gcc$/;"	m
+CFLAGS	Makefile	/^CFLAGS = $(DEFINES) $(DB_CFLAGS)$/;"	m
+CMD_ARGS	global.h	28;"	d
+CMD_PARAMS	global.h	29;"	d
+CMD_QUOTED	global.h	30;"	d
+CXXFLAGS	Makefile	/^CXXFLAGS = ${CFLAGS}$/;"	m
+DATAROOT	local.h	142;"	d
+DATAROOT	local.h	176;"	d
+DATAROOT	local.h	200;"	d
+DATAROOT	local.h	213;"	d
+DATAROOT	local.h	224;"	d
+DATAROOT	local.h	31;"	d
+DATAROOT	local.h	55;"	d
+DATAROOT	local.h	65;"	d
+DATAROOT	local.h	7;"	d
+DATAROOT	local.h	91;"	d
+DB	Makefile	/^DB = INFORMIX$/;"	m
+DB_APPNAME	local.h	150;"	d
+DB_APPNAME	local.h	99;"	d
+DB_CFLAGS	Makefile	/^DB_CFLAGS   = -DUSE_INFORMIX -I$(INFORMIXDIR)\/incl\/esql$/;"	m
+DB_CFLAGS	Makefile	/^DB_CFLAGS   = -DUSE_ORACLE -I$(ORACLE_HOME)\/rdbms\/demo$/;"	m
+DB_CFLAGS	Makefile	/^DB_CFLAGS  = -DUSE_MYSQL -I${MYSQL_HOME}\/include\/mysql$/;"	m
+DB_CFLAGS	Makefile	/^DB_CFLAGS  = -DUSE_SYBASE -I$(SYBASE)\/include$/;"	m
+DB_CFLAGS	Makefile	/^DB_CFLAGS = -DUSE_KUBL -DUNIX -I$(KUBL_HOME)\/include $/;"	m
+DB_DB	local.h	108;"	d
+DB_DB	local.h	121;"	d
+DB_DB	local.h	132;"	d
+DB_DB	local.h	147;"	d
+DB_DB	local.h	159;"	d
+DB_DB	local.h	179;"	d
+DB_DB	local.h	192;"	d
+DB_DB	local.h	197;"	d
+DB_DB	local.h	216;"	d
+DB_DB	local.h	21;"	d
+DB_DB	local.h	27;"	d
+DB_DB	local.h	44;"	d
+DB_DB	local.h	52;"	d
+DB_DB	local.h	71;"	d
+DB_DB	local.h	96;"	d
+DB_HOST	local.h	107;"	d
+DB_HOST	local.h	120;"	d
+DB_HOST	local.h	134;"	d
+DB_HOST	local.h	146;"	d
+DB_HOST	local.h	158;"	d
+DB_HOST	local.h	178;"	d
+DB_HOST	local.h	191;"	d
+DB_HOST	local.h	196;"	d
+DB_HOST	local.h	215;"	d
+DB_HOST	local.h	23;"	d
+DB_HOST	local.h	29;"	d
+DB_HOST	local.h	43;"	d
+DB_HOST	local.h	51;"	d
+DB_HOST	local.h	73;"	d
+DB_HOST	local.h	95;"	d
+DB_LIBS	Makefile	/^DB_LIBS     = -L$(ORACLE_HOME)\/lib $(ORACLE_HOME)\/lib\/libclient.a -lsqlnet \\$/;"	m
+DB_LIBS	Makefile	/^DB_LIBS     = -L${ORACLE_HOME}\/lib -L${ORACLE_HOME}\/rdbms\/lib \\$/;"	m
+DB_LIBS	Makefile	/^DB_LIBS    = -L$(SYBASE)\/lib -lsybdb -lsocket$/;"	m
+DB_LIBS	Makefile	/^DB_LIBS    = -L${MYSQL_HOME}\/lib\/mysql -lmysqlclient -lm -lnsl$/;"	m
+DB_LIBS	Makefile	/^DB_LIBS   = -L$(KUBL_HOME)\/bin  -lwic -ldksrv -ldkses$/;"	m
+DB_OBJS	Makefile	/^DB_OBJS     = informix.o$/;"	m
+DB_OBJS	Makefile	/^DB_OBJS     = oracle.o$/;"	m
+DB_OBJS	Makefile	/^DB_OBJS    = sybase_db.o$/;"	m
+DB_OBJS	Makefile	/^DB_OBJS   = kubl.o$/;"	m
+DB_OBJS	Makefile	/^DB_OBJS = mysql.o$/;"	m
+DB_PASSWORD	local.h	110;"	d
+DB_PASSWORD	local.h	123;"	d
+DB_PASSWORD	local.h	149;"	d
+DB_PASSWORD	local.h	161;"	d
+DB_PASSWORD	local.h	170;"	d
+DB_PASSWORD	local.h	173;"	d
+DB_PASSWORD	local.h	203;"	d
+DB_PASSWORD	local.h	46;"	d
+DB_PASSWORD	local.h	98;"	d
+DB_ROOT	local.h	106;"	d
+DB_ROOT	local.h	119;"	d
+DB_ROOT	local.h	133;"	d
+DB_ROOT	local.h	145;"	d
+DB_ROOT	local.h	157;"	d
+DB_ROOT	local.h	190;"	d
+DB_ROOT	local.h	195;"	d
+DB_ROOT	local.h	22;"	d
+DB_ROOT	local.h	28;"	d
+DB_ROOT	local.h	53;"	d
+DB_ROOT	local.h	72;"	d
+DB_ROOT	local.h	94;"	d
+DB_SOCKET	local.h	181;"	d
+DB_SOCKET	local.h	218;"	d
+DB_USERID	local.h	109;"	d
+DB_USERID	local.h	122;"	d
+DB_USERID	local.h	148;"	d
+DB_USERID	local.h	160;"	d
+DB_USERID	local.h	180;"	d
+DB_USERID	local.h	202;"	d
+DB_USERID	local.h	217;"	d
+DB_USERID	local.h	45;"	d
+DB_USERID	local.h	97;"	d
+DEBUG_BUILD	Makefile	/^DEBUG_BUILD = yes$/;"	m
+DEBUG_ENV	Makefile	/^DEBUG_ENV = yes$/;"	m
+DEFER_PARSE	oracle.c	26;"	d	file:
+DSCLEN	oracle.c	30;"	d	file:
+DYNAMIC_COLS	oracle.c	51;"	d	file:
+Data	global.h	/^} Data;$/;"	t
+Data	hash_table.h	/^} Data;$/;"	t
+ESQL	Makefile	/^ESQL        = $(INFORMIXDIR)\/bin\/esql$/;"	m
+ESQLFLAGS	Makefile	/^ESQLFLAGS   = -I$(INFORMIXDIR)\/incl\/esql -L$(INFORMIXDIR)\/lib\/esql$/;"	m
+EXECGUML	local.h	10;"	d
+EXECGUML	local.h	144;"	d
+EXECGUML	local.h	177;"	d
+EXECGUML	local.h	201;"	d
+EXECGUML	local.h	214;"	d
+EXECGUML	local.h	226;"	d
+EXECGUML	local.h	33;"	d
+EXECGUML	local.h	57;"	d
+EXECGUML	local.h	69;"	d
+EXECGUML	local.h	93;"	d
+FASTCGI	Makefile	/^FASTCGI = yes$/;"	m
+FILE_WRITE_DIR	local.h	126;"	d
+FILE_WRITE_DIR	local.h	12;"	d
+FILE_WRITE_DIR	local.h	230;"	d
+FINAL_CC	Makefile	/^FINAL_CC    = $(ESQL)$/;"	m
+FINAL_CC	Makefile	/^FINAL_CC = ${CC}$/;"	m
+FPUTS	global.h	6;"	d
+FPUTS	global.h	9;"	d
+GETENV	global.h	10;"	d
+GETENV	global.h	7;"	d
+GUMLHEADERDIR	local.h	8;"	d
+GUMLHEADERROOT	local.h	9;"	d
+GUMLROOT	local.h	143;"	d
+GUMLROOT	local.h	175;"	d
+GUMLROOT	local.h	199;"	d
+GUMLROOT	local.h	212;"	d
+GUMLROOT	local.h	225;"	d
+GUMLROOT	local.h	32;"	d
+GUMLROOT	local.h	56;"	d
+GUMLROOT	local.h	66;"	d
+GUMLROOT	local.h	6;"	d
+GUMLROOT	local.h	92;"	d
+HASH_ALL	global.h	42;"	d
+HASH_ARG	global.h	41;"	d
+HASH_BUILTIN	global.h	44;"	d
+HASH_COOKIE	global.h	39;"	d
+HASH_DEPTH	global.h	35;"	d
+HASH_DEPTH	hash_table.h	7;"	d
+HASH_ENV	global.h	38;"	d
+HASH_FORM	global.h	40;"	d
+HASH_MASK	global.h	36;"	d
+HASH_MASK	hash_table.h	8;"	d
+HASH_READONLY	global.h	45;"	d
+HASH_WIDTH	global.h	34;"	d
+HASH_WIDTH	hash_table.h	6;"	d
+HashNode	global.h	/^} HashNode;$/;"	t
+HashNode	hash_table.h	/^} HashNode;$/;"	t
+INFORMIXDIR	Makefile	/^INFORMIXDIR = \/home\/informix$/;"	m
+INLINE	global.h	16;"	d
+INLINE	global.h	20;"	d
+IWVPATH	local.h	16;"	d
+KUBL_HOME	Makefile	/^KUBL_HOME = \/home\/www-data\/kubl$/;"	m
+LIBS	Makefile	/^LIBS = ${OS_LIBS} ${DB_LIBS} ${OTHER_LIBS}$/;"	m
+LOGFILE	local.h	11;"	d
+LOGFILE	local.h	141;"	d
+LOGFILE	local.h	182;"	d
+LOGFILE	local.h	205;"	d
+LOGFILE	local.h	223;"	d
+LOGFILE	local.h	30;"	d
+LOGFILE	local.h	54;"	d
+LOGFILE	local.h	70;"	d
+LOGFILE	local.h	90;"	d
+LONG_BUFSIZE	oracle.c	72;"	d	file:
+MAXDEPTH	engine.c	20;"	d	file:
+MAX_SELECT_LIST	oracle.c	20;"	d	file:
+MODE	Makefile	/^MODE = PRODUCTION$/;"	m
+MYSQL_HOME	Makefile	/^MYSQL_HOME = \/usr\/local\/mysql$/;"	m
+NEED_SQL_ENVIRONMENT	local.h	104;"	d
+NEED_SQL_ENVIRONMENT	local.h	117;"	d
+NEED_SQL_ENVIRONMENT	local.h	130;"	d
+NEED_SQL_ENVIRONMENT	local.h	155;"	d
+NEED_SQL_ENVIRONMENT	local.h	17;"	d
+NEED_SQL_ENVIRONMENT	local.h	187;"	d
+NEED_SQL_ENVIRONMENT	local.h	210;"	d
+NEED_SQL_ENVIRONMENT	local.h	59;"	d
+NPOS	oracle.c	29;"	d	file:
+OCI_MORE_INSERT_PIECES	oracle.c	18;"	d	file:
+ORAADMIN	local.h	111;"	d
+ORAADMIN	local.h	124;"	d
+ORAADMIN	local.h	162;"	d
+ORAADMIN	local.h	204;"	d
+ORACLE_HOME	Makefile	/^ORACLE_HOME = \/opt2\/oracle8\/OraHome1$/;"	m
+ORACLE_HOME	Makefile	/^ORACLE_HOME = \/pkgs\/oracle7\/product\/732$/;"	m
+ORACLE_HOME	Makefile	/^ORACLE_HOME = \/usr\/local\/oracle\/app\/oracle\/product\/7.3.4$/;"	m
+OS	Makefile	/^OS = LINUX$/;"	m
+OSDEFINES	Makefile	/^OSDEFINES = $/;"	m
+OSDEFINES	Makefile	/^OSDEFINES = -DNEED_CRYPT -DNEED_RANDOM$/;"	m
+OSDEFINES	Makefile	/^OSDEFINES = -DNEED_CRYPT$/;"	m
+OSDEFINES	Makefile	/^OSDEFINES =$/;"	m
+OS_LIBS	Makefile	/^OS_LIBS = -lcrypt$/;"	m
+OTHER_LIBS	Makefile	/^OTHER_LIBS = -lm$/;"	m
+O_FILES	Makefile	/^O_FILES = setup.o engine.o commands.o env_ops.o dir_ops.o file_ops.o math_ops.o \\$/;"	m
+PARSE_NO_DEFER	oracle.c	22;"	d	file:
+PARSE_V7_LNG	oracle.c	23;"	d	file:
+PERIOD	site_specific_ops.c	11;"	d	file:
+ROOTDIR	Makefile	/^ROOTDIR = \/pkgs\/guml\/tuxedo\/tux$/;"	m
+SITE	Makefile	/^SITE = GUML_COM$/;"	m
+SPACE_MASK	string_utils.c	77;"	d	file:
+SQL_DATA	sybase_ct.c	/^} SQL_DATA;$/;"	t	file:
+STACK_INCREMENT	global.h	32;"	d
+STACK_INCREMENT	hash_table.h	4;"	d
+STACK_MASK	global.h	33;"	d
+STACK_MASK	hash_table.h	5;"	d
+SYBASE	Makefile	/^SYBASE     = \/space\/sybase$/;"	m
+USE_STANDARD_DIR_LOCATIONS	local.h	112;"	d
+USE_STANDARD_DIR_LOCATIONS	local.h	125;"	d
+USE_STANDARD_DIR_LOCATIONS	local.h	135;"	d
+USE_STANDARD_DIR_LOCATIONS	local.h	163;"	d
+USE_STANDARD_DIR_LOCATIONS	local.h	24;"	d
+USE_STANDARD_DIR_LOCATIONS	local.h	41;"	d
+USE_STANDARD_DIR_LOCATIONS	local.h	78;"	d
+USE_STANDARD_DIR_LOCATIONS	local.h	84;"	d
+USE_STANDARD_FILE_WRITE_DIR	local.h	100;"	d
+USE_STANDARD_FILE_WRITE_DIR	local.h	113;"	d
+USE_STANDARD_FILE_WRITE_DIR	local.h	136;"	d
+USE_STANDARD_FILE_WRITE_DIR	local.h	151;"	d
+USE_STANDARD_FILE_WRITE_DIR	local.h	164;"	d
+USE_STANDARD_FILE_WRITE_DIR	local.h	183;"	d
+USE_STANDARD_FILE_WRITE_DIR	local.h	206;"	d
+USE_STANDARD_FILE_WRITE_DIR	local.h	219;"	d
+USE_STANDARD_FILE_WRITE_DIR	local.h	35;"	d
+USE_STANDARD_FILE_WRITE_DIR	local.h	40;"	d
+USE_STANDARD_FILE_WRITE_DIR	local.h	58;"	d
+USE_STANDARD_FILE_WRITE_DIR	local.h	67;"	d
+USE_STANDARD_FILE_WRITE_DIR	local.h	79;"	d
+USE_STANDARD_FILE_WRITE_DIR	local.h	85;"	d
+VERSION_7	oracle.c	27;"	d	file:
+__NEW_ENV_H	hash_table.h	2;"	d
+__SQL_H	sql.h	2;"	d
+_ex_column_data	sybase_ct.c	/^typedef struct _ex_column_data$/;"	s	file:
+add_char	string_utils.c	/^INLINE void add_char (Data *str, char c)$/;"	f
+add_string	string_utils.c	/^INLINE void add_string (Data *s1, char *s2)$/;"	f
+add_string_data	string_utils.c	/^INLINE void add_string_data (Data *s1, Data *s2)$/;"	f
+add_string_size	string_utils.c	/^INLINE void add_string_size (Data *s1, char *s2, unsigned long s2_len)$/;"	f
+blobstuff_s	sql.h	/^} blobstuff_s;$/;"	t
+blobstuff_s_	sql.h	/^typedef struct blobstuff_s_$/;"	s
+buf	oracle.c	/^	sb1				buf[33];$/;"	m	struct:describe	file:
+buf	oracle.c	/^	ub1				*buf;$/;"	m	struct:define	file:
+buffsize	sql.h	/^    long buffsize;$/;"	m	struct:blobstuff_s_
+buflen	oracle.c	/^	sb4				buflen;$/;"	m	struct:describe	file:
+c_arg	global.h	/^    commfunc_args        *c_arg;$/;"	m	union:command::<anonymous>
+c_arg_param	global.h	/^    commfunc_args_params *c_arg_param;$/;"	m	union:command::<anonymous>
+calc_hash	hash_table.c	/^unsigned long calc_hash(char *str)$/;"	f
+calc_hash_increment	hash_table.c	/^INLINE void calc_hash_increment(unsigned long *hash_value, char c)$/;"	f
+cb_messages	sybase_ct.c	/^char *cb_messages   = NULL;$/;"	v
+cb_msg_size	sybase_ct.c	/^long  cb_msg_size   = 0;$/;"	v
+check_space	string_utils.c	/^INLINE void check_space (Data *str, int add)$/;"	f
+clean_filehandles	filehandle_ops.c	/^int clean_filehandles(void)$/;"	f
+clean_hash	hash_table.c	/^void clean_hash(unsigned long flags)$/;"	f
+cmd	global.h	/^  } cmd;$/;"	m	struct:command
+cmd	oracle.c	/^Data cmd = { NULL, 0 };$/;"	v
+cmd	sybase_ct.c	/^CS_COMMAND    *cmd        = NULL;$/;"	v
+cmd_flags	global.h	/^  int  cmd_flags;$/;"	m	struct:command
+cmode	engine.c	/^    cmode, smode, tmode$/;"	e	file:
+col_retcode	oracle.c	/^	ub2				col_retlen, col_retcode;$/;"	m	struct:define	file:
+col_retlen	oracle.c	/^	ub2				col_retlen, col_retcode;$/;"	m	struct:define	file:
+command	global.h	/^struct command {$/;"	s
+commfunc_args	global.h	/^typedef char *commfunc_args(Data *out_string, char *args[], int nargs);$/;"	t
+commfunc_args_params	global.h	/^typedef char *commfunc_args_params(Data *out_string, char *args[], int nargs, char *params[], int nparams);$/;"	t
+commlist	commands.c	/^struct command commlist[] =$/;"	v
+connection	sybase_ct.c	/^CS_CONNECTION *connection = NULL;$/;"	v
+context	sybase_ct.c	/^CS_CONTEXT    *context    = NULL;$/;"	v
+create_string	string_utils.c	/^Data *create_string(char *str, int no_dup)$/;"	f
+create_string	test_hash.c	/^Data *create_string(char *str, int no_dup)$/;"	f
+cursor_error	oracle.c	/^char *cursor_error(Cda_Def *cda) {$/;"	f
+data	global.h	/^        Data *data;$/;"	m	struct:hash_struct
+data	global.h	/^        char *data;$/;"	m	struct:data_struct
+data	hash_table.h	/^	Data *data;$/;"	m	struct:hash_struct
+data	hash_table.h	/^	char *data;$/;"	m	struct:data_struct
+data_struct	global.h	/^typedef struct data_struct$/;"	s
+data_struct	hash_table.h	/^typedef struct data_struct$/;"	s
+dbproc	sybase_db.c	/^DBPROCESS *dbproc;$/;"	v
+dbsize	oracle.c	/^	sb4				dbsize;$/;"	m	struct:describe	file:
+dbtype	oracle.c	/^	sb2				dbtype;$/;"	m	struct:describe	file:
+dbtype_str	mysql.c	/^char *dbtype_str (int t)$/;"	f
+debug	engine.c	/^int debug;$/;"	v
+def	oracle.c	/^struct define	*def  = NULL;$/;"	v
+def	oracle.c	/^struct define	def [100];$/;"	v
+define	oracle.c	/^struct define$/;"	s	file:
+delete_hash	hash_table.c	/^void delete_hash(char *key, unsigned long hash)$/;"	f
+depth	engine.c	/^int depth;$/;"	v
+desc	oracle.c	/^struct describe *desc = NULL;$/;"	v
+desc	oracle.c	/^struct describe desc[100];$/;"	v
+describe	oracle.c	/^struct describe$/;"	s	file:
+describe_define	oracle.c	/^char *describe_define(Cda_Def *cda) {$/;"	f
+dsize	oracle.c	/^	sb4				dsize;$/;"	m	struct:describe	file:
+dump_accumulate	engine.c	40;"	d	file:
+dupes	hash_table.c	/^unsigned int	stack_depth, stack_allocated, hash_depths[HASH_WIDTH], hash_allocated[HASH_WIDTH], dupes, readonly;$/;"	v
+err_handler	sybase_db.c	/^int err_handler (DBPROCESS * dbp, int sev, int errno, int oserr, char *dberrstr, char *oserrstr)$/;"	f
+err_string	engine.c	/^Data err_string;$/;"	v
+error_msg	sybase_ct.c	/^char *error_msg = NULL;$/;"	v
+error_msg	sybase_db.c	/^char *error_msg = NULL;$/;"	v
+error_out	stub.c	/^void error_out (int var)$/;"	f
+exiterr	mysql.c	/^char *exiterr ()$/;"	f
+fatal_error	calculator.c	/^int fatal_error;$/;"	v
+fatal_error	engine.c	/^int fatal_error;$/;"	v
+fcgi_envp	bestguml.c	/^    FCGX_ParamArray fcgi_envp;$/;"	v
+fcgi_err	bestguml.c	/^    FCGX_Stream *fcgi_in, *fcgi_out, *fcgi_err;$/;"	v
+fcgi_in	bestguml.c	/^    FCGX_Stream *fcgi_in, *fcgi_out, *fcgi_err;$/;"	v
+fcgi_out	bestguml.c	/^    FCGX_Stream *fcgi_in, *fcgi_out, *fcgi_err;$/;"	v
+filehandle	filehandle_ops.c	/^typedef struct filehandlestruct *filehandle;$/;"	t	file:
+filehandlestruct	filehandle_ops.c	/^struct filehandlestruct$/;"	s	file:
+filename	filehandle_ops.c	/^    char *filename;$/;"	m	struct:filehandlestruct	file:
+fileopener	filehandle_ops.c	/^char *fileopener (Data *out_string, char **args, int nargs, char *opentype)$/;"	f
+fileptr	filehandle_ops.c	/^    FILE *fileptr;$/;"	m	struct:filehandlestruct	file:
+filestack	filehandle_ops.c	/^filehandle filestack = NULL;$/;"	v
+find_hash_data	hash_table.c	/^Data *find_hash_data(char *key, unsigned long hash)$/;"	f
+find_hash_node	hash_table.c	/^HashNode *find_hash_node(char *key, unsigned long hash)$/;"	f
+flags	global.h	/^        unsigned long flags;$/;"	m	struct:hash_struct
+flags	hash_table.h	/^	unsigned long flags;$/;"	m	struct:hash_struct
+free_err_res	engine.c	/^int free_err_res;$/;"	v
+guml_backend	engine.c	/^void guml_backend (Data *out_string, char **ins, char *params[], int numparams)$/;"	f
+guml_calc_error	calculator.c	/^int guml_calc_error = 0;$/;"	v
+guml_calc_parseexpr	calculator.c	/^double guml_calc_parseexpr (char *expr, int level)$/;"	f
+guml_calc_parsenum	calculator.c	/^double guml_calc_parsenum (char *expr)$/;"	f
+guml_calc_skip_parens	calculator.c	/^char *guml_calc_skip_parens (char *ptr, char *end)$/;"	f
+guml_calculator	calculator.c	/^char *guml_calculator (Data *out_string, char *args[], int nargs)$/;"	f
+guml_calculator	global.h	/^commfunc_args guml_calculator;$/;"	v
+guml_close_dir	dir_ops.c	/^char *guml_close_dir (Data *out_string, char *args[], int nargs)$/;"	f
+guml_close_dir	global.h	/^commfunc_args guml_close_dir;$/;"	v
+guml_close_dir_internal	dir_ops.c	/^int guml_close_dir_internal ()$/;"	f
+guml_cmode	global.h	/^commfunc_args guml_cmode;$/;"	v
+guml_cmode	prims.c	/^char *guml_cmode (Data *out_string, char *args[], int nargs)$/;"	f
+guml_date	global.h	/^commfunc_args guml_date;$/;"	v
+guml_date	string_ops.c	/^char *guml_date (Data *out_string, char *args[], int nargs)$/;"	f
+guml_email	email.c	/^char *guml_email (Data *out_string, char *args[], int nargs)$/;"	f
+guml_email	global.h	/^commfunc_args guml_email;$/;"	v
+guml_env	bestguml.c	/^char **guml_env;$/;"	v
+guml_environ	env_ops.c	/^char *guml_environ (Data *out_string, char *args[], int nargs)$/;"	f
+guml_environ	global.h	/^commfunc_args guml_environ;$/;"	v
+guml_eq	global.h	/^commfunc_args guml_eq;$/;"	v
+guml_eq	prims.c	/^char *guml_eq (Data *out_string, char *args[], int nargs)$/;"	f
+guml_exit	global.h	/^commfunc_args guml_exit;$/;"	v
+guml_exit	prims.c	/^char *guml_exit (Data *out_string, char *args[], int nargs)$/;"	f
+guml_file	file_ops.c	/^void guml_file (Data *out_string, FILE * f)$/;"	f
+guml_file_delete	file_ops.c	/^char *guml_file_delete (Data *out_string, char *args[], int nargs)$/;"	f
+guml_file_delete	global.h	/^commfunc_args guml_file_delete;$/;"	v
+guml_file_exists	file_ops.c	/^char *guml_file_exists (Data *out_string, char *args[], int nargs)$/;"	f
+guml_file_exists	global.h	/^commfunc_args guml_file_exists;$/;"	v
+guml_file_include	file_ops.c	/^char *guml_file_include (Data *out_string, char *args[], int nargs)$/;"	f
+guml_file_include	global.h	/^commfunc_args guml_file_include;$/;"	v
+guml_file_read	file_ops.c	/^char *guml_file_read (Data *out_string, char *args[], int nargs)$/;"	f
+guml_file_read	global.h	/^commfunc_args guml_file_read;$/;"	v
+guml_file_status	file_ops.c	/^char *guml_file_status (Data *out_string, char *args[], int nargs)$/;"	f
+guml_file_status	global.h	/^commfunc_args guml_file_status;$/;"	v
+guml_file_write	file_ops.c	/^char *guml_file_write (Data *out_string, char *args[], int nargs)$/;"	f
+guml_file_write	global.h	/^commfunc_args guml_file_write;$/;"	v
+guml_filehandle_append	filehandle_ops.c	/^char *guml_filehandle_append (Data *out_string, char **args, int nargs)$/;"	f
+guml_filehandle_append	global.h	/^commfunc_args guml_filehandle_append;$/;"	v
+guml_filehandle_close	filehandle_ops.c	/^char *guml_filehandle_close (Data *out_string, char **args, int nargs)$/;"	f
+guml_filehandle_close	global.h	/^commfunc_args guml_filehandle_close;$/;"	v
+guml_filehandle_isopen	filehandle_ops.c	/^char *guml_filehandle_isopen (Data *out_string, char **args, int nargs)$/;"	f
+guml_filehandle_isopen	global.h	/^commfunc_args guml_filehandle_isopen;$/;"	v
+guml_filehandle_open	filehandle_ops.c	/^char *guml_filehandle_open (Data *out_string, char **args, int nargs)$/;"	f
+guml_filehandle_open	global.h	/^commfunc_args guml_filehandle_open;$/;"	v
+guml_filehandle_output	filehandle_ops.c	/^char *guml_filehandle_output (Data *out_string, char **args, int nargs)$/;"	f
+guml_filehandle_output	global.h	/^commfunc_args guml_filehandle_output;$/;"	v
+guml_filehandle_readline	filehandle_ops.c	/^char *guml_filehandle_readline (Data *out_string, char **args, int nargs)$/;"	f
+guml_filehandle_readline	global.h	/^commfunc_args guml_filehandle_readline;$/;"	v
+guml_filehandle_writeline	filehandle_ops.c	/^char *guml_filehandle_writeline (Data *out_string, char **args, int nargs)$/;"	f
+guml_filehandle_writeline	global.h	/^commfunc_args guml_filehandle_writeline;$/;"	v
+guml_fop	global.h	/^commfunc_args guml_fop;$/;"	v
+guml_fop	math_ops.c	/^char *guml_fop (Data *out_string, char *args[], int nargs)$/;"	f
+guml_get	global.h	/^commfunc_args guml_get;$/;"	v
+guml_get	prims.c	/^char *guml_get (Data *out_string, char *args[], int nargs)$/;"	f
+guml_htmlquote	global.h	/^commfunc_args guml_htmlquote;$/;"	v
+guml_htmlquote	prims.c	/^char *guml_htmlquote (Data *out_string, char *args[], int nargs)$/;"	f
+guml_httpdecode	global.h	/^commfunc_args guml_httpdecode;$/;"	v
+guml_httpdecode	string_ops.c	/^char *guml_httpdecode(Data *out_string, char *args[], int nargs)$/;"	f
+guml_httpencode	global.h	/^commfunc_args guml_httpencode;$/;"	v
+guml_httpencode	string_ops.c	/^char *guml_httpencode(Data *out_string, char *args[], int nargs)$/;"	f
+guml_if	global.h	/^commfunc_args_params guml_if;$/;"	v
+guml_if	prims.c	/^char *guml_if (Data *out_string, char *args[], int nargs, char *params[], int nparams)$/;"	f
+guml_index	global.h	/^commfunc_args guml_index;$/;"	v
+guml_index	string_ops.c	/^char *guml_index (Data *out_string, char *args[], int nargs)$/;"	f
+guml_isdir	dir_ops.c	/^char *guml_isdir (Data *out_string, char *args[], int nargs)$/;"	f
+guml_isdir	global.h	/^commfunc_args guml_isdir;$/;"	v
+guml_isset	global.h	/^commfunc_args guml_isset;$/;"	v
+guml_isset	prims.c	/^char *guml_isset (Data *out_string, char *args[], int nargs)$/;"	f
+guml_length	global.h	/^commfunc_args guml_length;$/;"	v
+guml_length	string_ops.c	/^char *guml_length (Data *out_string, char *args[], int nargs)$/;"	f
+guml_lower_string	global.h	/^commfunc_args guml_lower_string;$/;"	v
+guml_lower_string	string_ops.c	/^char *guml_lower_string (Data *out_string, char *args[], int nargs)$/;"	f
+guml_op	global.h	/^commfunc_args guml_op;$/;"	v
+guml_op	math_ops.c	/^char *guml_op (Data *out_string, char *args[], int nargs)$/;"	f
+guml_open_dir	dir_ops.c	/^char *guml_open_dir (Data *out_string, char *args[], int nargs)$/;"	f
+guml_open_dir	global.h	/^commfunc_args guml_open_dir;$/;"	v
+guml_param	global.h	/^commfunc_args_params guml_param;$/;"	v
+guml_param	prims.c	/^char *guml_param (Data *out_string, char *arg[], int nargs, char *params[], int nparams)$/;"	f
+guml_paramcount	global.h	/^commfunc_args_params guml_paramcount;$/;"	v
+guml_paramcount	prims.c	/^char *guml_paramcount (Data *out_string, char *arg[], int nargs, char *params[], int nparams)$/;"	f
+guml_parse_money	global.h	/^commfunc_args guml_parse_money;$/;"	v
+guml_parse_money	math_ops.c	/^char *guml_parse_money (Data *out_string, char *args[], int nargs)$/;"	f
+guml_parse_params	engine.c	/^char *guml_parse_params (char **ins, char **params, int numparams, char ***args, int *nargs, int quoted)$/;"	f
+guml_plsqlcall	global.h	/^commfunc_args guml_plsqlcall;$/;"	v
+guml_plsqlcall	oracle.c	/^char *guml_plsqlcall(Data *out_string, char *args[], int nargs) {$/;"	f
+guml_quote	global.h	/^commfunc_args guml_quote;$/;"	v
+guml_quote	prims.c	/^char *guml_quote (Data *out_string, char *args[], int nargs)$/;"	f
+guml_rand	global.h	/^commfunc_args guml_rand;$/;"	v
+guml_rand	math_ops.c	/^char *guml_rand (Data *out_string, char *args[], int nargs)$/;"	f
+guml_read_dir	dir_ops.c	/^char *guml_read_dir (Data *out_string, char *args[], int nargs)$/;"	f
+guml_read_dir	global.h	/^commfunc_args guml_read_dir;$/;"	v
+guml_sendmail	email.c	/^char *guml_sendmail (Data *out_string, char *args[], int nargs)$/;"	f
+guml_sendmail	global.h	/^commfunc_args guml_sendmail;$/;"	v
+guml_set	global.h	/^commfunc_args guml_set;$/;"	v
+guml_set	prims.c	/^char *guml_set (Data *out_string, char *args[], int nargs)$/;"	f
+guml_shell	email.c	/^char *guml_shell (Data *out_string, char *args[], int nargs)$/;"	f
+guml_shell	global.h	/^commfunc_args guml_shell;$/;"	v
+guml_shutdownguml	global.h	/^commfunc_args guml_shutdownguml;$/;"	v
+guml_shutdownguml	prims.c	/^char *guml_shutdownguml(Data *out_string, char *args[], int nargs)$/;"	f
+guml_soundex	global.h	/^commfunc_args guml_soundex;$/;"	v
+guml_soundex	string_ops.c	/^char *guml_soundex(Data *out_string, char *args[], int nargs)$/;"	f
+guml_sqlexec	global.h	/^commfunc_args guml_sqlexec;$/;"	v
+guml_sqlexec	mysql.c	/^char *guml_sqlexec (Data *out_string, char *args[], int nargs)$/;"	f
+guml_sqlexec	oracle.c	/^char *guml_sqlexec(Data *out_string, char *args[], int nargs)$/;"	f
+guml_sqlexec	sybase_ct.c	/^char *guml_sqlexec (Data *out_string, char *args[], int nargs)$/;"	f
+guml_sqlexec	sybase_db.c	/^char *guml_sqlexec (Data *out_string, char *args[], int nargs)$/;"	f
+guml_sqlquote	global.h	/^commfunc_args guml_sqlquote;$/;"	v
+guml_sqlquote	string_ops.c	/^char *guml_sqlquote(Data *out_string, char *args[], int nargs)$/;"	f
+guml_sqlquote	sybase_ct.c	/^char *guml_sqlquote (Data *out_string, char *args[], int nargs)$/;"	f
+guml_sqlrow	global.h	/^commfunc_args guml_sqlrow;$/;"	v
+guml_sqlrow	mysql.c	/^char *guml_sqlrow (Data *out_string, char *args[], int nargs)$/;"	f
+guml_sqlrow	oracle.c	/^char *guml_sqlrow(Data *out_string, char *args[], int nargs)$/;"	f
+guml_sqlrow	sybase_ct.c	/^char *guml_sqlrow (Data *out_string, char *args[], int nargs)$/;"	f
+guml_sqlrow	sybase_db.c	/^char *guml_sqlrow (Data *out_string, char *args[], int nargs)$/;"	f
+guml_strcmp	global.h	/^commfunc_args guml_strcmp;$/;"	v
+guml_strcmp	string_ops.c	/^char *guml_strcmp(Data *out_string, char *args[], int nargs)$/;"	f
+guml_strip	global.h	/^commfunc_args guml_strip;$/;"	v
+guml_strip	string_ops.c	/^char *guml_strip (Data *out_string, char *args[], int nargs)$/;"	f
+guml_strtok	global.h	/^commfunc_args guml_strtok;$/;"	v
+guml_strtok	string_ops.c	/^char *guml_strtok(Data *out_string, char *args[], int nargs)$/;"	f
+guml_substr	global.h	/^commfunc_args guml_substr;$/;"	v
+guml_substr	string_ops.c	/^char *guml_substr (Data *out_string, char *args[], int nargs)$/;"	f
+guml_time	global.h	/^commfunc_args guml_time;$/;"	v
+guml_time	string_ops.c	/^char *guml_time (Data *out_string, char *args[], int nargs)$/;"	f
+guml_tmode	global.h	/^commfunc_args guml_tmode;$/;"	v
+guml_tmode	prims.c	/^char *guml_tmode (Data *out_string, char *args[], int nargs)$/;"	f
+guml_tuxedo	global.h	/^commfunc_args guml_tuxedo;$/;"	v
+guml_tuxedo	tuxedo.cc	/^char *guml_tuxedo (Data *out_string, char *args[], int nargs)$/;"	f
+guml_tuxedo_results	global.h	/^commfunc_args guml_tuxedo_results;$/;"	v
+guml_tuxedo_results	tuxedo.cc	/^char *guml_tuxedo_results(Data *out_string, char *args[], int nargs)$/;"	f
+guml_unset	global.h	/^commfunc_args guml_unset;$/;"	v
+guml_unset	prims.c	/^char *guml_unset (Data *out_string, char *args[], int nargs)$/;"	f
+guml_upper_string	global.h	/^commfunc_args guml_upper_string;$/;"	v
+guml_upper_string	string_ops.c	/^char *guml_upper_string (Data *out_string, char *args[], int nargs)$/;"	f
+guml_while	global.h	/^commfunc_args_params guml_while;$/;"	v
+guml_while	prims.c	/^char *guml_while (Data *out_string, char *args[], int nargs, char *params[], int nparams)$/;"	f
+hash	global.h	/^        unsigned long hash;$/;"	m	struct:hash_struct
+hash	hash_table.h	/^	unsigned long hash;$/;"	m	struct:hash_struct
+hash_allocated	hash_table.c	/^unsigned int	stack_depth, stack_allocated, hash_depths[HASH_WIDTH], hash_allocated[HASH_WIDTH], dupes, readonly;$/;"	v
+hash_depths	hash_table.c	/^unsigned int	stack_depth, stack_allocated, hash_depths[HASH_WIDTH], hash_allocated[HASH_WIDTH], dupes, readonly;$/;"	v
+hash_info	hash_table.c	/^void hash_info(void)$/;"	f
+hash_struct	global.h	/^typedef struct hash_struct$/;"	s
+hash_struct	hash_table.h	/^typedef struct hash_struct$/;"	s
+hash_table	hash_table.c	/^HashNode	*hash_table[HASH_WIDTH];$/;"	v
+hd2n	www.c	/^inline int hd2n (char c)$/;"	f
+hda	oracle.c	/^ub4		hda[HDA_SIZE\/4];$/;"	v
+http_decode	www.c	/^char *http_decode (char *s)$/;"	f
+indicator	sybase_ct.c	/^    CS_SMALLINT indicator;$/;"	m	struct:_ex_column_data	file:
+indp	oracle.c	/^	sb2				indp;$/;"	m	struct:define	file:
+init_commands	commands.c	/^void init_commands(void)$/;"	f
+init_engine	engine.c	/^void init_engine(void)$/;"	f
+init_hash_table	hash_table.c	/^void init_hash_table(void)$/;"	f
+insert_hash	hash_table.c	/^int insert_hash(char *key, Data *data, unsigned long hash, unsigned long flags)$/;"	f
+isint	calculator.c	/^int isint (double d)$/;"	f
+key	global.h	/^        char *key;$/;"	m	struct:hash_struct
+key	hash_table.h	/^	char *key;$/;"	m	struct:hash_struct
+lda	oracle.c	/^Lda_Def lda;$/;"	v
+length	global.h	/^        unsigned long length;$/;"	m	struct:data_struct
+length	hash_table.h	/^	unsigned long length;$/;"	m	struct:data_struct
+long_buf	oracle.c	/^ub1 *long_buf = NULL;$/;"	v
+main	bestguml.c	/^int main (int argc, char *argv[], char *envp[])$/;"	f
+main	stub.c	/^int main (int dummy1, char **argv)$/;"	f
+main	test_hash.c	/^int main (int argc, char *argv[])$/;"	f
+max	sybase_ct.c	324;"	d	file:
+max	sybase_db.c	127;"	d	file:
+modetrigger	engine.c	/^int modetrigger;$/;"	v
+molson_encode_password	global.h	/^commfunc_args molson_encode_password;$/;"	v
+molson_encode_password	site_specific_ops.c	/^char *molson_encode_password (Data *out_string, char *args[], int nargs)$/;"	f
+msg	tuxedo.cc	/^TPMsg *msg = NULL;$/;"	v
+msg_handler	sybase_db.c	/^int msg_handler (DBPROCESS * dbp, DBINT msgno, int msgstate, int severity, char *msgtext, char *dummy1, char *dummy2, int dummy3)$/;"	f
+mydir	dir_ops.c	/^DIR *mydir = NULL;$/;"	v
+mysql	mysql.c	/^MYSQL mysql;$/;"	v
+nextfile	filehandle_ops.c	/^    filehandle nextfile;$/;"	m	struct:filehandlestruct	file:
+nullok	oracle.c	/^	sb2				nullok;$/;"	m	struct:describe	file:
+num_commands	commands.c	/^int num_commands = 0;$/;"	v
+numcols	oracle.c	/^int numcols = 0;$/;"	v
+numcols	sybase_ct.c	/^int numcols = 0;$/;"	v
+numcols	sybase_db.c	/^int numcols = 0;$/;"	v
+oci_error	oracle.c	/^char *oci_error(Cda_Def *cda) {$/;"	f
+pointer	sql.h	/^    char *pointer;$/;"	m	struct:blobstuff_s_
+pop_stack	hash_table.c	/^Data *pop_stack(void)$/;"	f
+precision	oracle.c	/^	sb2				precision;$/;"	m	struct:describe	file:
+push_stack	hash_table.c	/^void push_stack(Data *data)$/;"	f
+quote_html	www.c	/^char *quote_html (char *s)$/;"	f
+random	global.h	18;"	d
+random_string	test_hash.c	/^char *random_string(int len)$/;"	f
+read_per_page_hit_config_file	setup.c	/^void read_per_page_hit_config_file(void)$/;"	f
+read_startup_config_file	setup.c	/^void read_startup_config_file(void)$/;"	f
+readonly	hash_table.c	/^unsigned int	stack_depth, stack_allocated, hash_depths[HASH_WIDTH], hash_allocated[HASH_WIDTH], dupes, readonly;$/;"	v
+res	mysql.c	/^MYSQL_RES *res = NULL;$/;"	v
+results	sybase_ct.c	/^SQL_DATA *results = NULL;$/;"	v
+results	sybase_db.c	/^DBCHAR **results = NULL;$/;"	v
+retcode	sybase_ct.c	/^CS_RETCODE     retcode    = CS_SUCCEED;$/;"	v
+return_cursor	oracle.c	/^Cda_Def return_cursor;$/;"	v
+return_open	oracle.c	/^int return_open=0;$/;"	v
+scale	oracle.c	/^	sb2				scale;$/;"	m	struct:describe	file:
+setup_args	setup.c	/^void setup_args ()$/;"	f
+setup_commandline	setup.c	/^void setup_commandline (int argc, char *argv[])$/;"	f
+setup_cookie_args	setup.c	/^void setup_cookie_args (void)$/;"	f
+setup_environment	setup.c	/^void setup_environment (int argc, char *argv[])$/;"	f
+setup_form_args	setup.c	/^void setup_form_args (void)$/;"	f
+setup_path_and_filename	setup.c	/^void setup_path_and_filename ()$/;"	f
+shrink_stack	hash_table.c	/^void shrink_stack(void)$/;"	f
+shutdownguml	bestguml.c	/^int shutdownguml = 0;$/;"	v
+smode	engine.c	/^    cmode, smode, tmode$/;"	e	file:
+soundex_lookup	string_ops.c	/^static char soundex_lookup[] =$/;"	v	file:
+split_string	string_utils.c	/^int split_string(char *str, char split, char **w1, char **w2)$/;"	f
+sql_clientmsg_cb	sybase_ct.c	/^CS_RETCODE CS_PUBLIC sql_clientmsg_cb(CS_CONTEXT *context, CS_CONNECTION *connection, CS_CLIENTMSG *errmsg)$/;"	f
+sql_cmd	mysql.c	/^char *sql_cmd = NULL;$/;"	v
+sql_con_cleanup	sybase_ct.c	/^CS_RETCODE CS_PUBLIC sql_con_cleanup(CS_CONNECTION *connection, CS_RETCODE status)$/;"	f
+sql_ctx_cleanup	sybase_ct.c	/^CS_RETCODE CS_PUBLIC sql_ctx_cleanup(CS_CONTEXT *context, CS_RETCODE status)$/;"	f
+sql_exec_cmd	sybase_ct.c	/^char *sql_exec_cmd(char *cmd)$/;"	f
+sql_init	mysql.c	/^char *sql_init ()$/;"	f
+sql_init	oracle.c	/^char *sql_init()$/;"	f
+sql_init	sybase_ct.c	/^char *sql_init ()$/;"	f
+sql_init	sybase_db.c	/^char *sql_init ()$/;"	f
+sql_init_connect	sybase_ct.c	/^CS_RETCODE CS_PUBLIC sql_init_connect(CS_CONTEXT *context, CS_CONNECTION **connection)$/;"	f
+sql_init_context	sybase_ct.c	/^CS_RETCODE CS_PUBLIC sql_init_context(CS_CONTEXT **context)$/;"	f
+sql_init_environ	oracle.c	/^char *sql_init_environ(void)$/;"	f
+sql_init_environ	sybase_ct.c	/^int sql_init_environ (void)$/;"	f
+sql_init_environ	sybase_db.c	/^char *sql_init_environ (void)$/;"	f
+sql_initted	mysql.c	/^int sql_initted = 0;$/;"	v
+sql_initted	oracle.c	/^int sql_initted = 0;$/;"	v
+sql_initted	sybase_ct.c	/^int   sql_initted   = 0;$/;"	v
+sql_initted	sybase_db.c	/^int sql_initted = 0;$/;"	v
+sql_servermsg_cb	sybase_ct.c	/^CS_RETCODE CS_PUBLIC sql_servermsg_cb(CS_CONTEXT *context, CS_CONNECTION *connection, CS_SERVERMSG *srvmsg)$/;"	f
+sql_shutdown	mysql.c	/^char *sql_shutdown ()$/;"	f
+sql_shutdown	oracle.c	/^char *sql_shutdown()$/;"	f
+sql_shutdown	sybase_ct.c	/^char *sql_shutdown ()$/;"	f
+sql_shutdown	sybase_db.c	/^char *sql_shutdown ()$/;"	f
+sql_use_db	sybase_ct.c	/^CS_RETCODE sql_use_db(CS_CONNECTION *connection)$/;"	f
+srandom	global.h	17;"	d
+stack	hash_table.c	/^Data		**stack;$/;"	v
+stack_allocated	hash_table.c	/^unsigned int	stack_depth, stack_allocated, hash_depths[HASH_WIDTH], hash_allocated[HASH_WIDTH], dupes, readonly;$/;"	v
+stack_depth	hash_table.c	/^unsigned int	stack_depth, stack_allocated, hash_depths[HASH_WIDTH], hash_allocated[HASH_WIDTH], dupes, readonly;$/;"	v
+stack_info	hash_table.c	/^void stack_info(void)$/;"	f
+strip_space	string_utils.c	/^char *strip_space (char *buffer)$/;"	f
+text_time	mysql.c	/^char *text_time ()$/;"	f
+text_time	sybase_ct.c	/^char *text_time ()$/;"	f
+thecomm	global.h	/^  char *thecomm;$/;"	m	struct:command
+tmode	engine.c	/^    cmode, smode, tmode$/;"	e	file:
+tohex	string_ops.c	330;"	d	file:
+value	sybase_ct.c	/^    CS_CHAR     *value;$/;"	m	struct:_ex_column_data	file:
+valuelen	sybase_ct.c	/^    CS_INT      valuelen;$/;"	m	struct:_ex_column_data	file:
+writelog	string_utils.c	/^void writelog(char *msg, ...)$/;"	f
+wsw	engine.c	/^wsw;$/;"	t	file:
