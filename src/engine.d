@@ -1,7 +1,7 @@
 module engine;
 
 import data;
-import hashtable;
+import hash_table;
 
 import core.stdc.config;
 import core.stdc.string;
@@ -19,8 +19,7 @@ extern(C)
     extern void add_string(Data *s1, const char *s2);
     extern void add_string_size(Data *s1, const char *s2, c_ulong s2_len);
 
-    extern void calc_hash_increment(c_ulong *hash_value, char c);
-    extern HashNode *find_hash_node(const char *key, c_ulong hash);
+    extern HashNode *find_hash_node(const char *key, size_t hash);
 
     extern char* command_invoke(command* c, Data* out_string, char** args, int nargs, char **params, int nparams);
     extern int command_wants_quoted(command* c);

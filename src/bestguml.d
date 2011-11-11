@@ -2,6 +2,7 @@ module bestguml;
 
 import data;
 import engine;
+import hash_table;
 import setup;
 
 import core.stdc.config;
@@ -32,7 +33,6 @@ extern(C)
     //extern void guml_backend(Data *out_string, char **ins, char *params[], int numparams);
     extern char* guml_file_include(Data* out_string, char** args, int nargs);
 
-    extern void init_hash_table();
     extern void delete_hash(const char *key, c_ulong hash);
     extern int  insert_hash(char *key, Data *data, c_ulong hash, c_ulong flags);
     extern Data *find_hash_data(const char *key, c_ulong hash);

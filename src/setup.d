@@ -1,7 +1,7 @@
 module setup;
 
 import data;
-import hashtable;
+import hash_table;
 
 import core.stdc.config;
 import core.stdc.stdio;

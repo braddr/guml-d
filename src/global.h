@@ -12,6 +12,8 @@
 
 #include "local.h"
 
+#include "stdint.h"
+
 #if defined(__SUNPRO_C) || defined(__SUNPRO_CC)
 #define INLINE
 #define srandom srand
@@ -50,13 +52,18 @@ typedef struct data_struct
         unsigned long length;
 } Data;
 
+#if 0
 typedef struct hash_struct
 {
         Data *data;
         char *key;
-        unsigned long hash;
+        size_t hash;
         unsigned long flags;
 } HashNode;
+#else
+struct hash_struct;
+typedef struct hash_struct HashNode;
+#endif
 
 typedef char *commfunc_args(Data *out_string, char *args[], int nargs);
 typedef char *commfunc_args_params(Data *out_string, char *args[], int nargs, char *params[], int nparams);
@@ -76,23 +83,25 @@ extern "C" {
 #endif
 
 /* hash_table.h */
-extern void calc_hash_increment(unsigned long *hash_value, char c);
+extern size_t calc_hash(const char *str);
+extern void delete_hash(const char *key, size_t hash);
+extern int  insert_hash(char *key, Data *data, size_t hash, unsigned long flags);
+extern Data *find_hash_data(const char *key, size_t hash);
+extern HashNode *find_hash_node(const char *key, size_t hash);
+#if 0
+extern void calc_hash_increment(size_t *hash_value, char c);
 extern void init_hash_table(void);
 extern void push_stack(Data *data);
 extern Data *pop_stack(void);
 extern void shrink_stack(void);
-extern Data *find_hash_data(const char *key, unsigned long hash);
-extern int  insert_hash(char *key, Data *data, unsigned long hash, unsigned long flags);
-extern void delete_hash(const char *key, unsigned long hash);
 extern void clean_hash(unsigned long flags);
-extern HashNode *find_hash_node(const char *key, unsigned long hash);
-extern unsigned long calc_hash(const char *str);
 
 #ifdef DEBUG_STACK
 extern void stack_info(void);
 #endif
 #ifdef DEBUG_HASH       
 extern void hash_info(void);
+#endif
 #endif
 
 /* setup.c */

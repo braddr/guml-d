@@ -258,16 +258,13 @@ endif
 .d.o:
 	dmd -c -gc $<
 
-all: test_hash bestguml
+all: bestguml
 
 install: all
 	echo "You need to copy the files yourself for now.."
 
 clean:
-	rm -f *.o bestguml stub test_hash
-
-test_hash: test_hash.o hash_table.o
-	$(CC) $(CFLAGS) -o test_hash test_hash.o hash_table.o
+	rm -f *.o bestguml stub
 
 bestguml: bestguml.o $(O_FILES)
 	dmd -ofbestguml bestguml.o $(O_FILES) $(addprefix -L,$(LIBS))
@@ -277,21 +274,21 @@ bestguml: bestguml.o $(O_FILES)
 
 stub.o: stub.c local.h
 
-bestguml.o: bestguml.d global.h local.h
+bestguml.o: bestguml.d
 
-setup.o: setup.d global.h local.h
-
-test_hash.o: test_hash.c global.h
+setup.o: setup.d
 
 commands.o: commands.c global.h local.h
 
-engine.o: engine.d global.h local.h
+engine.o: engine.d
 
 env.o: env.c global.h local.h
 
 file_ops.o: file_ops.c global.h local.h
 
 filehandle_ops.o: filehandle_ops.c global.h local.h
+
+hash_table.o: hash_table.d
 
 string_ops.o: string_ops.c global.h local.h
 
