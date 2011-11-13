@@ -42,6 +42,7 @@ char *guml_parse_money (Data *out_string, const ref Data[] args)
             case '.':
                 buffer[strlen (buffer.ptr) + 1] = 0;
                 buffer[strlen (buffer.ptr)] = args[0].data[i];
+                goto case;
             case ',':
             case '$':
                 break;
@@ -165,7 +166,6 @@ char *guml_op (Data *out_string, const ref Data[] args)
                     break;
                 default:
                     return cast(char*)"\\op -- unknown math operation.";
-                    break;
             }
     }
 
@@ -292,7 +292,6 @@ char *guml_fop (Data *out_string, const ref Data[] args)
                     break;
                 default:
                     return cast(char*)"\\fop -- invalid math operation.";
-                    break;
             }
     }
 

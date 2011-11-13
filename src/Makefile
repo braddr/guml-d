@@ -259,7 +259,7 @@ endif
 
 .SUFFIXES: .d
 .d.o:
-	dmd -c -gc $(DFLAGS) $<
+	dmd -c -gc -w $(DFLAGS) $<
 
 all: bestguml
 

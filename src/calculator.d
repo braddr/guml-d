@@ -305,7 +305,6 @@ double guml_calc_parseexpr (char *expr, int level)
 
                     default:
                         assert(false);
-                        return 0;
                 }
             }
         }
