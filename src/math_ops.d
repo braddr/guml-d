@@ -1,22 +1,28 @@
-/* math_ops.c */
-/* guml math primitives */
+module math_ops;
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <strings.h>
-#include <math.h>
-#include <ctype.h>
+import data;
+import string_utils;
 
-#include "global.h"
+import core.stdc.config;
+import core.stdc.ctype;
+import core.stdc.math;
+import core.stdc.stdio;
+import core.stdc.stdlib;
+import core.stdc.string;
+import core.sys.posix.stdlib;
 
-char *guml_parse_money (Data *out_string, char *args[], int nargs)
+extern(C)
+{
+    extern int strcasecmp(const char *s1, const char *s2);
+}
+
+char *guml_parse_money (Data *out_string, char** args, int nargs)
 {
     char buffer[1024];
-    unsigned int i;
+    size_t i;
 
     if (nargs != 1)
-        return "\\money requires only one parameter";
+        return cast(char*)"\\money requires only one parameter";
 
     i = 0;
     buffer[0] = 0;
@@ -35,63 +41,62 @@ char *guml_parse_money (Data *out_string, char *args[], int nargs)
             case '8':
             case '9':
             case '.':
-                buffer[strlen (buffer) + 1] = 0;
-                buffer[strlen (buffer)] = args[0][i];
+                buffer[strlen (buffer.ptr) + 1] = 0;
+                buffer[strlen (buffer.ptr)] = args[0][i];
             case ',':
             case '$':
                 break;
             default:
-                return NULL;
+                return null;
         }
         i++;
     }
-    add_string (out_string, buffer);
-    return NULL;
+    add_string (out_string, buffer.ptr);
+    return null;
 }
 
 /* pick a random number from 0 to arg[0]-1 */
-char *guml_rand (Data *out_string, char *args[], int nargs)
+char *guml_rand (Data *out_string, char** args, int nargs)
 {
     char res[15];
     int max;
 
     if (nargs != 1)
-        return "\\rand requires only one argument";
+        return cast(char*)"\\rand requires only one argument";
 
     max = atoi (args[0]);
 
     if (max == 0)
-        return "\\rand called with a string or a 0";
+        return cast(char*)"\\rand called with a string or a 0";
     else
-        sprintf (res, "%ld", (long) random () % atoi (args[0]));
+        sprintf (res.ptr, "%ld", cast(long) random () % atoi (args[0]));
 
-    add_string (out_string, res);
-    return NULL;
+    add_string (out_string, res.ptr);
+    return null;
 }
 
 /* do general math operation */
-char *guml_op (Data *out_string, char *args[], int nargs)
+char *guml_op (Data *out_string, char** args, int nargs)
 {
     int a, b, c;
-    unsigned int loop;
     char *op;
     int isrel = 0;
     char res[32];
 
     if (nargs < 2 || nargs > 3)
-        return "\\op requires 2 or 3 parameters";
+        return cast(char*)"\\op requires 2 or 3 parameters";
 
-    if (strchr ("+-*%|&^</>=", args[1][0]) != NULL)
+    if (strchr ("+-*%|&^</>=", args[1][0]) != null)
     {
         if (nargs != 3)
-            return "\\op with +, -, *, /, %, |, &, ^, <, >, <=. >=, or = requires 3 parameters";
+            return cast(char*)"\\op with +, -, *, /, %, |, &, ^, <, >, <=. >=, or = requires 3 parameters";
         else
             b = atoi (args[2]);
     }
     else
     {
         if (nargs < 2)
-            return "\\op with V or ~ requires 2 parameters";
+            return cast(char*)"\\op with V or ~ requires 2 parameters";
     }
 
     c = 0;
@@ -104,7 +109,7 @@ char *guml_op (Data *out_string, char *args[], int nargs)
         case 'V':
             isrel = 1;
             c = strlen (args[0]) != 0;
-            for (loop = 0; loop < strlen (args[0]) && c; loop++)
+            for (size_t loop = 0; loop < strlen (args[0]) && c; loop++)
                 if (!(isdigit (args[0][loop]) || args[0][loop] == '-'))
                     c = 0;
             break;
@@ -119,12 +124,12 @@ char *guml_op (Data *out_string, char *args[], int nargs)
             break;
         case '/':
             if (b == 0)
-                return "\\op divide by 0 error";
+                return cast(char*)"\\op divide by 0 error";
             c = a / b;
             break;
         case '%':              /* modulus is WRONG in c! */
             if (b == 0)
-                return "\\op divide by 0 error";
+                return cast(char*)"\\op divide by 0 error";
             c = a % b;
             if (c < 0)
                 c += b;
@@ -161,7 +166,7 @@ char *guml_op (Data *out_string, char *args[], int nargs)
                     c = a == b;
                     break;
                 default:
-                    return "\\op -- unknown math operation.";
+                    return cast(char*)"\\op -- unknown math operation.";
                     break;
             }
     }
@@ -173,26 +178,26 @@ char *guml_op (Data *out_string, char *args[], int nargs)
     }
     else
     {
-        sprintf (res, "%d", c);
-        add_string (out_string, res);
+        sprintf (res.ptr, "%d", c);
+        add_string (out_string, res.ptr);
     }
-    return NULL;
+    return null;
 }
 
 /* do general fp math operation */
-char *guml_fop (Data *out_string, char *args[], int nargs)
+char *guml_fop (Data *out_string, char** args, int nargs)
 {
     static char res[1024];
     double a, b, c;
-    unsigned int loop;
     int d = 0, isrel = 0;
-    char *op, fmt[10];
+    char *op;
+    char fmt[10];
 
 /*
    if (nargs < 2 || nargs > 5)
    return "\\op requires between 2 and 5 parameters";
 
-   if (strchr("+-*</>=", args[1][0]) != NULL)
+   if (strchr("+-*</>=", args[1][0]) != null)
    {
    if (nargs != 3 && nargs != 4)
    return "\\fop with +, -, *, **, /, <, >, <=. >=, or = requires 3 or 4 parameters";
@@ -212,13 +217,13 @@ char *guml_fop (Data *out_string, char *args[], int nargs)
         b = 0;
 
     if (nargs == 4)
-        sprintf (fmt, "%%.%df", atoi (args[3]));
+        sprintf (fmt.ptr, "%%.%df", atoi (args[3]));
     else if (nargs == 5)
-        sprintf (fmt, "%%%d.%df", atoi (args[3]), atoi (args[4]));
-    else if (strchr (args[0], '.') != NULL)
-        sprintf (fmt, "%%.%zdf", strlen (strchr (args[0], '.') + 1));
+        sprintf (fmt.ptr, "%%%d.%df", atoi (args[3]), atoi (args[4]));
+    else if (strchr (args[0], '.') != null)
+        sprintf (fmt.ptr, "%%.%zdf", strlen (strchr (args[0], '.') + 1));
     else
-        sprintf (fmt, "%%.%zdf", strlen (args[0]));
+        sprintf (fmt.ptr, "%%.%zdf", strlen (args[0]));
     op = args[1];
 
     switch (*op)
@@ -237,7 +242,7 @@ char *guml_fop (Data *out_string, char *args[], int nargs)
             break;
         case '/':
             if (b == 0)
-                return "\\fop divide by 0 error";
+                return cast(char*)"\\fop divide by 0 error";
             c = a / b;
             break;
         case 'c':
@@ -255,7 +260,7 @@ char *guml_fop (Data *out_string, char *args[], int nargs)
             else if (strcasecmp(op, "log10") == 0)
                 c = log10(a);
             else
-                return "\\fop -- invalid operator";
+                return cast(char*)"\\fop -- invalid operator";
             break;
         case 'r':
         case 'R':
@@ -265,7 +270,7 @@ char *guml_fop (Data *out_string, char *args[], int nargs)
         case 'V':
             isrel = 1;
             d = strlen (args[0]) != 0;
-            for (loop = 0; loop < strlen (args[0]) && d; loop++)
+            for (size_t loop = 0; loop < strlen (args[0]) && d; loop++)
                 if (!(isdigit (args[0][loop]) || args[0][loop] == '-' || args[0][loop] == '.'))
                     d = 0;
             break;
@@ -289,7 +294,7 @@ char *guml_fop (Data *out_string, char *args[], int nargs)
                     d = a == b;
                     break;
                 default:
-                    return "\\fop -- invalid math operation.";
+                    return cast(char*)"\\fop -- invalid math operation.";
                     break;
             }
     }
@@ -301,8 +306,8 @@ char *guml_fop (Data *out_string, char *args[], int nargs)
     }
     else
     {
-        sprintf (res, fmt, c);
-        add_string (out_string, res);
+        sprintf (res.ptr, fmt.ptr, c);
+        add_string (out_string, res.ptr);
     }
-    return NULL;
+    return null;
 }

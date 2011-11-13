@@ -1,7 +1,9 @@
 module engine;
 
+import commands;
 import data;
 import hash_table;
+import string_utils;
 
 import core.stdc.config;
 import core.stdc.string;
@@ -12,23 +14,7 @@ extern(C)
 {
     __gshared Data err_string;
     __gshared int modetrigger;
-
-    struct command {}
-
-    extern void add_char(Data *s1, char c);
-    extern void add_string(Data *s1, const char *s2);
-    extern void add_string_size(Data *s1, const char *s2, c_ulong s2_len);
-
-    extern HashNode *find_hash_node(const char *key, size_t hash);
-
-    extern char* command_invoke(command* c, Data* out_string, char** args, int nargs, char **params, int nparams);
-    extern int command_wants_quoted(command* c);
 }
-
-// really belong in commands.d, once that's ported to d
-enum CMD_ARGS   = 0x00000001;
-enum CMD_PARAMS = 0x00000002;
-enum CMD_QUOTED = 0x00000004;
 
 enum wsw
 {
@@ -38,7 +24,7 @@ enum wsw
 enum MAXDEPTH = 100;
 
 int depth;
-int fatal_error;
+__gshared int fatal_error;
 int free_err_res;
 
 void init_engine()
@@ -152,7 +138,7 @@ char* guml_parse_params (char **ins, char **params, int numparams, char ***args,
         (*nargs)++;
 
         if (*cur != '}')
-            return cast(char*)("Missing } in parameter parsing".ptr);
+            return cast(char*)"Missing } in parameter parsing";
 
         cur++;
     }
@@ -274,7 +260,7 @@ extern(C) void guml_backend (Data *out_string, char **ins, char **params, int nu
                                 add_string(&err_string, err);
                                 add_char(&err_string, '\n');
                             }
-                            sprintf(tmp.ptr, "   ... while parsing parameters for '%s' at line %d.\n".ptr, commandstr.ptr, line);
+                            sprintf(tmp.ptr, "   ... while parsing parameters for '%s' at line %d.\n", commandstr.ptr, line);
                             add_string(&err_string, tmp.ptr);
                             goto cleanup_params;
                         }

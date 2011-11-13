@@ -222,6 +222,7 @@ ifdef DEBUG_SQL
 CFLAGS += -DDEBUG_SQL
 endif
 ifdef FASTCGI
+DFLAGS += -version=FASTCGI
 CFLAGS += -DFASTCGI
 endif
 ifdef TUXEDO
@@ -236,9 +237,11 @@ endif
 
 CXXFLAGS = ${CFLAGS}
 
+# filehandle_ops.o
+# site_specific_ops.o
 O_FILES = setup.o engine.o commands.o env_ops.o dir_ops.o file_ops.o math_ops.o \
           string_ops.o email.o hash_table.o prims.o www.o calculator.o string_utils.o \
-          site_specific_ops.o filehandle_ops.o $(DB_OBJS)
+          $(DB_OBJS)
 ifdef TUXEDO
 O_FILES += tuxedo.o
 endif
@@ -256,7 +259,7 @@ endif
 
 .SUFFIXES: .d
 .d.o:
-	dmd -c -gc $<
+	dmd -c -gc $(DFLAGS) $<
 
 all: bestguml
 
@@ -278,31 +281,35 @@ bestguml.o: bestguml.d
 
 setup.o: setup.d
 
-commands.o: commands.c global.h local.h
+commands.o: commands.d
+
+dir_ops.o: dir_ops.d
 
 engine.o: engine.d
 
-env.o: env.c global.h local.h
+env_ops.o: env_ops.d
 
-file_ops.o: file_ops.c global.h local.h
+file_ops.o: file_ops.d
 
 filehandle_ops.o: filehandle_ops.c global.h local.h
 
 hash_table.o: hash_table.d
 
-string_ops.o: string_ops.c global.h local.h
+string_ops.o: string_ops.d
 
-math_ops.o: math_ops.c global.h local.h
+math_ops.o: math_ops.d
 
-prims.o: prims.c global.h local.h
+prims.o: prims.d
 
-www.o: www.c global.h
+www.o: www.d
 
-email.o: email.c global.h local.h
+email.o: email.d
 
-calculator.o: calculator.c global.h local.h
+calculator.o: calculator.d
 
 site_specific_ops.o: site_specific_ops.c global.h local.h
+
+string_utils.o: string_utils.d
 
 tuxedo.o: tuxedo.cc global.h local.h
 
@@ -323,7 +330,7 @@ informix.o: informix.ec global.h local.h
 endif
 
 ifeq (${DB},MYSQL)
-mysql.o: mysql.c global.h local.h
+mysql.o: mysql.d
 endif
 
 # End.

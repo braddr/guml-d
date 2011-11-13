@@ -1,9 +1,14 @@
 module bestguml;
 
+import commands;
 import data;
+import dir_ops;
 import engine;
+import file_ops;
 import hash_table;
+import mysql;
 import setup;
+import string_utils;
 
 import core.stdc.config;
 import core.stdc.stdio;
@@ -14,7 +19,6 @@ import core.stdc.time;
 extern(C)
 {
     extern __gshared Data err_string;
-    extern __gshared int fatal_error;
     extern __gshared const char** environ;
 
     __gshared char** guml_env;
@@ -23,24 +27,15 @@ extern(C)
 
     version (FASTCGI)
     {
+        struct FCGX_Stream;
+        alias char** FCGX_ParamArray;
         FCGX_Stream* fcgi_in, fcgi_out, fcgi_err;
         FCGX_ParamArray fcgi_envp;
+
+        extern int FCGX_Accept(FCGX_Stream **instr, FCGX_Stream **outstr, FCGX_Stream **err, FCGX_ParamArray *envp);
+        extern void FCGX_Finish();
+        extern int FCGX_PutS(const char *str, FCGX_Stream *stream);
     }
-
-    extern void writelog(const char *msg, ...);
-    extern Data *create_string(char *str, int no_dup);
-    extern void add_string(Data *s1, char *s2);
-    //extern void guml_backend(Data *out_string, char **ins, char *params[], int numparams);
-    extern char* guml_file_include(Data* out_string, char** args, int nargs);
-
-    extern void delete_hash(const char *key, c_ulong hash);
-    extern int  insert_hash(char *key, Data *data, c_ulong hash, c_ulong flags);
-    extern Data *find_hash_data(const char *key, c_ulong hash);
-    extern c_ulong calc_hash(const char *str);
-
-    extern void init_commands();
-    extern char *sql_init();
-    extern char *sql_shutdown();
 }
 
 void FPUTS(const char* x)
@@ -57,11 +52,15 @@ void processRequest(string[] args)
 
     setup_environment (args);
     init_engine();
+    read_startup_config_file();
 
-    version(none)
     {
-        read_startup_config_file();
-        read_per_page_hit_config_file();
+        char* err = sql_init();
+        if (err)
+        {
+            writelog("Error, unable to initialize the db: %s", err);
+            exit(10);
+        }
     }
 
     fatal_error = 0;
@@ -192,6 +191,8 @@ void processRequest(string[] args)
     version (LOG_ONLY_ERRORS) {}
     else
         writelog ("Done parsing.");
+
+    sql_shutdown();
 }
 
 int main (string[] args)
@@ -202,13 +203,6 @@ int main (string[] args)
     init_hash_table();
     init_commands();
 
-    char* err = sql_init();
-    if (err)
-    {
-        writelog("Error, unable to initialize the db: %s\n", err);
-        exit(10);
-    }
-
     version (FASTCGI)
     {
         while(!shutdownguml && FCGX_Accept(&fcgi_in, &fcgi_out, &fcgi_err, &fcgi_envp) >= 0)
@@ -217,8 +211,11 @@ int main (string[] args)
 
             processRequest(args);
 
-            if (clean_filehandles())
-                writelog ("Failed to close a file handle.");
+            version (USE_FILE_HANDLE_OPS)
+            {
+                if (clean_filehandles())
+                    writelog ("Failed to close a file handle.");
+            }
 
             guml_close_dir_internal();
 
@@ -232,8 +229,6 @@ int main (string[] args)
         // The three cleanup routines above aren't called since the process
         // is just going to exit anyway.
     }
-
-    sql_shutdown();
 
     return 0;
 }

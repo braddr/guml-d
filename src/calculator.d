@@ -1,3 +1,14 @@
+module calculator;
+
+import data;
+import string_utils;
+
+import core.stdc.ctype;
+import core.stdc.math;
+import core.stdc.stdio;
+import core.stdc.stdlib;
+import core.stdc.string;
+
 /* calc.c - evaluates a numerical expression, e.g.:
 
  *       "calc '9+12/(5+1)**(8/4)'" returns "9.333333"
@@ -48,17 +59,8 @@
  * mathematical constants like e, pi..??
  */
 
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
-#include<math.h>
-#include<ctype.h>
+enum CALC_NUMLEVELS = 3;
 
-#include "global.h"
-
-#define CALC_NUMLEVELS 3
-
-int fatal_error;
 int guml_calc_error = 0;
 
 int isint (double d)
@@ -78,8 +80,7 @@ char *guml_calc_skip_parens (char *ptr, char *end)
         switch (*ptr)
         {
             case '\0':
-                return NULL;
-                break;
+                return null;
             case '(':
                 if (dir == 0)
                     level--;
@@ -91,6 +92,8 @@ char *guml_calc_skip_parens (char *ptr, char *end)
                     level++;
                 else
                     level--;
+                break;
+            default:
                 break;
         }
         if (level == 0 || ptr == end)
@@ -106,7 +109,7 @@ char *guml_calc_skip_parens (char *ptr, char *end)
     if (level > 0)
     {
         guml_calc_error = 2;
-        return NULL;
+        return null;
     }
     else
         return ptr;
@@ -157,7 +160,7 @@ double guml_calc_parseexpr (char *expr, int level)
     /* strip any containing parentheses */
     while (*expr == '(' && *(ptr - 1) == ')')
     {
-        if (guml_calc_skip_parens (expr, ptr) == NULL)
+        if (guml_calc_skip_parens (expr, ptr) == null)
             return 0;
         *expr = '\0';           /* probably unnecessary, but cleaner.. */
         expr++;
@@ -202,13 +205,12 @@ double guml_calc_parseexpr (char *expr, int level)
                             switch (c)
                             {
                                 case '|':
-                                    return (int) floor (l) | (int) floor (r);
-                                    break;
+                                    return cast(int)floor(l) | cast(int)floor(r);
                                 case '^':
-                                    return (int) floor (l) ^ (int) floor (r);
-                                    break;
+                                    return cast(int)floor(l) ^ cast(int)floor(r);
                                 case '&':
-                                    return (int) floor (l) & (int) floor (r);
+                                    return cast(int)floor(l) & cast(int)floor(r);
+                                default:
                                     break;
                             }
                         }
@@ -254,7 +256,7 @@ double guml_calc_parseexpr (char *expr, int level)
                                 guml_calc_error = 1;
                                 return 0;
                             }
-                            return (long) floor (l) % (long) floor (r);
+                            return cast(long)floor(l) % cast(long)floor(r);
                         }
                         break;
 
@@ -301,6 +303,10 @@ double guml_calc_parseexpr (char *expr, int level)
                             }
                         }
                         break;
+
+                    default:
+                        assert(false);
+                        return 0;
                 }
             }
         }
@@ -322,13 +328,13 @@ double guml_calc_parseexpr (char *expr, int level)
         return 0;               /* should signal error! */
 }
 
-char *guml_calculator (Data *out_string, char *args[], int nargs)
+char *guml_calculator (Data *out_string, char **args, int nargs)
 {
     char buf[1024];
     char formstr[16];
 
     if (nargs < 1 || nargs > 2)
-        return "\\calc requires 1 or 2 parameters";
+        return cast(char*)"\\calc requires 1 or 2 parameters";
 
     if (nargs == 2)
     {
@@ -336,53 +342,46 @@ char *guml_calculator (Data *out_string, char *args[], int nargs)
 
         for (c = args[1] + strlen (args[1]) - 1; c >= args[1]; c--)
             if (!isdigit (*c))
-                return "\\calc -- second argument must be a number!";
+                return cast(char*)"\\calc -- second argument must be a number!";
 
-        sprintf (formstr, "%%0.%if", atoi (args[1]));
+        sprintf (formstr.ptr, "%%0.%if".ptr, atoi (args[1]));
     }
     else
-        sprintf (formstr, "%%f");
+        sprintf (formstr.ptr, "%%f".ptr);
 
     guml_calc_error = 0;
 
-    sprintf (buf, formstr, guml_calc_parseexpr (args[0], 0));
+    sprintf (buf.ptr, formstr.ptr, guml_calc_parseexpr (args[0], 0));
 
     switch (guml_calc_error)
     {
         case 0:
-            add_string (out_string, buf);
-            return NULL;
-            break;
+            add_string (out_string, buf.ptr);
+            return null;
         case 1:
-            return "\\calc -- Non-integral values were used in integral context (bitwise or modulus)";
-            break;
+            return cast(char*)"\\calc -- Non-integral values were used in integral context (bitwise or modulus)";
         case 2:
-            return "\\calc -- Mismatched parentheses";
-            break;
+            return cast(char*)"\\calc -- Mismatched parentheses";
         case 3:
-            return "\\calc -- Error parsing number";
-            break;
+            return cast(char*)"\\calc -- Error parsing number";
         case 4:
-            return "\\calc -- Division by zero";
-            break;
+            return cast(char*)"\\calc -- Division by zero";
         case 5:
-            return "\\calc -- Missing operand";
-            break;
+            return cast(char*)"\\calc -- Missing operand";
         default:
-            return "\\calc -- Undefined error";
-            break;
+            return cast(char*)"\\calc -- Undefined error";
     }
 }
 
-#if 0
+/+
 void main(int argc, char *argv[])
 {
-    char *args[2] = { strdup(argv[1]), NULL };
+    char *args[2] = { strdup(argv[1]), null };
 
     if(argc>1)
         printf("%s\n",guml_calculator(args,1));
     else
         printf("Usage: calc expression\n");
 }
-#endif
++/
 

@@ -1,51 +1,55 @@
-/* string_ops.c */
-/* guml string operations */
+module string_ops;
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include <ctype.h>
-#include <time.h>
+import data;
+import string_utils;
+import www;
 
-#include "global.h"
+import core.stdc.config;
+import core.stdc.ctype;
+import core.stdc.stdlib;
+import core.stdc.stdio;
+import core.stdc.string;
+import core.stdc.time;
 
-char *guml_index (Data *out_string, char *args[], int nargs)
+extern(C)
 {
-    long ret;
+    extern char *strptime(const char *s, const char *format, tm *tm);
+}
+
+char *guml_index (Data *out_string, char** args, int nargs)
+{
     char *comres;
     char retc[32];
 
     if (nargs != 2)
-        return "\\strindex requires 2 parameters";
+        return cast(char*)"\\strindex requires 2 parameters";
 
     comres = strstr (args[0], args[1]);
-    if (comres != NULL)
+    if (comres != null)
     {
-        ret = ((unsigned long) comres - (unsigned long) args[0]) / sizeof (char);
-
-        sprintf (retc, "%ld", ret);
-        add_string (out_string, retc);
+        sprintf (retc.ptr, "%ld", (comres - args[0]) / char.sizeof);
+        add_string (out_string, retc.ptr);
     }
-    return NULL;
+    return null;
 }
 
 /* returns substring of length arg[2] starting at arg[1] */
-char *guml_substr (Data *out_string, char *args[], int nargs)
+char *guml_substr (Data *out_string, char** args, int nargs)
 {
-    unsigned int start_index, len;
+    uint start_index;
+    size_t len;
 
     if (nargs != 3)
-        return "\\strsubstr requires 3 parameters";
+        return cast(char*)"\\strsubstr requires 3 parameters";
 
     start_index = atoi (args[1]);
 
     if (start_index > strlen (args[0]))
-        return NULL;
+        return null;
 
     len = atoi (args[2]);
     if (len < 0)
-        return NULL;
+        return null;
 
     if (len > strlen (args[0]) - start_index)
         len = strlen (args[0]) - start_index;
@@ -53,136 +57,128 @@ char *guml_substr (Data *out_string, char *args[], int nargs)
     args[0][start_index + len] = 0;
     add_string (out_string, &(args[0][start_index]));
 
-    return NULL;
+    return null;
 }
 
 /* compute length of a string */
-char *guml_length (Data *out_string, char *args[], int nargs)
+char *guml_length (Data *out_string, char** args, int nargs)
 {
     char s[128];
 
     if (nargs != 1)
-        return "\\strlen requires only 1 parameter";
+        return cast(char*)"\\strlen requires only 1 parameter";
 
-    sprintf (s, "%zd", strlen (args[0]));
-    add_string (out_string, s);
+    sprintf (s.ptr, "%zd", strlen (args[0]));
+    add_string (out_string, s.ptr);
 
-    return NULL;
+    return null;
 }
 
-char *guml_upper_string (Data *out_string, char *args[], int nargs)
+char *guml_upper_string (Data *out_string, char** args, int nargs)
 {
-    unsigned int i;
-
     if (nargs != 1)
-        return "\\strupper requires only 1 parameter";
+        return cast(char*)"\\strupper requires only 1 parameter";
 
-    for (i = 0; i < strlen (args[0]); i++)
-        add_char (out_string, (char)toupper (args[0][i]));
+    for (size_t i = 0; i < strlen (args[0]); i++)
+        add_char (out_string, cast(char)toupper (args[0][i]));
 
-    return NULL;
+    return null;
 }
 
-char *guml_lower_string (Data *out_string, char *args[], int nargs)
+char *guml_lower_string (Data *out_string, char** args, int nargs)
 {
-    unsigned int i;
-
     if (nargs != 1)
-        return "\\strlower requires only 1 parameter";
+        return cast(char*)"\\strlower requires only 1 parameter";
 
-    for (i = 0; i < strlen (args[0]); i++)
-        add_char (out_string, (char)tolower (args[0][i]));
+    for (size_t i = 0; i < strlen (args[0]); i++)
+        add_char (out_string, cast(char)tolower (args[0][i]));
 
-    return NULL;
+    return null;
 }
 
-char *guml_strip (Data *out_string, char *args[], int nargs)
+char *guml_strip (Data *out_string, char** args, int nargs)
 {
-    unsigned int i;
     int flag = 0;
 
     if (nargs < 2 || nargs > 3)
-        return "\\strstrip requires 2 or 3 parameters";
+        return cast(char*)"\\strstrip requires 2 or 3 parameters";
 
     if (nargs == 3)
         flag = atoi(args[2]);
 
-    for (i = 0; i < strlen (args[0]); i++)
+    for (size_t i = 0; i < strlen (args[0]); i++)
         if (flag)
         {
-            if (strchr(args[1], args[0][i]) != NULL)
+            if (strchr(args[1], args[0][i]) != null)
                 add_char(out_string, args[0][i]);
         }
         else
         {
-            if (strchr (args[1], args[0][i]) == NULL)
+            if (strchr (args[1], args[0][i]) == null)
                 add_char (out_string, args[0][i]);
         }
 
-    return NULL;
+    return null;
 }
 
 /* return a date, two optional arguments: */
 /* args[0]: date format string, default like "February 19, 1997" */
 /* args[1]: time to convert. (as in "854523817"..)  defaults to current time */
-char *guml_date (Data *out_string, char *args[], int nargs)
+char *guml_date (Data *out_string, char** args, int nargs)
 {
     char buffer[100];
     char *fmtstr;
     time_t ttime;
-    struct tm *tmtime;
+    tm *tmtime;
 
     if (nargs > 2)
-        return "\\date requires between 0 and 2 parameters";
+        return cast(char*)"\\date requires between 0 and 2 parameters";
 
     if (nargs < 1 || *args[0] == '\0')
-        fmtstr = "%B %d, %Y";
+        fmtstr = cast(char*)("%B %d, %Y");
     else
         fmtstr = args[0];
 
     if (nargs < 2 || *args[1] == '\0')
-        ttime = time (NULL);
+        ttime = time (null);
     else
-        ttime = (time_t) atol (args[1]);
+        ttime = atol (args[1]);
     tmtime = localtime (&ttime);
 
-    strftime (buffer, sizeof (buffer), fmtstr, tmtime);
-    add_string (out_string, buffer);
+    strftime (buffer.ptr, buffer.sizeof, fmtstr, tmtime);
+    add_string (out_string, buffer.ptr);
 
-    return NULL;
+    return null;
 }
 
 /* return the unix time, # of seconds since Jan 1st, 1970 0:00 GMT */
 /* OR, give it a date format string, a date (in said format), and we'll */
 /* return to you /that/ unix time..  pretty swell, eh? */
-char *guml_time (Data *out_string, char *args[], int nargs)
+char *guml_time (Data *out_string, char** args, int nargs)
 {
-#ifndef strptime
-    char *strptime(const char *, const char *, struct tm*);
-#endif
-    struct tm tms;
+    tm tms;
     char buffer[64];
     time_t ttime;
 
     if (nargs != 0 && nargs != 2)
-        return "\\time requires 0 or 2 parameters";
+        return cast(char*)"\\time requires 0 or 2 parameters";
 
     if (nargs < 2 || *args[0] == '\0')
-        ttime = time (NULL);
+        ttime = time (null);
     else
     {
         strptime (args[1], args[0], &tms);
         ttime = mktime (&tms);
     }
 
-    sprintf (buffer, "%li", (long) ttime);
-    add_string (out_string, buffer);
+    sprintf (buffer.ptr, "%li", cast(long) ttime);
+    add_string (out_string, buffer.ptr);
 
-    return NULL;
+    return null;
 }
 
 static char soundex_lookup[] =
-{
+[
     '0',    /* A */
     '1',    /* B */
     '2',    /* C */
@@ -209,16 +205,20 @@ static char soundex_lookup[] =
     '2',    /* X */
     '0',    /* Y */
     '2',    /* Z */
-};
+];
 
-char *guml_soundex(Data *out_string, char *args[], int nargs)
+bool isascii(char c)
 {
-    unsigned int i;
+    return c >= 0 && c <= 127;
+}
+
+char *guml_soundex(Data *out_string, char** args, int nargs)
+{
     int num_chars;
     char c, last_char;
 
     if (nargs < 0 || nargs > 2)
-        return "\\soundex requires either 1 or 2 parameters";
+        return cast(char*)"\\soundex requires either 1 or 2 parameters";
 
     if (nargs == 2)
     {
@@ -229,12 +229,12 @@ char *guml_soundex(Data *out_string, char *args[], int nargs)
     else
         num_chars = 4;
 
-    for (i=0; i<strlen(args[0]) && num_chars; i++)
+    for (size_t i=0; i<strlen(args[0]) && num_chars; i++)
     {
         c = args[0][i];
         if (!isascii(c) || !isalpha(c))
             continue;
-        c = toupper(c);
+        c = cast(char)toupper(c);
         if (c == 'S' && (!isalpha(args[0][i+1])))
             continue;
         if (i == 0)
@@ -259,16 +259,16 @@ char *guml_soundex(Data *out_string, char *args[], int nargs)
         add_char(out_string, '0');
         num_chars--;
     }
-    return NULL;
+    return null;
 }
 
-char *guml_strtok(Data *out_string, char *args[], int nargs)
+char *guml_strtok(Data *out_string, char** args, int nargs)
 {
-    static char *my_tok = NULL;
+    static char *my_tok = null;
     char *tmp;
 
     if (nargs != 2)
-        return "\\strtok requires 2 parameters";
+        return cast(char*)"\\strtok requires 2 parameters";
 
     if (strlen(args[0]) != 0)
     {
@@ -278,23 +278,23 @@ char *guml_strtok(Data *out_string, char *args[], int nargs)
         tmp = strtok(my_tok, args[1]);
     }
     else
-        tmp = strtok(NULL, args[1]);
+        tmp = strtok(null, args[1]);
     if (tmp)
         add_string(out_string, tmp);
     else
     {
         free(my_tok);
-        my_tok = NULL;
+        my_tok = null;
     }
-    return NULL;
+    return null;
 }
 
-char *guml_strcmp(Data *out_string, char *args[], int nargs)
+char *guml_strcmp(Data *out_string, char** args, int nargs)
 {
     int rc;
 
     if (nargs != 2)
-        return "\\strcmp requires 2 arguments!";
+        return cast(char*)"\\strcmp requires 2 arguments!";
 
     if ((rc = strcmp(args[0], args[1])) > 0)
         add_char(out_string, '1');
@@ -303,30 +303,29 @@ char *guml_strcmp(Data *out_string, char *args[], int nargs)
     else
         add_string_size(out_string, "-1", 2);
 
-    return NULL;
+    return null;
 }
 
 /* modifies args[0], so never call with a constant string */
-char *guml_httpdecode(Data *out_string, char *args[], int nargs)
+char *guml_httpdecode(Data *out_string, char** args, int nargs)
 {
     if (nargs != 1)
-        return "\\httpdecode requires only 1 parameter";
+        return cast(char*)"\\httpdecode requires only 1 parameter";
 
     add_string(out_string, http_decode(args[0]));
-    return NULL;
+    return null;
 }
 
-#define tohex(c) (dec_2_hex[(int) c])
-
-char *guml_httpencode(Data *out_string, char *args[], int nargs)
+string tohex(int c)
 {
-    char * dec_2_hex[] = {
+    static string dec_2_hex[] =
+    [
        "%00", "%01", "%02", "%03", "%04", "%05", "%06", "%07", "%08", "%09",
        "%0a", "%0b", "%0c", "%0d", "%0e",
-       NULL, NULL, NULL, NULL, NULL,
-       NULL, NULL, NULL, NULL, NULL,
-       NULL, NULL, NULL, NULL, NULL,
-       NULL, NULL, NULL,
+       null, null, null, null, null,
+       null, null, null, null, null,
+       null, null, null, null, null,
+       null, null, null,
        "%21", "%22", "%23", "%24", "%25", "%26", "%27", "%28", "%29", "%2a", "%2b",
        "%2c", "%2d", "%2e", "%2f", "%30", "%31", "%32", "%33", "%34", "%35", "%36",
        "%37", "%38", "%39", "%3a", "%3b", "%3c", "%3d", "%3e", "%3f", "%40", "%41",
@@ -335,12 +334,17 @@ char *guml_httpencode(Data *out_string, char *args[], int nargs)
        "%58", "%59", "%5a", "%5b", "%5c", "%5d", "%5e", "%5f", "%60", "%61", "%62",
        "%63", "%64", "%65", "%66", "%67", "%68", "%69", "%6a", "%6b", "%6c", "%6d",
        "%6e", "%6f", "%70", "%71", "%72", "%73", "%74", "%75", "%76", "%77", "%78",
-       "%79", "%7a", "%7b", "%7c", "%7d", "%7e", NULL
-    };
+       "%79", "%7a", "%7b", "%7c", "%7d", "%7e", null
+    ];
+    return dec_2_hex[c];
+}
+
+char *guml_httpencode(Data *out_string, char** args, int nargs)
+{
     int i;
 
     if (nargs != 1)
-        return "\\httpencode requires only 1 parameter";
+        return cast(char*)"\\httpencode requires only 1 parameter";
 
     for (i=0; i<strlen(args[0]); i++) {
         if (args[0][i] == ' ')
@@ -350,30 +354,31 @@ char *guml_httpencode(Data *out_string, char *args[], int nargs)
                 (args[0][i] >= 'a' && args[0][i] <= 'z'))
             add_char(out_string, args[0][i]);
         else
-            add_string_size(out_string, tohex(args[0][i]), 3);
+            add_string_size(out_string, tohex(args[0][i]).ptr, 3);
     }
-    return NULL;
+    return null;
 }
 
 /* quote a string; that is, replace double quotes
    with backslashed double-quotes */
  
-#if defined(USE_ORACLE)
-#define QUOTE_CHAR '\''
-#define QUOTED_STR "''"
-#else
-#define QUOTE_CHAR '"'
-#define QUOTED_STR "\"\""
-#endif
-
-char *guml_sqlquote(Data *out_string, char *args[], int nargs)
+version (USE_ORACLE)
 {
-    int i;
- 
+    enum QUOTE_CHAR = '\'';
+    enum QUOTED_STR = "''";
+}
+else
+{
+    enum QUOTE_CHAR = '"';
+    enum QUOTED_STR = "\"\"";
+}
+
+char *guml_sqlquote(Data *out_string, char** args, int nargs)
+{
     if (nargs != 1)
-        return "\\sqlquote requires only 1 parameter";
+        return cast(char*)"\\sqlquote requires only 1 parameter";
  
-    for (i=0; i<strlen(args[0]); i++)
+    for (size_t i=0; i<strlen(args[0]); i++)
     {
         if (args[0][i] == QUOTE_CHAR)
             add_string_size(out_string, QUOTED_STR, 2);
@@ -381,6 +386,6 @@ char *guml_sqlquote(Data *out_string, char *args[], int nargs)
             add_char(out_string, args[0][i]);
     }
  
-    return NULL;
+    return null;
 }
 

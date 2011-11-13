@@ -2,11 +2,16 @@ module setup;
 
 import data;
 import hash_table;
+import file_ops;
+import string_utils;
+import www;
 
 import core.stdc.config;
 import core.stdc.stdio;
 import core.stdc.stdlib;
 import core.stdc.string;
+
+version = ARG_HANDLE_USE_ONLY_GET_FORMAT;
 
 extern(C)
 {
@@ -14,17 +19,14 @@ extern(C)
 
     version (FASTCGI)
     {
+        struct FCGX_Stream;
+        alias char** FCGX_ParamArray;
         extern FCGX_Stream* fcgi_in;
         extern FCGX_ParamArray fcgi_envp;
+
+        extern char *FCGX_GetParam(const char *name, FCGX_ParamArray envp);
+        extern int FCGX_GetStr(char *str, int n, FCGX_Stream *stream);
     }
-
-    extern Data *create_string(char *str, int no_dup);
-    extern void add_string_size(Data *s1, char *s2, c_ulong s2_len);
-
-    extern c_ulong calc_hash(const char *str);
-    extern int insert_hash(char *key, Data *data, c_ulong hash, c_ulong flags);
-
-    extern char *http_decode(char *);
 }
 
 char* GETENV(const char* e)
@@ -35,45 +37,14 @@ char* GETENV(const char* e)
         return getenv(e);
 }
 
-Data* create_string(string s, int no_dup)
+void read_startup_config_file()
 {
-    assert(!no_dup);
-    return create_string(cast(char*)s.ptr, 0);
-}
-
-version (none)
-{
-
-void read_startup_config_file(void)
-{
-    Data output;
-    FILE *g;
-    char *ptr;
-
-    if ((ptr = GETENV("GUML_CFGFILE")))
-        if ((g = fopen(ptr, "r")))
-        {
-            guml_file(&output, g);
-            fclose(g);
-        }
-}
-
-void read_per_page_hit_config_file(void)
-{
-    Data  results;
-    Data* ptr;
-    char* buf;
-
-    results.data = null;
-    results.length = 0;
-
-    ptr = find_hash_data("SERVERNAME", calc_hash("SERVERNAME"));
-    buf = malloc(strlen(ptr.data)+10);
-    sprintf (buf, "/headers/%s", ptr.data);
+    Data  results = { null, 0 };
+    Data* ptr = find_hash_data("SERVERNAME", calc_hash("SERVERNAME"));
+    char* buf = cast(char*)malloc(strlen(ptr.data)+10);
+    sprintf (buf, "/include/%s", ptr.data);
     guml_file_include(&results, &buf, 1);
     free(buf);
-}
-
 }
 
 void setup_commandline (string[] args)

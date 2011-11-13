@@ -1,23 +1,21 @@
-/* env_ops.c */
-/* guml interface to the environment variables */
+module env_ops;
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+import bestguml;
+import data;
+import hash_table;
+import string_utils;
 
-#include "global.h"
+import core.stdc.stdlib;
+import core.stdc.string;
 
-extern char **guml_env;
-
-/* unset a variable */
-char *guml_environ (Data *out_string, char *args[], int nargs)
+char *guml_environ (Data *out_string, char **args, int nargs)
 {
     static char guml_environ_initialized = 0;
     int i;
-    char *eptr, *name, *value;
+    char* eptr, name, value;
 
     if (nargs > 1)
-        return "\\email requires either 0 or 1 parameters";
+        return cast(char*)"\\email requires either 0 or 1 parameters";
 
     if (!guml_environ_initialized)
     {
@@ -44,5 +42,5 @@ char *guml_environ (Data *out_string, char *args[], int nargs)
         free(eptr);
     }
 
-    return NULL;
+    return null;
 }

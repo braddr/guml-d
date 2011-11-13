@@ -1,11 +1,7 @@
-/* www.c */
-/* Library of general WWW utilities. */
+module www;
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "global.h"
+import core.stdc.stdlib;
+import core.stdc.string;
 
 /* Convert a single hex digit to its value 0-15,
    either lower or upper case.  No error checking. */
@@ -19,7 +15,8 @@ int hd2n (char c)
 
 char *http_decode (char *s)
 {
-    char *t, *v;
+    char *t;
+    char *v;
 
     t = v = s;
     while (*v)
@@ -30,7 +27,7 @@ char *http_decode (char *s)
                 *t = ' ';
                 break;
             case '%':
-                *t = (hd2n (*(v + 1)) << 4) + hd2n (*(v + 2));
+                *t = cast(char)((hd2n (*(v + 1)) << 4) + hd2n (*(v + 2)));
                 v += 2;
                 break;
             default:
@@ -50,7 +47,9 @@ char *http_decode (char *s)
 char *quote_html (char *s)
 {
     int i;
-    char *t, *qq, *q;
+    char *t;
+    char *qq;
+    char *q;
 
     /* first, count offending chars */
     for (i = 0, t = s; *t; t++)
@@ -67,11 +66,13 @@ char *quote_html (char *s)
             case '"':
                 i += 5;
                 break;
+            default:
+                break;
         }
     }
 
     /* the malloc of death */
-    qq = q = malloc ((sizeof (*q)) * (strlen (s) + i + 1));
+    qq = q = cast(char*)malloc ((*q).sizeof * (strlen (s) + i + 1));
 
     /* copy s on over to q */
     for (t = s; *t; t++)
