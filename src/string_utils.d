@@ -44,15 +44,26 @@ void writelog(const char *msg, ...)
     }
 }
 
-Data* create_string(string s)
+Data* create_string(Data* d)
 {
-    return create_string(s.ptr);
+    return create_string(d.data, d.length-1); // exclude the trailing null
 }
 
-Data *create_string(const char *str)
+Data* create_string(string s)
+{
+    return create_string(s.ptr, s.length);
+}
+
+Data* create_string(const char *str)
+{
+    size_t len = strlen(str);
+    return create_string(str, len);
+}
+
+Data *create_string(const char *str, c_ulong len)
 {
     Data *tmp = cast(Data*)calloc(1, Data.sizeof);
-    add_string(tmp, str);
+    add_string(tmp, str, len);
     return tmp;
 }
 
@@ -121,23 +132,7 @@ void add_char(Data *str, char c)
 void add_string(Data *s1, const char *s2)
 {
     size_t s2_len = strlen(s2);
-
-    if (!s2_len)
-        return;
-    check_space(s1, s2_len);
-    strncpy(s1.data + s1.length - 1, s2, s2_len + 1);
-    s1.length += s2_len;
-}
-
-/* add s2 to the end of s1 */
-void add_string(Data *s1, const char *s2, c_ulong s2_len)
-{
-    if (!s2_len)
-        return;
-    check_space(s1, s2_len);
-    strncpy(s1.data + s1.length - 1, s2, s2_len);
-    s1.length += s2_len;
-    s1.data[s1.length-1] = 0;
+    add_string(s1, s2, s2_len);
 }
 
 void add_string(Data *s1, Data *s2)
@@ -147,11 +142,20 @@ void add_string(Data *s1, Data *s2)
 
 void add_string(Data *s1, const ref Data s2)
 {
-    if (!s2.length)
-        return;
-    check_space(s1, s2.length);
-    strncpy(s1.data + s1.length - 1, s2.data, s2.length);
-    s1.length += s2.length - 1;  /* don't account for 2 nulls */
+    if (!s2.length) return;
+
+    add_string(s1, s2.data, s2.length-1); // exclude the trailing 0 in s2
+}
+
+/* add s2 to the end of s1 */
+void add_string(Data *s1, const char *s2, c_ulong s2_len)
+{
+    if (!s2_len) return;
+
+    check_space(s1, s2_len);
+    strncpy(s1.data + s1.length - 1, s2, s2_len);
+    s1.length += s2_len;
+    s1.data[s1.length-1] = 0;
 }
 
 int split_string(char *str, char split, char **w1, char **w2)

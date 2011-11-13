@@ -9,6 +9,7 @@ import core.stdc.config;
 import core.stdc.stdio;
 import core.stdc.stdlib;
 import core.stdc.string;
+import core.sys.posix.sys.stat;
 
 version = ARG_HANDLE_USE_ONLY_GET_FORMAT;
 
@@ -36,17 +37,47 @@ char* GETENV(const char* e)
         return getenv(e);
 }
 
-void read_startup_config_file()
+bool read_startup_config_file()
 {
-    Data  results = { null, 0 };
-    Data* ptr = find_hash_data("SERVERNAME", calc_hash("SERVERNAME"));
-    Data* arg = create_string("/include/");
-    add_string(arg, ptr);
+    static stat_t[string] lastread;
 
-    Data[] args = [ *arg ];
-    guml_file_include(&results, args);
-    free(arg.data);
-    free(arg);
+    Data* sn = find_hash_data("SERVERNAME", calc_hash("SERVERNAME"));
+    stat_t* last = sn.data[0 .. sn.length] in lastread;
+
+    Data* bd = find_hash_data("BASE_DIR", calc_hash("BASE_DIR"));
+    Data* fn = create_string(bd);
+    add_string(fn, "/include/");
+    add_string(fn, sn);
+
+    stat_t s;
+    auto rc = stat(fn.data, &s);
+
+    writelog("read_startup_config_file: rc = %d, last = %p, file = %s", rc, last, fn.data);
+    free(fn.data);
+    free(fn);
+    if (rc == 0)
+    {
+        // found file, so let's see if it's new
+        if (last == null || *last != s)
+        {
+            Data* arg = create_string("/include/");
+            add_string(arg, sn);
+            writelog("loading site file: %s", arg.data);
+
+            Data   results;
+            Data[] args = [ *arg ];
+            guml_file_include(&results, args);
+            free(arg.data);
+            free(arg);
+            free(results.data);
+
+            // save stat for next time
+            lastread[sn.data[0 .. sn.length].idup] = s;
+
+            return true;
+        }
+    }
+    return false;
 }
 
 void setup_commandline (string[] args)

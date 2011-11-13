@@ -24,8 +24,6 @@ extern(C)
 
     __gshared int shutdownguml = 0;
 
-    extern void mysql_server_end();
-
     version (FASTCGI)
     {
         struct FCGX_Stream;
@@ -53,15 +51,11 @@ void processRequest(string[] args)
 
     setup_environment (args);
     init_engine();
-    read_startup_config_file();
 
+    if (read_startup_config_file())
     {
-        char* err = sql_init();
-        if (err)
-        {
-            writelog("Error, unable to initialize the db: %s", err);
-            exit(10);
-        }
+        // config file was re-read.. so flush anything that might have cached state
+        sql_shutdown(); // will re-connect next time a query happens
     }
 
     fatal_error = 0;
@@ -71,7 +65,7 @@ void processRequest(string[] args)
 
     version (LOG_ONLY_ERRORS) {}
     else
-        writelog("Parsing file: %s%s", err, filename.data[0] == '/' ? filename.data+1 : filename.data);
+        writelog("Parsing file: %s%s", err.data, filename.data[0] == '/' ? filename.data+1 : filename.data);
 
     if (strstr (filename.data, "..") != null)
     {
@@ -199,7 +193,7 @@ void processRequest(string[] args)
     else
         writelog ("Done parsing.");
 
-    sql_shutdown();
+    sql_cleanup_after_page();
 }
 
 int main (string[] args)
@@ -236,7 +230,7 @@ int main (string[] args)
         clean_hash(HASH_ALL);
     }
 
-    mysql_server_end();
+    sql_shutdown();
     clean_hash(HASH_BUILTIN);
 
     return 0;
