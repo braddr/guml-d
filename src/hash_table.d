@@ -1,6 +1,6 @@
 module hashtable;
 
-import data;
+import string_utils;
 
 import core.stdc.config;
 import core.stdc.stdio;

@@ -1,6 +1,5 @@
 module mysql;
 
-import data;
 import hash_table;
 import setup;
 import string_utils;
@@ -145,11 +144,11 @@ char *dbtype_str (int t)
     }
 }
 
-char *guml_sqlexec (Data *out_string, char** args, int nargs)
+char *guml_sqlexec (Data *out_string, const ref Data[] args)
 {
     char *initres;
 
-    if (nargs != 1)
+    if (args.length != 1)
         return cast(char*)"\\sqlexec requries only 1 parameter";
 
     if (!sql_initted)
@@ -165,10 +164,14 @@ char *guml_sqlexec (Data *out_string, char** args, int nargs)
     if (sql_cmd)
         free (sql_cmd);
 
-    while (args[0][strlen(args[0])-1] == '\n')
-        args[0][strlen(args[0])-1] = '\0';
+    sql_cmd = strdup(args[0].data);
+    size_t len = strlen(sql_cmd);
 
-    sql_cmd = strdup (args[0]);
+    while (sql_cmd[len-1] == '\n')
+    {
+        sql_cmd[len-1] = '\0';
+        len--;
+    }
 
     if (mysql_query (&mysql, sql_cmd))
         return exiterr ();
@@ -183,7 +186,7 @@ char *guml_sqlexec (Data *out_string, char** args, int nargs)
     return null;
 }
 
-char *guml_sqlrow (Data *out_string, char** args, int nargs)
+char *guml_sqlrow (Data *out_string, const ref Data[] args)
 {
     MYSQL_ROW row;
     int i;
@@ -195,12 +198,12 @@ char *guml_sqlrow (Data *out_string, char** args, int nargs)
     if (!row)
         return null;
 
-    for (i = 0; i < mysql_num_fields(res) && i < nargs; i++)
+    for (i = 0; i < mysql_num_fields(res) && i < args.length; i++)
         if (row[i])
-            insert_hash(strdup(args[i]), create_string(row[i]), calc_hash(args[i]), 0);
+            insert_hash(strdup(args[i].data), create_string(row[i]), calc_hash(args[i].data), 0);
         else
-            insert_hash(strdup(args[i]), create_string(""), calc_hash(args[i]), 0);
+            insert_hash(strdup(args[i].data), create_string(""), calc_hash(args[i].data), 0);
 
-    add_string_size (out_string, cast(char*)"true", 4);
+    add_string(out_string, cast(char*)"true", 4);
     return null;
 }

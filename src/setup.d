@@ -1,6 +1,5 @@
 module setup;
 
-import data;
 import hash_table;
 import file_ops;
 import string_utils;
@@ -41,10 +40,13 @@ void read_startup_config_file()
 {
     Data  results = { null, 0 };
     Data* ptr = find_hash_data("SERVERNAME", calc_hash("SERVERNAME"));
-    char* buf = cast(char*)malloc(strlen(ptr.data)+10);
-    sprintf (buf, "/include/%s", ptr.data);
-    guml_file_include(&results, &buf, 1);
-    free(buf);
+    Data* arg = create_string("/include/");
+    add_string(arg, ptr);
+
+    Data[] args = [ *arg ];
+    guml_file_include(&results, args);
+    free(arg.data);
+    free(arg);
 }
 
 void setup_commandline (string[] args)
@@ -286,7 +288,7 @@ void setup_extract_parts(char *pi, char *pt)
     data = cast(Data*)malloc(Data.sizeof);
     data.data = null;
     data.length = 0;
-    add_string_size(data, pt, pt_ptr-pt+1);
+    add_string(data, pt, pt_ptr-pt+1);
     insert_hash(strdup("BASE_DIR"), data, calc_hash("BASE_DIR"), HASH_ENV);
 
     /* want to end of string, so no need to make our own temp string */
@@ -296,7 +298,7 @@ void setup_extract_parts(char *pi, char *pt)
     data = cast(Data*)malloc(Data.sizeof);
     data.data = null;
     data.length = 0;
-    add_string_size(data, pt_ptr, pt_last_slash-pt_ptr+1);
+    add_string(data, pt_ptr, pt_last_slash-pt_ptr+1);
     insert_hash(strdup("PATH"), data, calc_hash("PATH"), HASH_ENV);
 }
 

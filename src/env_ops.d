@@ -1,20 +1,19 @@
 module env_ops;
 
 import bestguml;
-import data;
 import hash_table;
 import string_utils;
 
 import core.stdc.stdlib;
 import core.stdc.string;
 
-char *guml_environ (Data *out_string, char **args, int nargs)
+char *guml_environ (Data *out_string, const ref Data[] args)
 {
     static char guml_environ_initialized = 0;
     int i;
     char* eptr, name, value;
 
-    if (nargs > 1)
+    if (args.length > 1)
         return cast(char*)"\\email requires either 0 or 1 parameters";
 
     if (!guml_environ_initialized)

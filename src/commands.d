@@ -1,7 +1,7 @@
 module commands;
 
-import data;
 import hash_table;
+import string_utils;
 
 // command implementations
 import calculator;
@@ -17,8 +17,8 @@ import mysql;
 
 import core.stdc.string;
 
-alias char* function(Data* out_string, char** args, int nargs) commfunc_args;
-alias char* function(Data* out_string, char** args, int nargs, char** params, int nparams) commfunc_args_params;
+alias char* function(Data* out_string, const ref Data[] args) commfunc_args;
+alias char* function(Data* out_string, const ref Data[] args, const ref Data[] params) commfunc_args_params;
 
 enum CMD_PARAMS = 0x00000001;
 enum CMD_QUOTED = 0x00000002;
@@ -29,8 +29,8 @@ struct command
     int    flags;
     union
     {
-        commfunc_args        c_arg;
-        commfunc_args_params c_arg_param;
+        commfunc_args         c_arg;
+        commfunc_args_params  c_arg_param;
     }
 }
 
@@ -120,12 +120,12 @@ void init_commands()
                     HASH_BUILTIN | HASH_READONLY);
 }
 
-char* command_invoke(command* c, Data* out_string, char** args, int nargs, char**params, int nparams)
+char* command_invoke(command* c, Data* out_string, const ref Data[] args, const ref Data[] params)
 {
     if (c.flags & CMD_PARAMS)
-        return (*c.c_arg_param)(out_string, args, nargs, params, nparams);
+        return (*c.c_arg_param)(out_string, args, params);
     else
-        return (*c.c_arg)(out_string, args, nargs);
+        return (*c.c_arg)(out_string, args);
 }
 
 int command_wants_quoted(command* c)

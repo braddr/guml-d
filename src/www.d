@@ -44,10 +44,10 @@ char *http_decode (char *s)
 
 /* quote all <, >, and & in text... generates malloc... should be free'd */
 
-char *quote_html (char *s)
+char *quote_html (const char *s)
 {
     int i;
-    char *t;
+    const(char) *t;
     char *qq;
     char *q;
 

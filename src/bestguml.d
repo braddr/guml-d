@@ -1,7 +1,6 @@
 module bestguml;
 
 import commands;
-import data;
 import dir_ops;
 import engine;
 import file_ops;
@@ -50,7 +49,7 @@ void FPUTS(const char* x)
 
 void processRequest(string[] args)
 {
-    Data results = {null, 0};
+    Data results;
 
     setup_environment (args);
     init_engine();
@@ -67,20 +66,21 @@ void processRequest(string[] args)
 
     fatal_error = 0;
 
-    char* filename = find_hash_data ("FILENAME", calc_hash("FILENAME")).data;
-    char* err = find_hash_data("BASE_DIR", calc_hash("BASE_DIR")).data;  /* overloading usage of err */
+    Data* filename = find_hash_data ("FILENAME", calc_hash("FILENAME"));
+    Data* err = find_hash_data("BASE_DIR", calc_hash("BASE_DIR"));  /* overloading usage of err */
 
     version (LOG_ONLY_ERRORS) {}
     else
-        writelog("Parsing file: %s%s", err, filename[0] == '/' ? filename+1 : filename);
+        writelog("Parsing file: %s%s", err, filename.data[0] == '/' ? filename.data+1 : filename.data);
 
-    if (strstr (filename, "..") != null)
+    if (strstr (filename.data, "..") != null)
     {
-        FPUTS("Content-type: text/plain\n\nIllegal file name encountered!\n".ptr);
+        FPUTS("Content-type: text/plain\n\nIllegal file name encountered!\n");
         exit (2);
     }
 
-    err = guml_file_include (&results, &filename, -1);
+    Data[] funcargs = [ *filename ];
+    char *errstr = guml_file_include (&results, funcargs);
 
     Data* error_data = find_hash_data ("ERROR", calc_hash("ERROR"));
     if (error_data && error_data.data)
@@ -100,11 +100,11 @@ void processRequest(string[] args)
     }
     else
     {
-        if ((err || fatal_error) && fatal_error != 2)
+        if ((errstr || fatal_error) && fatal_error != 2)
         {
             writelog("fatal_error = %d", fatal_error);
-            if (err)
-                add_string(&err_string, err);
+            if (errstr)
+                add_string(&err_string, errstr);
 
             if (results.data)
             {
@@ -122,14 +122,17 @@ void processRequest(string[] args)
                 err_string.length = 0;
             }
             fatal_error = 0;
-            filename = strdup("/handle-error");
-            err = guml_file_include (&results, &filename, -1);
+            filename = create_string("/handle-error");
+            funcargs = [ *filename ];
+            errstr = guml_file_include (&results, funcargs);
+            free(filename.data);
             free(filename);
             filename = null;
-            if (err)
+            if (errstr)
             {
                 char *oops = strdup("Content-type: text/plain\n\n\\get{ERROR_traceback}\n\nResults so far:\n\n\\get{ERROR_results}");
-                guml_backend (&results, &oops, null, 0);
+                Data[] params;
+                guml_backend (&results, &oops, params);
                 free(oops);
                 oops = null;
 
@@ -137,7 +140,7 @@ void processRequest(string[] args)
                 {
                     FPUTS("Content-type: text/plain\n\nFatal error parsing /handle-error\n");
                     FPUTS(err_string.data);
-                    FPUTS(err);
+                    FPUTS(errstr);
                     FPUTS("\n\nBase-Dir: ");
                     error_data = find_hash_data("BASE_DIR", calc_hash("BASE_DIR"));
                     if (error_data && error_data.data)

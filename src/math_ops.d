@@ -1,6 +1,5 @@
 module math_ops;
 
-import data;
 import string_utils;
 
 import core.stdc.config;
@@ -16,19 +15,19 @@ extern(C)
     extern int strcasecmp(const char *s1, const char *s2);
 }
 
-char *guml_parse_money (Data *out_string, char** args, int nargs)
+char *guml_parse_money (Data *out_string, const ref Data[] args)
 {
     char buffer[1024];
     size_t i;
 
-    if (nargs != 1)
+    if (args.length != 1)
         return cast(char*)"\\money requires only one parameter";
 
     i = 0;
     buffer[0] = 0;
-    while (i < strlen (args[0]))
+    while (i < strlen (args[0].data))
     {
-        switch (args[0][i])
+        switch (args[0].data[i])
         {
             case '0':
             case '1':
@@ -42,7 +41,7 @@ char *guml_parse_money (Data *out_string, char** args, int nargs)
             case '9':
             case '.':
                 buffer[strlen (buffer.ptr) + 1] = 0;
-                buffer[strlen (buffer.ptr)] = args[0][i];
+                buffer[strlen (buffer.ptr)] = args[0].data[i];
             case ',':
             case '$':
                 break;
@@ -56,61 +55,60 @@ char *guml_parse_money (Data *out_string, char** args, int nargs)
 }
 
 /* pick a random number from 0 to arg[0]-1 */
-char *guml_rand (Data *out_string, char** args, int nargs)
+char *guml_rand (Data *out_string, const ref Data[] args)
 {
     char res[15];
     int max;
 
-    if (nargs != 1)
+    if (args.length != 1)
         return cast(char*)"\\rand requires only one argument";
 
-    max = atoi (args[0]);
+    max = atoi (args[0].data);
 
     if (max == 0)
         return cast(char*)"\\rand called with a string or a 0";
     else
-        sprintf (res.ptr, "%ld", cast(long) random () % atoi (args[0]));
+        sprintf (res.ptr, "%ld", cast(long) random () % atoi (args[0].data));
 
     add_string (out_string, res.ptr);
     return null;
 }
 
 /* do general math operation */
-char *guml_op (Data *out_string, char** args, int nargs)
+char *guml_op (Data *out_string, const ref Data[] args)
 {
     int a, b, c;
-    char *op;
     int isrel = 0;
     char res[32];
 
-    if (nargs < 2 || nargs > 3)
+    if (args.length < 2 || args.length > 3)
         return cast(char*)"\\op requires 2 or 3 parameters";
 
-    if (strchr ("+-*%|&^</>=", args[1][0]) != null)
+    if (strchr ("+-*%|&^</>=", args[1].data[0]) != null)
     {
-        if (nargs != 3)
+        if (args.length != 3)
             return cast(char*)"\\op with +, -, *, /, %, |, &, ^, <, >, <=. >=, or = requires 3 parameters";
         else
-            b = atoi (args[2]);
+            b = atoi (args[2].data);
     }
     else
     {
-        if (nargs < 2)
+        if (args.length < 2)
             return cast(char*)"\\op with V or ~ requires 2 parameters";
     }
 
     c = 0;
-    a = atoi (args[0]);
-    op = args[1];
+    a = atoi (args[0].data);
+    const char* op = args[1].data;
 
     switch (*op)
     {
         case 'v':
         case 'V':
             isrel = 1;
-            c = strlen (args[0]) != 0;
-            for (size_t loop = 0; loop < strlen (args[0]) && c; loop++)
-                if (!(isdigit (args[0][loop]) || args[0][loop] == '-'))
+            c = strlen (args[0].data) != 0;
+            for (size_t loop = 0; loop < strlen (args[0].data) && c; loop++)
+                if (!(isdigit (args[0].data[loop]) || args[0].data[loop] == '-'))
                     c = 0;
             break;
         case '+':
@@ -174,7 +172,7 @@ char *guml_op (Data *out_string, char** args, int nargs)
     if (isrel)
     {
         if (c)
-            add_string_size (out_string, "true", 4);
+            add_string(out_string, "true", 4);
     }
     else
     {
@@ -185,46 +183,45 @@ char *guml_op (Data *out_string, char** args, int nargs)
 }
 
 /* do general fp math operation */
-char *guml_fop (Data *out_string, char** args, int nargs)
+char *guml_fop (Data *out_string, const ref Data[] args)
 {
     static char res[1024];
     double a, b, c;
     int d = 0, isrel = 0;
-    char *op;
     char fmt[10];
 
 /*
-   if (nargs < 2 || nargs > 5)
+   if (args.length < 2 || args.length > 5)
    return "\\op requires between 2 and 5 parameters";
 
-   if (strchr("+-*</>=", args[1][0]) != null)
+   if (strchr("+-*</>=", args[1].data[0]) != null)
    {
-   if (nargs != 3 && nargs != 4)
+   if (args.length != 3 && args.length != 4)
    return "\\fop with +, -, *, **, /, <, >, <=. >=, or = requires 3 or 4 parameters";
    else
    }
    else
    {
-   if (nargs != 2 && nargs != 3)
+   if (args.length != 2 && args.length != 3)
    return "\\fop with c, f, r, or V requires 2 or 3 parameters";
    }
  */
     c = 0;
-    a = atof (args[0]);
-    if (nargs >= 3)
-        b = atof (args[2]);
+    a = atof (args[0].data);
+    if (args.length >= 3)
+        b = atof (args[2].data);
     else
         b = 0;
 
-    if (nargs == 4)
-        sprintf (fmt.ptr, "%%.%df", atoi (args[3]));
-    else if (nargs == 5)
-        sprintf (fmt.ptr, "%%%d.%df", atoi (args[3]), atoi (args[4]));
-    else if (strchr (args[0], '.') != null)
-        sprintf (fmt.ptr, "%%.%zdf", strlen (strchr (args[0], '.') + 1));
+    if (args.length == 4)
+        sprintf (fmt.ptr, "%%.%df", atoi (args[3].data));
+    else if (args.length == 5)
+        sprintf (fmt.ptr, "%%%d.%df", atoi (args[3].data), atoi (args[4].data));
+    else if (strchr (args[0].data, '.') != null)
+        sprintf (fmt.ptr, "%%.%zdf", strlen (strchr (args[0].data, '.') + 1));
     else
-        sprintf (fmt.ptr, "%%.%zdf", strlen (args[0]));
-    op = args[1];
+        sprintf (fmt.ptr, "%%.%zdf", strlen (args[0].data));
+    const char* op = args[1].data;
 
     switch (*op)
     {
@@ -269,9 +266,9 @@ char *guml_fop (Data *out_string, char** args, int nargs)
         case 'v':
         case 'V':
             isrel = 1;
-            d = strlen (args[0]) != 0;
-            for (size_t loop = 0; loop < strlen (args[0]) && d; loop++)
-                if (!(isdigit (args[0][loop]) || args[0][loop] == '-' || args[0][loop] == '.'))
+            d = strlen (args[0].data) != 0;
+            for (size_t loop = 0; loop < strlen (args[0].data) && d; loop++)
+                if (!(isdigit (args[0].data[loop]) || args[0].data[loop] == '-' || args[0].data[loop] == '.'))
                     d = 0;
             break;
         default:
@@ -302,7 +299,7 @@ char *guml_fop (Data *out_string, char** args, int nargs)
     if (isrel)
     {
         if (d)
-            add_string_size (out_string, "true", 4);
+            add_string(out_string, "true", 4);
     }
     else
     {

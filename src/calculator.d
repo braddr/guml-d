@@ -1,6 +1,5 @@
 module calculator;
 
-import data;
 import string_utils;
 
 import core.stdc.ctype;
@@ -328,30 +327,30 @@ double guml_calc_parseexpr (char *expr, int level)
         return 0;               /* should signal error! */
 }
 
-char *guml_calculator (Data *out_string, char **args, int nargs)
+char *guml_calculator (Data *out_string, const ref Data[] args)
 {
     char buf[1024];
     char formstr[16];
 
-    if (nargs < 1 || nargs > 2)
+    if (args.length < 1 || args.length > 2)
         return cast(char*)"\\calc requires 1 or 2 parameters";
 
-    if (nargs == 2)
+    if (args.length == 2)
     {
-        char *c;
-
-        for (c = args[1] + strlen (args[1]) - 1; c >= args[1]; c--)
+        for (const(char)* c = args[1].data + strlen (args[1].data) - 1; c >= args[1].data; c--)
             if (!isdigit (*c))
                 return cast(char*)"\\calc -- second argument must be a number!";
 
-        sprintf (formstr.ptr, "%%0.%if".ptr, atoi (args[1]));
+        sprintf (formstr.ptr, "%%0.%if".ptr, atoi (args[1].data));
     }
     else
         sprintf (formstr.ptr, "%%f".ptr);
 
     guml_calc_error = 0;
 
-    sprintf (buf.ptr, formstr.ptr, guml_calc_parseexpr (args[0], 0));
+    char* s = strdup(args[0].data);
+    sprintf (buf.ptr, formstr.ptr, guml_calc_parseexpr (s, 0));
+    free(s);
 
     switch (guml_calc_error)
     {
