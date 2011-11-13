@@ -25,6 +25,8 @@ extern(C)
 
     __gshared int shutdownguml = 0;
 
+    extern void mysql_server_end();
+
     version (FASTCGI)
     {
         struct FCGX_Stream;
@@ -106,14 +108,16 @@ void processRequest(string[] args)
 
             if (results.data)
             {
-                insert_hash(strdup("ERROR_results"), create_string(results.data, 1), calc_hash("ERROR_results"), 0);
+                insert_hash(strdup("ERROR_results"), create_string(results.data), calc_hash("ERROR_results"), 0);
+                free(results.data);
                 results.data  = null;
                 results.length = 0;
             }
             if (err_string.data)
             {
                 writelog("traceback: %s", err_string.data);
-                insert_hash(strdup("ERROR_traceback"), create_string(err_string.data, 1), calc_hash("ERROR_traceback"), 0);
+                insert_hash(strdup("ERROR_traceback"), create_string(err_string.data), calc_hash("ERROR_traceback"), 0);
+                free(err_string.data);
                 err_string.data = null;
                 err_string.length = 0;
             }
@@ -218,7 +222,6 @@ int main (string[] args)
             }
 
             guml_close_dir_internal();
-
             clean_hash(HASH_ALL);
         }
     }
@@ -226,9 +229,12 @@ int main (string[] args)
     {
         processRequest(args);
 
-        // The three cleanup routines above aren't called since the process
-        // is just going to exit anyway.
+        guml_close_dir_internal();
+        clean_hash(HASH_ALL);
     }
+
+    mysql_server_end();
+    clean_hash(HASH_BUILTIN);
 
     return 0;
 }

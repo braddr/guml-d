@@ -40,18 +40,15 @@ void writelog(const char *msg, ...)
     }
 }
 
-Data* create_string(string s, int no_dup)
+Data* create_string(string s)
 {
-    assert(!no_dup);
-    return create_string(cast(char*)s.ptr, 0);
+    return create_string(cast(char*)s.ptr);
 }
 
-Data *create_string(char *str, int no_dup)
+Data *create_string(char *str)
 {
-    Data *tmp = cast(Data*)malloc(Data.sizeof);
-
-    tmp.data = no_dup ? str : strdup(str);
-    tmp.length = strlen(str)+1;
+    Data *tmp = cast(Data*)calloc(1, Data.sizeof);
+    add_string(tmp, str);
     return tmp;
 }
 

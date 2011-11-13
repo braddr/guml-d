@@ -23,9 +23,9 @@ char *guml_environ (Data *out_string, char **args, int nargs)
         {
             eptr=strdup(guml_env[i]);
             if (split_string(eptr, '=', &name, &value))
-                insert_hash(strdup(name), create_string(value, 0), calc_hash(name), HASH_ENV);
+                insert_hash(strdup(name), create_string(value), calc_hash(name), HASH_ENV);
             else
-                insert_hash(strdup(name), create_string("", 0), calc_hash(name), HASH_ENV);
+                insert_hash(strdup(name), create_string(""), calc_hash(name), HASH_ENV);
             free(eptr);
         }
         guml_environ_initialized = 1;

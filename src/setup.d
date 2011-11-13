@@ -63,15 +63,15 @@ version(none)
         strncpy (filename, argv[1], 255);
         filename[255] = 0;
     }
-    insert_hash(strdup("FILENAME"), create_string(filename, 0), calc_hash("FILENAME"), HASH_ENV);
-    insert_hash(strdup("BASE_DIR"), create_string(GUMLROOT, 0), calc_hash("BASE_DIR"), HASH_ENV);
+    insert_hash(strdup("FILENAME"), create_string(filename), calc_hash("FILENAME"), HASH_ENV);
+    insert_hash(strdup("BASE_DIR"), create_string(GUMLROOT), calc_hash("BASE_DIR"), HASH_ENV);
 
     if (argc > 2)
     {
         for (i = 2; i < argc; i++)
         {
             sprintf (n, "ARG_%d", i - 1);
-            insert_hash(strdup(n), create_string(argv[i], 0), calc_hash(n), HASH_ARG);
+            insert_hash(strdup(n), create_string(argv[i]), calc_hash(n), HASH_ARG);
         }
     }
 }
@@ -86,7 +86,7 @@ version(ARG_HANDLE_USE_ONLY_GET_FORMAT)
     env_ptr = GETENV ("QUERY_STRING");
     if (env_ptr)
     {
-        insert_hash(strdup("QUERY_STRING"), create_string(env_ptr, 0), calc_hash("QUERY_STRING"), HASH_ENV);
+        insert_hash(strdup("QUERY_STRING"), create_string(env_ptr), calc_hash("QUERY_STRING"), HASH_ENV);
         str = strdup (env_ptr);
         p = strtok (str, "&");
         while (p)
@@ -96,7 +96,7 @@ version(ARG_HANDLE_USE_ONLY_GET_FORMAT)
             { 
                 *q = 0;
                 q++;
-                insert_hash(strdup(http_decode(p)), create_string(http_decode(q), 0), calc_hash(p), HASH_FORM);
+                insert_hash(strdup(http_decode(p)), create_string(http_decode(q)), calc_hash(p), HASH_FORM);
             }
             p = strtok (null, "&");
         }
@@ -112,7 +112,7 @@ else version(ARG_HANDLE_BOTH_FORMATS)
     env_ptr = GETENV ("QUERY_STRING");
     if (env_ptr)
     {
-        insert_hash(strdup("QUERY_STRING"), create_string(env_ptr, 0), calc_hash("QUERY_STRING"), HASH_ENV);
+        insert_hash(strdup("QUERY_STRING"), create_string(env_ptr), calc_hash("QUERY_STRING"), HASH_ENV);
         str2 = strdup(env_ptr);
         str = http_decode (strdup (env_ptr));
         p = strtok (str, " ");
@@ -120,7 +120,7 @@ else version(ARG_HANDLE_BOTH_FORMATS)
         while (p && i < 10000)
         {
             sprintf (n, "ARG_%d", i);
-            insert_hash(strdup(n), create_string(p, 0), calc_hash(n), HASH_ARG);
+            insert_hash(strdup(n), create_string(p), calc_hash(n), HASH_ARG);
             p = strtok (null, " ");
             i++;
         }
@@ -134,7 +134,7 @@ else version(ARG_HANDLE_BOTH_FORMATS)
             {
                 *q = 0;
                 q++; 
-                insert_hash(strdup(http_decode(p)), create_string(http_decode(q), 0), calc_hash(p), HASH_FORM);
+                insert_hash(strdup(http_decode(p)), create_string(http_decode(q)), calc_hash(p), HASH_FORM);
             }
             p = strtok (null, "&");
         }
@@ -150,14 +150,14 @@ else
     env_ptr = GETENV ("QUERY_STRING");
     if (env_ptr)
     {
-        insert_hash(strdup("QUERY_STRING"), create_string(env_ptr, 0), calc_hash("QUERY_STRING"), HASH_ENV);
+        insert_hash(strdup("QUERY_STRING"), create_string(env_ptr), calc_hash("QUERY_STRING"), HASH_ENV);
         str = http_decode (strdup (env_ptr));
         p = strtok (str, " ");
         i = 1;
         while (p && i < 10000)
         {
             sprintf (n.ptr, "ARG_%d", i);
-            insert_hash(strdup(n.ptr), create_string(p, 0), calc_hash(n.ptr), HASH_ARG);
+            insert_hash(strdup(n.ptr), create_string(p), calc_hash(n.ptr), HASH_ARG);
             p = strtok (null, " ");
             i++;
         }
@@ -187,7 +187,7 @@ else
             data[cl]=0;
 
             // keep an unmodified copy
-            insert_hash(strdup("HTTP_BODY"), create_string(data, 0), calc_hash("HTTP_BODY"), HASH_FORM);
+            insert_hash(strdup("HTTP_BODY"), create_string(data), calc_hash("HTTP_BODY"), HASH_FORM);
 
             p = strtok (data, "&");
             while (p)
@@ -197,7 +197,7 @@ else
                 {
                     *q = 0;
                     q++;
-                    insert_hash(strdup(p), create_string(http_decode(q), 0), calc_hash(p), HASH_FORM);
+                    insert_hash(strdup(p), create_string(http_decode(q)), calc_hash(p), HASH_FORM);
                 }
                 p = strtok (null, "&");
             }
@@ -225,7 +225,7 @@ void setup_cookie_args ()
             {
                 *q = 0;
                 q++;
-                insert_hash(strdup(p), create_string(q, 0), calc_hash(p), HASH_COOKIE);
+                insert_hash(strdup(p), create_string(q), calc_hash(p), HASH_COOKIE);
             }
             p = strtok (null, ";");
             if (p)
@@ -290,7 +290,7 @@ void setup_extract_parts(char *pi, char *pt)
     insert_hash(strdup("BASE_DIR"), data, calc_hash("BASE_DIR"), HASH_ENV);
 
     /* want to end of string, so no need to make our own temp string */
-    insert_hash(strdup("FILENAME"), create_string(pt_ptr, 0), calc_hash("FILENAME"), HASH_ENV);
+    insert_hash(strdup("FILENAME"), create_string(pt_ptr), calc_hash("FILENAME"), HASH_ENV);
 
     /* PATH will be the data between pt_ptr and pt_last_lash, inclusive */
     data = cast(Data*)malloc(Data.sizeof);
@@ -346,16 +346,16 @@ void setup_environment (string[] args)
     /* find out if we're off the "command line" */
     tmp = GETENV ("REQUEST_METHOD");
     if (tmp)
-        insert_hash(strdup("REQUEST_METHOD"), create_string(tmp, 0), calc_hash("REQUEST_METHOD"), HASH_ENV);
+        insert_hash(strdup("REQUEST_METHOD"), create_string(tmp), calc_hash("REQUEST_METHOD"), HASH_ENV);
 
     iscomm = (tmp == null);
     if (iscomm)
-        insert_hash(strdup("USER"), create_string("manual", 0), calc_hash("USER"), HASH_ENV);
+        insert_hash(strdup("USER"), create_string("manual"), calc_hash("USER"), HASH_ENV);
     else
     {
         tmp = GETENV ("REMOTE_USER");
         if (tmp)
-            insert_hash(strdup("USER"), create_string(tmp, 0), calc_hash("USER"), HASH_ENV);
+            insert_hash(strdup("USER"), create_string(tmp), calc_hash("USER"), HASH_ENV);
     }
 
     servername[0] = 0;
@@ -368,7 +368,7 @@ void setup_environment (string[] args)
         {
             strncpy (servername.ptr, tmp, 240);
             servername[240] = 0;
-            insert_hash(strdup("SERVERDOMAIN"), create_string(servername.ptr, 0), calc_hash("SERVERDOMAIN"), HASH_ENV);
+            insert_hash(strdup("SERVERDOMAIN"), create_string(servername.ptr), calc_hash("SERVERDOMAIN"), HASH_ENV);
         }
         tmp = GETENV ("SERVER_PORT");
         if (tmp)
@@ -378,7 +378,7 @@ void setup_environment (string[] args)
                 strcat (servername.ptr, tmp);
             }
     }
-    insert_hash(strdup("SERVERNAME"), create_string(servername.ptr, 0), calc_hash("SERVERNAME"), HASH_ENV);
+    insert_hash(strdup("SERVERNAME"), create_string(servername.ptr), calc_hash("SERVERNAME"), HASH_ENV);
 
     if (iscomm)
         setup_commandline(args);
@@ -392,27 +392,27 @@ void setup_environment (string[] args)
 
     tmp = GETENV ("SCRIPT_NAME");
     if (tmp)
-        insert_hash(strdup("SCRIPT_NAME"), create_string(tmp, 0), calc_hash("SCRIPT_NAME"), HASH_ENV);
+        insert_hash(strdup("SCRIPT_NAME"), create_string(tmp), calc_hash("SCRIPT_NAME"), HASH_ENV);
 
     tmp = GETENV ("HTTP_REFERER");
     if (tmp)
-        insert_hash(strdup("HTTP_REFERER"), create_string(tmp, 0), calc_hash("HTTP_REFERER"), HASH_ENV);
+        insert_hash(strdup("HTTP_REFERER"), create_string(tmp), calc_hash("HTTP_REFERER"), HASH_ENV);
 
     tmp = GETENV ("HTTP_USER_AGENT");
     if (tmp)
-        insert_hash(strdup("HTTP_USER_AGENT"), create_string(tmp, 0), calc_hash("HTTP_USER_AGENT"), HASH_ENV);
+        insert_hash(strdup("HTTP_USER_AGENT"), create_string(tmp), calc_hash("HTTP_USER_AGENT"), HASH_ENV);
 
     tmp = GETENV ("REMOTE_HOST");
     if (tmp)
-        insert_hash(strdup("REMOTE_HOST"), create_string(tmp, 0), calc_hash("REMOTE_HOST"), HASH_ENV);
+        insert_hash(strdup("REMOTE_HOST"), create_string(tmp), calc_hash("REMOTE_HOST"), HASH_ENV);
     else
-        insert_hash(strdup("REMOTE_HOST"), create_string("unknown", 0), calc_hash("REMOTE_HOST"), HASH_ENV);
+        insert_hash(strdup("REMOTE_HOST"), create_string("unknown"), calc_hash("REMOTE_HOST"), HASH_ENV);
 
     tmp = GETENV("REMOTE_ADDR");
     if (tmp)
-        insert_hash(strdup("REMOTE_ADDR"), create_string(tmp, 0), calc_hash("REMOTE_ADDR"), HASH_ENV);
+        insert_hash(strdup("REMOTE_ADDR"), create_string(tmp), calc_hash("REMOTE_ADDR"), HASH_ENV);
     else
-        insert_hash(strdup("REMOTE_ADDR"), create_string("unknown", 0), calc_hash("REMOTE_ADDR"), HASH_ENV);
+        insert_hash(strdup("REMOTE_ADDR"), create_string("unknown"), calc_hash("REMOTE_ADDR"), HASH_ENV);
 }
 
 /* end */

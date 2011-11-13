@@ -236,7 +236,12 @@ void clean_hash(c_ulong flags)
         for (size_t j=0; j<hash_depths[i]; j++)
         {
             if (hash_table[i][j].flags & HASH_BUILTIN)
-                num_builtin++;
+            {
+                if (flags & HASH_BUILTIN)
+                    free(hash_table[i][j].key);
+                else
+                    num_builtin++;
+            }
             else
             {
                 free(hash_table[i][j].data.data);

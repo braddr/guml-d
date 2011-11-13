@@ -84,7 +84,7 @@ char *guml_set (Data *out_string, char** args, int nargs)
     if (nargs != 2)
         return cast(char*)"\\set requires 2 parameters";
 
-    if (insert_hash(strdup(args[0]), create_string(args[1], 0), calc_hash(args[0]), 0))
+    if (insert_hash(strdup(args[0]), create_string(args[1]), calc_hash(args[0]), 0))
         return cast(char*)"\\set of a read only parameter is illegal";
 
     return null;

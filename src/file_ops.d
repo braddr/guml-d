@@ -98,6 +98,8 @@ char *guml_file_read (Data *out_string, char** args, int nargs)
     fclose (fp);
     add_string_data (out_string, &file_text);
 
+    free(file_text.data);
+
     return null;
 }
 

@@ -21,6 +21,7 @@ alias char** MYSQL_ROW;
 
 extern(C)
 {
+    extern MYSQL* mysql_init(MYSQL *mysql);
     extern MYSQL* mysql_real_connect(MYSQL *mysql, const char *host, const char *user, const char *passwd, const char *db, uint port, const char *unix_socket, c_ulong clientflag);
     extern const(char)* mysql_error(MYSQL *mysql);
     extern void	mysql_free_result(MYSQL_RES *result);
@@ -72,6 +73,8 @@ char *sql_init ()
 
     if (!db_host || !db_userid || !db_password || !db_db)
         return null;
+
+    mysql_init(&mysql);
 
     if (!mysql_real_connect (&mysql, db_host.data, db_userid.data, db_password.data, db_db.data, 3306, null, 0))
         return exiterr ();
@@ -194,9 +197,9 @@ char *guml_sqlrow (Data *out_string, char** args, int nargs)
 
     for (i = 0; i < mysql_num_fields(res) && i < nargs; i++)
         if (row[i])
-            insert_hash(strdup(args[i]), create_string(row[i], 0), calc_hash(args[i]), 0);
+            insert_hash(strdup(args[i]), create_string(row[i]), calc_hash(args[i]), 0);
         else
-            insert_hash(strdup(args[i]), create_string("", 0), calc_hash(args[i]), 0);
+            insert_hash(strdup(args[i]), create_string(""), calc_hash(args[i]), 0);
 
     add_string_size (out_string, cast(char*)"true", 4);
     return null;
