@@ -170,9 +170,7 @@ extern(C) Data *find_hash_data(const char *key, size_t hash)
 
 extern(C) int insert_hash(char *key, Data *data, size_t hash, c_ulong flags)
 {
-    HashNode *tmp_node;
-
-    tmp_node = find_hash_node(key, hash);
+    HashNode *tmp_node = find_hash_node(key, hash);
     if (tmp_node)
     {
         if (tmp_node.flags & HASH_READONLY)
@@ -181,7 +179,7 @@ extern(C) int insert_hash(char *key, Data *data, size_t hash, c_ulong flags)
             return 1;
         }
         free(key);
-        free(tmp_node.data.data);
+        tmp_node.data.reset();
         free(tmp_node.data);
         dupes++;
     }
@@ -219,7 +217,7 @@ extern(C) void delete_hash(const char *key, size_t hash)
 
     if (i < hash_depths[bucket] && !(hash_table[bucket][i].flags & HASH_READONLY))
     {
-        free(hash_table[bucket][i].data.data);
+        hash_table[bucket][i].data.reset();
         free(hash_table[bucket][i].data);
         free(hash_table[bucket][i].key);
         hash_depths[bucket]--;
@@ -244,7 +242,7 @@ void clean_hash(c_ulong flags)
             }
             else
             {
-                free(hash_table[i][j].data.data);
+                hash_table[i][j].data.reset();
                 free(hash_table[i][j].data);
                 free(hash_table[i][j].key);
             }

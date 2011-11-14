@@ -28,8 +28,7 @@ int free_err_res;
 
 void init_engine()
 {
-    err_string.data = null;
-    err_string.length = 0;
+    err_string.reset();
     modetrigger  = 0;
     depth        = 0;
     fatal_error  = 0;
@@ -264,9 +263,9 @@ extern(C) void guml_backend (Data *out_string, const(char) **ins, const ref Data
                             {
                                 Data *env_data = myfunction.data;
 
-                                if (env_data && (env_data.data != null))
+                                if (env_data && (env_data.asCharStar != null))
                                 {
-                                    char* str = strdup(env_data.data);
+                                    char* str = strdup(env_data.asCharStar);
                                     const(char)* env_str = str;
                                     guml_backend (out_string, &env_str, args);
                                     free(str);
@@ -328,7 +327,7 @@ extern(C) void guml_backend (Data *out_string, const(char) **ins, const ref Data
 
                       cleanup_params:
                         foreach(ref arg; args)
-                            free (arg.data);
+                            arg.reset();
                         cur--;
                     }
                     else

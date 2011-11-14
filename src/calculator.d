@@ -336,18 +336,18 @@ char *guml_calculator (Data *out_string, const ref Data[] args)
 
     if (args.length == 2)
     {
-        for (const(char)* c = args[1].data + strlen (args[1].data) - 1; c >= args[1].data; c--)
-            if (!isdigit (*c))
+        foreach(c; args[1].asString)
+            if (!isdigit(c))
                 return cast(char*)"\\calc -- second argument must be a number!";
 
-        sprintf (formstr.ptr, "%%0.%if".ptr, atoi (args[1].data));
+        sprintf (formstr.ptr, "%%0.%if".ptr, atoi (args[1].asCharStar));
     }
     else
         sprintf (formstr.ptr, "%%f".ptr);
 
     guml_calc_error = 0;
 
-    char* s = strdup(args[0].data);
+    char* s = strdup(args[0].asCharStar);
     sprintf (buf.ptr, formstr.ptr, guml_calc_parseexpr (s, 0));
     free(s);
 

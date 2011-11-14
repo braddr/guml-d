@@ -65,9 +65,9 @@ void processRequest(string[] args)
 
     version (LOG_ONLY_ERRORS) {}
     else
-        writelog("Parsing file: %s%s", err.data, filename.data[0] == '/' ? filename.data+1 : filename.data);
+        writelog("Parsing file: %s%s", err.asCharStar, filename.asCharStar[0] == '/' ? filename.asCharStar+1 : filename.asCharStar);
 
-    if (strstr (filename.data, "..") != null)
+    if (strstr(filename.asCharStar, "..") != null)
     {
         FPUTS("Content-type: text/plain\n\nIllegal file name encountered!\n");
         exit (2);
@@ -77,18 +77,18 @@ void processRequest(string[] args)
     char *errstr = guml_file_include (&results, funcargs);
 
     Data* error_data = find_hash_data ("ERROR", calc_hash("ERROR"));
-    if (error_data && error_data.data)
+    if (error_data && *error_data)
     {
         writelog("ERROR defined");
-        if (strstr(error_data.data, "Content-type:") == null)
+        if (strstr(error_data.asCharStar, "Content-type:") == null)
         {
-            if (strstr(error_data.data, "Location:") != null)
+            if (strstr(error_data.asCharStar, "Location:") != null)
                 FPUTS("Content-type: text/html\n");
             else
                 FPUTS("Content-type: text/html\n\n");
         }
 
-        FPUTS(error_data.data);
+        FPUTS(error_data.asCharStar);
 
         delete_hash("ERROR", calc_hash("ERROR"));
     }
@@ -100,26 +100,22 @@ void processRequest(string[] args)
             if (errstr)
                 add_string(&err_string, errstr);
 
-            if (results.data)
+            if (results)
             {
-                insert_hash(strdup("ERROR_results"), create_string(results.data), calc_hash("ERROR_results"), 0);
-                free(results.data);
-                results.data  = null;
-                results.length = 0;
+                insert_hash(strdup("ERROR_results"), create_string(results.asString), calc_hash("ERROR_results"), 0);
+                results.reset();
             }
-            if (err_string.data)
+            if (err_string)
             {
-                writelog("traceback: %s", err_string.data);
-                insert_hash(strdup("ERROR_traceback"), create_string(err_string.data), calc_hash("ERROR_traceback"), 0);
-                free(err_string.data);
-                err_string.data = null;
-                err_string.length = 0;
+                writelog("traceback: %s", err_string.asCharStar);
+                insert_hash(strdup("ERROR_traceback"), create_string(err_string.asString), calc_hash("ERROR_traceback"), 0);
+                err_string.reset();
             }
             fatal_error = 0;
             filename = create_string("/handle-error");
             funcargs = [ *filename ];
             errstr = guml_file_include (&results, funcargs);
-            free(filename.data);
+            filename.reset();
             free(filename);
             filename = null;
             if (errstr)
@@ -129,44 +125,44 @@ void processRequest(string[] args)
                 guml_backend (&results, &oops, params);
                 oops = null;
 
-                if (err_string.data)
+                if (err_string)
                 {
                     FPUTS("Content-type: text/plain\n\nFatal error parsing /handle-error\n");
-                    FPUTS(err_string.data);
+                    FPUTS(err_string.asCharStar);
                     FPUTS(errstr);
                     FPUTS("\n\nBase-Dir: ");
                     error_data = find_hash_data("BASE_DIR", calc_hash("BASE_DIR"));
-                    if (error_data && error_data.data)
-                        FPUTS(error_data.data);
+                    if (error_data && *error_data)
+                        FPUTS(error_data.asCharStar);
                 }
                 else
-                    FPUTS(results.data);
+                    FPUTS(results.asCharStar);
             }
             else
             {
-                if (err_string.data)
+                if (err_string)
                 {
                     FPUTS("Content-type: text/plain\n\nFatal error parsing /handle-error\n");
-                    FPUTS(err_string.data);
+                    FPUTS(err_string.asCharStar);
                 }
-                else if (results.data)
-                    FPUTS(results.data);
+                else if (results)
+                    FPUTS(results.asCharStar);
                 else
                     FPUTS("Content-type: text/plain\n\nFatal error, unable to find /handle-error\n");
             }
         }
         else
         {
-            if (results.data)
+            if (results)
             {
-                if (strstr(results.data, "Content-type:") == null)
+                if (strstr(results.asCharStar, "Content-type:") == null)
                 {
-                    if (strstr(results.data, "Location:") != null)
+                    if (strstr(results.asCharStar, "Location:") != null)
                         FPUTS("Content-type: text/html\n");
                     else
                         FPUTS("Content-type: text/html\n\n");
                 }
-                FPUTS(results.data);
+                FPUTS(results.asCharStar);
             }
         }
     }
@@ -174,19 +170,8 @@ void processRequest(string[] args)
     version (FASTCGI)
         FCGX_Finish();
 
-    if (err_string.data)
-    {
-        free(err_string.data);
-        err_string.data = null;
-        err_string.length = 0;
-    }
-
-    if (results.data)
-    {
-        free (results.data);
-        results.data  = null;
-        results.length = 0;
-    }
+    err_string.reset();
+    results.reset();
 
     version (LOG_ONLY_ERRORS) {}
     else

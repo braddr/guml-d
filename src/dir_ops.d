@@ -36,7 +36,7 @@ char *guml_open_dir (Data *out_string, const ref Data[] args)
         return cast(char*)"\\opendir requires only one parameter";
 
     guml_close_dir_internal();
-    mydir = opendir(args[0].data);
+    mydir = opendir(args[0].asCharStar);
     if (!mydir)
         return null;
 
@@ -69,7 +69,7 @@ char *guml_isdir (Data *out_string, const ref Data[] args)
     if (args.length != 1)
       return cast(char*)"\\isdir requires one parameter, the file name!";
 
-    stat(args[0].data, &buf);
+    stat(args[0].asCharStar, &buf);
 
 /* returns error if there's a permission error.  oh well..
     if(stat(args[0],&buf))

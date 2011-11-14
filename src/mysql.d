@@ -68,7 +68,7 @@ private char *exiterr ()
 private MYSQL* lookupdb()
 {
     Data* sn = find_hash_data("SERVERNAME", calc_hash("SERVERNAME"));
-    MYSQL** m = sn.data[0 .. sn.length] in sitedbs;
+    MYSQL** m = sn.asString in sitedbs;
 
     return m != null ? *m : null;
 }
@@ -76,7 +76,7 @@ private MYSQL* lookupdb()
 private void storedb(MYSQL* m)
 {
     Data* sn = find_hash_data("SERVERNAME", calc_hash("SERVERNAME"));
-    sitedbs[sn.data[0 .. sn.length].idup] = m;
+    sitedbs[sn.asString.idup] = m;
 }
 
 char *sql_init ()
@@ -92,11 +92,11 @@ char *sql_init ()
     if (!db_host || !db_userid || !db_password || !db_db)
         return null;
 
-    writelog("connecting to mysql server: %s:%s", db_host.data, db_db.data);
+    writelog("connecting to mysql server: %s:%s", db_host.asCharStar, db_db.asCharStar);
     m = mysql_init(null);
     storedb(m);
 
-    if (!mysql_real_connect (m, db_host.data, db_userid.data, db_password.data, db_db.data, 3306, null, 0))
+    if (!mysql_real_connect (m, db_host.asCharStar, db_userid.asCharStar, db_password.asCharStar, db_db.asCharStar, 3306, null, 0))
         return exiterr ();
 
     return null;
@@ -155,7 +155,7 @@ char *guml_sqlexec (Data *out_string, const ref Data[] args)
     if (sql_cmd)
         free (sql_cmd);
 
-    sql_cmd = strdup(args[0].data);
+    sql_cmd = strdup(args[0].asCharStar);
     size_t len = strlen(sql_cmd);
 
     while (sql_cmd[len-1] == '\n')
@@ -189,9 +189,9 @@ char *guml_sqlrow (Data *out_string, const ref Data[] args)
 
     for (int i = 0; i < mysql_num_fields(res) && i < args.length; i++)
         if (row[i])
-            insert_hash(strdup(args[i].data), create_string(row[i]), calc_hash(args[i].data), 0);
+            insert_hash(strdup(args[i].asCharStar), create_string(row[i]), calc_hash(args[i].asCharStar), 0);
         else
-            insert_hash(strdup(args[i].data), create_string(""), calc_hash(args[i].data), 0);
+            insert_hash(strdup(args[i].asCharStar), create_string(""), calc_hash(args[i].asCharStar), 0);
 
     add_string(out_string, cast(char*)"true", 4);
     return null;

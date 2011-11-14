@@ -10,8 +10,15 @@ import core.sys.posix.unistd;
 
 struct Data
 {
+private:
     char  *data   = null;
-    size_t length = 0;    // includes trailing null
+    size_t length_ = 0;    // includes trailing null
+public:
+    void reset() { free(data); data = null; length_ = 0; }
+    string asString() const @property { return cast(immutable)data[0 .. length_-1]; }
+    const(char)* asCharStar() const @property { return data; }
+    size_t length() const @property { return length_ - 1; }
+    bool opCast(T = bool)() const { return length_ > 1; }
 }
 
 enum LOGFILE = "/tmp/guml_logfile";
@@ -44,9 +51,14 @@ void writelog(const char *msg, ...)
     }
 }
 
-Data* create_string(Data* d)
+Data* create_string(const ref Data d)
 {
-    return create_string(d.data, d.length-1); // exclude the trailing null
+    return create_string(&d);
+}
+
+Data* create_string(const(Data)* d)
+{
+    return create_string(d.data, d.length_-1); // exclude the trailing null
 }
 
 Data* create_string(string s)
@@ -104,18 +116,18 @@ enum SPACE_MASK = ((cast(c_ulong)-1) ^ 0xFFF);
 
 void check_space(Data *str, size_t add)
 {
-    if (!(str.length))
+    if (!(str.length_))
         add++;
-    if (str.length+add > ((str.length + 4095) & SPACE_MASK))
+    if (str.length_+add > ((str.length_ + 4095) & SPACE_MASK))
     {
-        size_t newlen = (str.length + add + 4095) & SPACE_MASK;
-        assert(newlen > str.length+add);
+        size_t newlen = (str.length_ + add + 4095) & SPACE_MASK;
+        assert(newlen > str.length_+add);
 
         str.data = cast(char*)realloc(str.data, newlen);
-        if (!(str.length))
+        if (!(str.length_))
         {
             str.data[0] = 0;
-            str.length++;
+            str.length_++;
         }
     }
 }
@@ -124,8 +136,8 @@ void check_space(Data *str, size_t add)
 void add_char(Data *str, char c)
 {
     check_space(str, 1);
-    str.data[str.length - 1] = c;
-    str.data[str.length++] = 0;
+    str.data[str.length_ - 1] = c;
+    str.data[str.length_++] = 0;
 }
 
 /* add s2 to the end of s1 */
@@ -135,6 +147,11 @@ void add_string(Data *s1, const char *s2)
     add_string(s1, s2, s2_len);
 }
 
+void add_string(Data *s1, string s2)
+{
+    add_string(s1, s2.ptr, s2.length);
+}
+
 void add_string(Data *s1, Data *s2)
 {
     add_string(s1, *s2);
@@ -142,9 +159,9 @@ void add_string(Data *s1, Data *s2)
 
 void add_string(Data *s1, const ref Data s2)
 {
-    if (!s2.length) return;
+    if (!s2.length_) return;
 
-    add_string(s1, s2.data, s2.length-1); // exclude the trailing 0 in s2
+    add_string(s1, s2.data, s2.length_-1); // exclude the trailing 0 in s2
 }
 
 /* add s2 to the end of s1 */
@@ -153,9 +170,9 @@ void add_string(Data *s1, const char *s2, c_ulong s2_len)
     if (!s2_len) return;
 
     check_space(s1, s2_len);
-    strncpy(s1.data + s1.length - 1, s2, s2_len);
-    s1.length += s2_len;
-    s1.data[s1.length-1] = 0;
+    strncpy(s1.data + s1.length_ - 1, s2, s2_len);
+    s1.length_ += s2_len;
+    s1.data[s1.length_-1] = 0;
 }
 
 int split_string(char *str, char split, char **w1, char **w2)

@@ -11,25 +11,23 @@ import core.sys.posix.stdio;
 /* unset a variable */
 char *guml_email (Data *out_string, const ref Data[] args)
 {
-    FILE *fp;
-    char cmdstr[1000];
-
     if (args.length < 2 || args.length > 3)
         return cast(char*)"\\email requires either 2 or 3 parameters";
 
     Data* fwd = find_hash_data("FILE_WRITE_DIR", calc_hash("FILE_WRITE_DIR"));
-    if (!fwd)
+    if (!fwd || !*fwd)
         return cast(char*)"\\email -- FILE_WRITE_DIR not configured";
 
-    if (args.length == 3 && strlen (args[2].data) > 0)
-        sprintf (cmdstr.ptr, "/usr/lib/sendmail -f \\\"%s\\\" %s >> %s/email.log", args[2].data, args[0].data, fwd.data);
+    char cmdstr[1000];
+    if (args.length == 3 && args[2].length > 0)
+        sprintf (cmdstr.ptr, "/usr/lib/sendmail -f \\\"%s\\\" %s >> %s/email.log", args[2].asCharStar, args[0].asCharStar, fwd.asCharStar);
     else
-        sprintf (cmdstr.ptr, "/usr/lib/sendmail %s >> %s/email.log", args[0].data, fwd.data);
+        sprintf (cmdstr.ptr, "/usr/lib/sendmail %s >> %s/email.log", args[0].asCharStar, fwd.asCharStar);
 
-    fp = popen (cmdstr.ptr, "w");
+    FILE* fp = popen (cmdstr.ptr, "w");
     if (fp)
     {
-        fprintf (fp, "%s\n", args[1].data);
+        fprintf (fp, "%s\n", args[1].asCharStar);
         pclose (fp);
         add_string(out_string, cast(char*)"true", 4);
     }
@@ -39,16 +37,14 @@ char *guml_email (Data *out_string, const ref Data[] args)
 
 char *guml_sendmail (Data *out_string, const ref Data[] args)
 {
-    FILE *fp;
-    string cmdstr =  "/usr/lib/sendmail -t";
-
     if (args.length > 2)
         return cast(char*)"\\sendmail requires exactly one parameter, the text of the message";
 
-    fp = popen (cmdstr.ptr, "w");
+    string cmdstr =  "/usr/lib/sendmail -t";
+    FILE *fp = popen (cmdstr.ptr, "w");
     if (fp)
     {
-        fprintf (fp, "%s\n", args[0].data);
+        fprintf (fp, "%s\n", args[0].asCharStar);
         pclose (fp);
         add_string(out_string, cast(char*)"true", 4);
     }

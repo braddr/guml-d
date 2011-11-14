@@ -42,7 +42,7 @@ bool read_startup_config_file()
     static stat_t[string] lastread;
 
     Data* sn = find_hash_data("SERVERNAME", calc_hash("SERVERNAME"));
-    stat_t* last = sn.data[0 .. sn.length] in lastread;
+    stat_t* last = sn.asString in lastread;
 
     Data* bd = find_hash_data("BASE_DIR", calc_hash("BASE_DIR"));
     Data* fn = create_string(bd);
@@ -50,10 +50,10 @@ bool read_startup_config_file()
     add_string(fn, sn);
 
     stat_t s;
-    auto rc = stat(fn.data, &s);
+    auto rc = stat(fn.asCharStar, &s);
 
-    writelog("read_startup_config_file: rc = %d, last = %p, file = %s", rc, last, fn.data);
-    free(fn.data);
+    writelog("read_startup_config_file: rc = %d, last = %p, file = %s", rc, last, fn.asCharStar);
+    fn.reset();
     free(fn);
     if (rc == 0)
     {
@@ -62,17 +62,17 @@ bool read_startup_config_file()
         {
             Data* arg = create_string("/include/");
             add_string(arg, sn);
-            writelog("loading site file: %s", arg.data);
+            writelog("loading site file: %s", arg.asCharStar);
 
             Data   results;
             Data[] args = [ *arg ];
             guml_file_include(&results, args);
-            free(arg.data);
+            arg.reset();
             free(arg);
-            free(results.data);
+            results.reset();
 
             // save stat for next time
-            lastread[sn.data[0 .. sn.length].idup] = s;
+            lastread[sn.asString.idup] = s;
 
             return true;
         }
@@ -316,9 +316,7 @@ void setup_extract_parts(char *pi, char *pt)
         pt_ptr++;
 
     /* BASE_DIR will be the data between pt and pt_ptr, inclusive */
-    data = cast(Data*)malloc(Data.sizeof);
-    data.data = null;
-    data.length = 0;
+    data = cast(Data*)calloc(1, Data.sizeof);
     add_string(data, pt, pt_ptr-pt+1);
     insert_hash(strdup("BASE_DIR"), data, calc_hash("BASE_DIR"), HASH_ENV);
 
@@ -326,9 +324,7 @@ void setup_extract_parts(char *pi, char *pt)
     insert_hash(strdup("FILENAME"), create_string(pt_ptr), calc_hash("FILENAME"), HASH_ENV);
 
     /* PATH will be the data between pt_ptr and pt_last_lash, inclusive */
-    data = cast(Data*)malloc(Data.sizeof);
-    data.data = null;
-    data.length = 0;
+    data = cast(Data*)calloc(1, Data.sizeof);
     add_string(data, pt_ptr, pt_last_slash-pt_ptr+1);
     insert_hash(strdup("PATH"), data, calc_hash("PATH"), HASH_ENV);
 }

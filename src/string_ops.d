@@ -17,16 +17,14 @@ extern(C)
 
 char *guml_index (Data *out_string, const ref Data[] args)
 {
-    char *comres;
-    char retc[32];
-
     if (args.length != 2)
         return cast(char*)"\\strindex requires 2 parameters";
 
-    comres = strstr (args[0].data, args[1].data);
+    char *comres = strstr (args[0].asCharStar, args[1].asCharStar);
     if (comres != null)
     {
-        sprintf (retc.ptr, "%ld", (comres - args[0].data) / char.sizeof);
+        char retc[32];
+        sprintf (retc.ptr, "%ld", (comres - args[0].asCharStar) / char.sizeof);
         add_string (out_string, retc.ptr);
     }
     return null;
@@ -35,30 +33,28 @@ char *guml_index (Data *out_string, const ref Data[] args)
 /* returns substring of length arg[2] starting at arg[1] */
 char *guml_substr (Data *out_string, const ref Data[] args)
 {
-    uint start_index;
-    size_t len;
-
     if (args.length != 2 && args.length != 3)
         return cast(char*)"\\strsubstr requires 2-3 parameters";
 
-    start_index = atoi (args[1].data);
+    uint start_index = atoi (args[1].asCharStar);
 
-    if (start_index > strlen (args[0].data))
+    if (start_index > args[0].length)
         return null;
 
+    size_t len;
     if (args.length == 2)
-        len = strlen(args[0].data);
+        len = strlen(args[0].asCharStar);
     else
     {
-        len = atoi (args[2].data);
+        len = atoi (args[2].asCharStar);
         if (len < 0)
             return null;
     }
 
-    if (len > strlen (args[0].data) - start_index)
-        len = strlen (args[0].data) - start_index;
+    if (len > args[0].length - start_index)
+        len = args[0].length - start_index;
 
-    add_string (out_string, &(args[0].data[start_index]), len);
+    add_string (out_string, &(args[0].asCharStar[start_index]), len);
 
     return null;
 }
@@ -66,12 +62,11 @@ char *guml_substr (Data *out_string, const ref Data[] args)
 /* compute length of a string */
 char *guml_length (Data *out_string, const ref Data[] args)
 {
-    char s[128];
-
     if (args.length != 1)
         return cast(char*)"\\strlen requires only 1 parameter";
 
-    sprintf (s.ptr, "%zd", strlen (args[0].data));
+    char s[128];
+    sprintf (s.ptr, "%zd", args[0].length);
     add_string (out_string, s.ptr);
 
     return null;
@@ -82,8 +77,8 @@ char *guml_upper_string (Data *out_string, const ref Data[] args)
     if (args.length != 1)
         return cast(char*)"\\strupper requires only 1 parameter";
 
-    for (size_t i = 0; i < strlen (args[0].data); i++)
-        add_char (out_string, cast(char)toupper (args[0].data[i]));
+    foreach (c; args[0].asString)
+        add_char (out_string, cast(char)toupper(c));
 
     return null;
 }
@@ -93,32 +88,32 @@ char *guml_lower_string (Data *out_string, const ref Data[] args)
     if (args.length != 1)
         return cast(char*)"\\strlower requires only 1 parameter";
 
-    for (size_t i = 0; i < strlen (args[0].data); i++)
-        add_char (out_string, cast(char)tolower (args[0].data[i]));
+    foreach(c; args[0].asString())
+        add_char (out_string, cast(char)tolower(c));
 
     return null;
 }
 
 char *guml_strip (Data *out_string, const ref Data[] args)
 {
-    int flag = 0;
-
     if (args.length < 2 || args.length > 3)
         return cast(char*)"\\strstrip requires 2 or 3 parameters";
 
-    if (args.length == 3)
-        flag = atoi(args[2].data);
+    int flag = 0;
 
-    for (size_t i = 0; i < strlen (args[0].data); i++)
+    if (args.length == 3)
+        flag = atoi(args[2].asCharStar);
+
+    foreach(c; args[0].asString)
         if (flag)
         {
-            if (strchr(args[1].data, args[0].data[i]) != null)
-                add_char(out_string, args[0].data[i]);
+            if (strchr(args[1].asCharStar, c) != null)
+                add_char(out_string, c);
         }
         else
         {
-            if (strchr (args[1].data, args[0].data[i]) == null)
-                add_char (out_string, args[0].data[i]);
+            if (strchr(args[1].asCharStar, c) == null)
+                add_char (out_string, c);
         }
 
     return null;
@@ -129,25 +124,23 @@ char *guml_strip (Data *out_string, const ref Data[] args)
 /* args[1]: time to convert. (as in "854523817"..)  defaults to current time */
 char *guml_date (Data *out_string, const ref Data[] args)
 {
-    char buffer[100];
-    const(char) *fmtstr;
-    time_t ttime;
-    tm *tmtime;
-
     if (args.length > 2)
         return cast(char*)"\\date requires between 0 and 2 parameters";
 
-    if (args.length < 1 || args[0].data[0] == '\0')
+    const(char) *fmtstr;
+    if (args.length < 1 || args[0].asCharStar[0] == '\0')
         fmtstr = cast(char*)("%B %d, %Y");
     else
-        fmtstr = args[0].data;
+        fmtstr = args[0].asCharStar;
 
-    if (args.length < 2 || args[1].data[0] == '\0')
+    time_t ttime;
+    if (args.length < 2 || args[1].asCharStar[0] == '\0')
         ttime = time (null);
     else
-        ttime = atol (args[1].data);
-    tmtime = localtime (&ttime);
+        ttime = atol (args[1].asCharStar);
+    tm* tmtime = localtime (&ttime);
 
+    char buffer[100];
     strftime (buffer.ptr, buffer.sizeof, fmtstr, tmtime);
     add_string (out_string, buffer.ptr);
 
@@ -159,21 +152,20 @@ char *guml_date (Data *out_string, const ref Data[] args)
 /* return to you /that/ unix time..  pretty swell, eh? */
 char *guml_time (Data *out_string, const ref Data[] args)
 {
-    tm tms;
-    char buffer[64];
-    time_t ttime;
-
     if (args.length != 0 && args.length != 2)
         return cast(char*)"\\time requires 0 or 2 parameters";
 
-    if (args.length < 2 || args[0].data[0] == '\0')
+    time_t ttime;
+    if (args.length < 2 || args[0].asCharStar[0] == '\0')
         ttime = time (null);
     else
     {
-        strptime (args[1].data, args[0].data, &tms);
+        tm tms;
+        strptime (args[1].asCharStar, args[0].asCharStar, &tms);
         ttime = mktime (&tms);
     }
 
+    char buffer[64];
     sprintf (buffer.ptr, "%li", cast(long) ttime);
     add_string (out_string, buffer.ptr);
 
@@ -217,28 +209,27 @@ bool isascii(char c)
 
 char *guml_soundex(Data *out_string, const ref Data[] args)
 {
-    int num_chars;
-    char c, last_char;
-
     if (args.length < 0 || args.length > 2)
         return cast(char*)"\\soundex requires either 1 or 2 parameters";
 
+    int num_chars;
     if (args.length == 2)
     {
-        num_chars = atoi(args[1].data);
+        num_chars = atoi(args[1].asCharStar);
         if (num_chars <= 0)
             num_chars = 4;
     }
     else
         num_chars = 4;
 
-    for (size_t i=0; i<strlen(args[0].data) && num_chars; i++)
+    char last_char;
+    for (size_t i = 0; i < args[0].length && num_chars; i++)
     {
-        c = args[0].data[i];
+        char c = args[0].asCharStar[i];
         if (!isascii(c) || !isalpha(c))
             continue;
         c = cast(char)toupper(c);
-        if (c == 'S' && (!isalpha(args[0].data[i+1])))
+        if (c == 'S' && (!isalpha(args[0].asCharStar[i+1])))
             continue;
         if (i == 0)
         {
@@ -268,20 +259,20 @@ char *guml_soundex(Data *out_string, const ref Data[] args)
 char *guml_strtok(Data *out_string, const ref Data[] args)
 {
     static char *my_tok = null;
-    char *tmp;
 
     if (args.length != 2)
         return cast(char*)"\\strtok requires 2 parameters";
 
-    if (strlen(args[0].data) != 0)
+    char *tmp;
+    if (args[0])
     {
         if (my_tok)
             free(my_tok);
-        my_tok = strdup(args[0].data);
-        tmp = strtok(my_tok, args[1].data);
+        my_tok = strdup(args[0].asCharStar);
+        tmp = strtok(my_tok, args[1].asCharStar);
     }
     else
-        tmp = strtok(null, args[1].data);
+        tmp = strtok(null, args[1].asCharStar);
     if (tmp)
         add_string(out_string, tmp);
     else
@@ -294,12 +285,11 @@ char *guml_strtok(Data *out_string, const ref Data[] args)
 
 char *guml_strcmp(Data *out_string, const ref Data[] args)
 {
-    int rc;
-
     if (args.length != 2)
         return cast(char*)"\\strcmp requires 2 arguments!";
 
-    if ((rc = strcmp(args[0].data, args[1].data)) > 0)
+    int rc = strcmp(args[0].asCharStar, args[1].asCharStar);
+    if (rc > 0)
         add_char(out_string, '1');
     else if (rc == 0)
         add_char(out_string, '0');
@@ -315,11 +305,10 @@ char *guml_httpdecode(Data *out_string, const ref Data[] args)
     if (args.length != 1)
         return cast(char*)"\\httpdecode requires only 1 parameter";
 
-    Data t;
-    add_string(&t, args[0]);
+    char* t = strdup(args[0].asCharStar);
 
-    add_string(out_string, http_decode(t.data));
-    free(t.data);
+    add_string(out_string, http_decode(t));
+    free(t);
     return null;
 }
 
@@ -348,20 +337,17 @@ string tohex(int c)
 
 char *guml_httpencode(Data *out_string, const ref Data[] args)
 {
-    int i;
-
     if (args.length != 1)
         return cast(char*)"\\httpencode requires only 1 parameter";
 
-    for (i=0; i<strlen(args[0].data); i++) {
-        if (args[0].data[i] == ' ')
+    foreach (c; args[0].asString)
+    {
+        if (c == ' ')
             add_char(out_string, '+');
-        else if ((args[0].data[i] >= '0' && args[0].data[i] <= '9') ||
-                 (args[0].data[i] >= 'A' && args[0].data[i] <= 'Z') ||
-                 (args[0].data[i] >= 'a' && args[0].data[i] <= 'z'))
-            add_char(out_string, args[0].data[i]);
+        else if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
+            add_char(out_string, c);
         else
-            add_string(out_string, tohex(args[0].data[i]).ptr, 3);
+            add_string(out_string, tohex(c));
     }
     return null;
 }
@@ -385,12 +371,12 @@ char *guml_sqlquote(Data *out_string, const ref Data[] args)
     if (args.length != 1)
         return cast(char*)"\\sqlquote requires only 1 parameter";
  
-    for (size_t i=0; i<strlen(args[0].data); i++)
+    foreach (c; args[0].asString)
     {
-        if (args[0].data[i] == QUOTE_CHAR)
+        if (c == QUOTE_CHAR)
             add_string(out_string, QUOTED_STR, 2);
         else
-            add_char(out_string, args[0].data[i]);
+            add_char(out_string, c);
     }
  
     return null;
