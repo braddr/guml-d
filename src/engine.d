@@ -221,7 +221,7 @@ extern(C) void guml_backend (Data *out_string, const(char) **ins, const ref Data
                         int quoteargs = 0;
                         char* err;
 
-                        if ((myfunction = find_hash_node(commandstr.ptr, hash_value)) != null)
+                        if ((myfunction = find_hash_node(commandstr[0 .. i], hash_value)) != null)
                             if (myfunction.flags & HASH_BUILTIN)
                             {
                                 mycmd = cast(command*)(myfunction.data);
@@ -278,7 +278,7 @@ extern(C) void guml_backend (Data *out_string, const(char) **ins, const ref Data
 
                             if (!fatal_error)
                                 fatal_error = 1;
-                            sprintf (buffer.ptr, "Undefined macro \"%s\" invoked.\n", commandstr);
+                            sprintf (buffer.ptr, "Undefined macro \"%s\" invoked.\n", commandstr.ptr);
                             add_string (&err_string, buffer.ptr);
                         }
 

@@ -189,9 +189,9 @@ char *guml_sqlrow (Data *out_string, const ref Data[] args)
 
     for (int i = 0; i < mysql_num_fields(res) && i < args.length; i++)
         if (row[i])
-            insert_hash(strdup(args[i].asCharStar), create_string(row[i]), calc_hash(args[i].asCharStar), 0);
+            insert_hash(create_string(args[i]), create_string(row[i]), calc_hash(args[i]), 0);
         else
-            insert_hash(strdup(args[i].asCharStar), create_string(""), calc_hash(args[i].asCharStar), 0);
+            insert_hash(create_string(args[i]), create_string(""), calc_hash(args[i]), 0);
 
     add_string(out_string, cast(char*)"true", 4);
     return null;

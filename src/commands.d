@@ -114,9 +114,9 @@ version (TUXEDO)
 void init_commands()
 {
     foreach (ref c; commlist)
-        insert_hash(strdup(c.name.ptr),
+        insert_hash(create_string(c.name),
                     cast(Data*)(&c),
-                    calc_hash(c.name.ptr),
+                    calc_hash(c.name),
                     HASH_BUILTIN | HASH_READONLY);
 }
 

@@ -26,7 +26,7 @@ enum HASH_MASK       = cast(ulong)(-HASH_DEPTH);
 struct HashNode
 {
     Data *data;
-    char *key;
+    Data *key;
     c_ulong hash;
     c_ulong flags;
 }
@@ -132,24 +132,33 @@ void calc_hash_increment(size_t* hash_value, char c)
     *hash_value = (*hash_value << 4) + c;
 }
 
-extern(C) size_t calc_hash(const(char) *str)
+size_t calc_hash(const ref Data str)
 {
-    c_ulong hashval = 0;
-    size_t len = strlen(str);
+    return calc_hash(str.asString);
+}
 
-    for (; len; len--, str++)
-        hashval = (hashval << 4) + *str;
+size_t calc_hash(const(char)[] str)
+{
+    size_t hashval = 0;
+
+    foreach(c; str)
+        hashval = (hashval << 4) + c;
 
     return hashval;
 }
 
-extern(C) HashNode *find_hash_node(const char *key, size_t hash)
+HashNode *find_hash_node(const ref Data key, size_t hash)
+{
+    return find_hash_node(key.asString, hash);
+}
+
+HashNode *find_hash_node(const(char)[] key, size_t hash)
 {
     uint bucket = hash % HASH_WIDTH;
     size_t i = 0;
     HashNode *tmp = hash_table[bucket];
 
-    while (tmp && i < hash_depths[bucket] && strcmp(tmp[i].key, key) != 0)
+    while (tmp && i < hash_depths[bucket] && tmp[i].key.asString != key)
         i++;
 
     if (i < hash_depths[bucket])
@@ -158,7 +167,12 @@ extern(C) HashNode *find_hash_node(const char *key, size_t hash)
         return null;
 }
 
-extern(C) Data *find_hash_data(const char *key, size_t hash)
+Data *find_hash_data(const ref Data key, size_t hash)
+{
+    return find_hash_data(key.asString, hash);
+}
+
+Data *find_hash_data(const(char)[] key, size_t hash)
 {
     HashNode *tmp = find_hash_node(key, hash);
 
@@ -168,9 +182,9 @@ extern(C) Data *find_hash_data(const char *key, size_t hash)
         return null;
 }
 
-extern(C) int insert_hash(char *key, Data *data, size_t hash, c_ulong flags)
+int insert_hash(Data *key, Data *data, size_t hash, c_ulong flags)
 {
-    HashNode *tmp_node = find_hash_node(key, hash);
+    HashNode *tmp_node = find_hash_node(key.asString, hash);
     if (tmp_node)
     {
         if (tmp_node.flags & HASH_READONLY)
@@ -178,6 +192,7 @@ extern(C) int insert_hash(char *key, Data *data, size_t hash, c_ulong flags)
             readonly++;
             return 1;
         }
+        key.reset();
         free(key);
         tmp_node.data.reset();
         free(tmp_node.data);
@@ -206,19 +221,25 @@ extern(C) int insert_hash(char *key, Data *data, size_t hash, c_ulong flags)
     return 0;
 }
 
-extern(C) void delete_hash(const char *key, size_t hash)
+void delete_hash(const ref Data key, size_t hash)
+{
+    delete_hash(key.asString, hash);
+}
+
+void delete_hash(string key, size_t hash)
 {
     uint bucket = hash % HASH_WIDTH;
     size_t i = 0;
     HashNode *tmp = hash_table[bucket];
 
-    while (tmp && i < hash_depths[bucket] && strcmp(tmp[i].key, key) != 0)
+    while (tmp && i < hash_depths[bucket] && tmp[i].key.asString != key)
         i++;
 
     if (i < hash_depths[bucket] && !(hash_table[bucket][i].flags & HASH_READONLY))
     {
         hash_table[bucket][i].data.reset();
         free(hash_table[bucket][i].data);
+        hash_table[bucket][i].key.reset();
         free(hash_table[bucket][i].key);
         hash_depths[bucket]--;
         memcpy(&(hash_table[bucket][i]), &(hash_table[bucket][hash_depths[bucket]]), HashNode.sizeof);
@@ -236,7 +257,10 @@ void clean_hash(c_ulong flags)
             if (hash_table[i][j].flags & HASH_BUILTIN)
             {
                 if (flags & HASH_BUILTIN)
+                {
+                    hash_table[i][j].key.reset();
                     free(hash_table[i][j].key);
+                }
                 else
                     num_builtin++;
             }
@@ -244,6 +268,7 @@ void clean_hash(c_ulong flags)
             {
                 hash_table[i][j].data.reset();
                 free(hash_table[i][j].data);
+                hash_table[i][j].key.reset();
                 free(hash_table[i][j].key);
             }
         }

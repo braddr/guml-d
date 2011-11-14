@@ -37,7 +37,7 @@ char *guml_unset (Data *out_string, const ref Data[] args)
     if (args.length != 1)
         return cast(char*)"\\unset requires only 1 parameter";
 
-    delete_hash(args[0].asCharStar, calc_hash(args[0].asCharStar));
+    delete_hash(args[0], calc_hash(args[0]));
 
     return null;
 }
@@ -61,7 +61,7 @@ char *guml_get (Data *out_string, const ref Data[] args)
     if (args.length != 1)
         return cast(char*)"\\get requires only 1 parameter";
 
-    Data *tmp_data = find_hash_data(args[0].asCharStar, calc_hash(args[0].asCharStar));
+    Data *tmp_data = find_hash_data(args[0], calc_hash(args[0]));
 
     if (!tmp_data)
         return null;
@@ -77,7 +77,7 @@ char *guml_set (Data *out_string, const ref Data[] args)
     if (args.length != 2)
         return cast(char*)"\\set requires 2 parameters";
 
-    if (insert_hash(strdup(args[0].asCharStar), create_string(args[1]), calc_hash(args[0].asCharStar), 0))
+    if (insert_hash(create_string(args[0]), create_string(args[1]), calc_hash(args[0]), 0))
         return cast(char*)"\\set of a read only parameter is illegal";
 
     return null;
@@ -123,7 +123,7 @@ char *guml_isset (Data *out_string, const ref Data[] args)
     if (args.length != 1)
         return cast(char*)"\\isset requires only 1 parameter";
 
-    if (find_hash_node(args[0].asCharStar, calc_hash(args[0].asCharStar)))
+    if (find_hash_node(args[0], calc_hash(args[0])))
         add_string(out_string, "true", 4);
 
     return null;

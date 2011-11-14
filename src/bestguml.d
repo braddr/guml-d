@@ -102,13 +102,13 @@ void processRequest(string[] args)
 
             if (results)
             {
-                insert_hash(strdup("ERROR_results"), create_string(results.asString), calc_hash("ERROR_results"), 0);
+                insert_hash(create_string("ERROR_results"), create_string(results), calc_hash("ERROR_results"), 0);
                 results.reset();
             }
             if (err_string)
             {
                 writelog("traceback: %s", err_string.asCharStar);
-                insert_hash(strdup("ERROR_traceback"), create_string(err_string.asString), calc_hash("ERROR_traceback"), 0);
+                insert_hash(create_string("ERROR_traceback"), create_string(err_string), calc_hash("ERROR_traceback"), 0);
                 err_string.reset();
             }
             fatal_error = 0;
@@ -120,10 +120,9 @@ void processRequest(string[] args)
             filename = null;
             if (errstr)
             {
-                const(char)*oops = "Content-type: text/plain\n\n\\get{ERROR_traceback}\n\nResults so far:\n\n\\get{ERROR_results}";
+                const(char)* oops = "Content-type: text/plain\n\n\\get{ERROR_traceback}\n\nResults so far:\n\n\\get{ERROR_results}";
                 Data[] params;
                 guml_backend (&results, &oops, params);
-                oops = null;
 
                 if (err_string)
                 {

@@ -22,9 +22,9 @@ char *guml_environ (Data *out_string, const ref Data[] args)
         {
             eptr=strdup(guml_env[i]);
             if (split_string(eptr, '=', &name, &value))
-                insert_hash(strdup(name), create_string(value), calc_hash(name), HASH_ENV);
+                insert_hash(create_string(name), create_string(value), calc_hash(name[0 .. strlen(name)]), HASH_ENV);
             else
-                insert_hash(strdup(name), create_string(""), calc_hash(name), HASH_ENV);
+                insert_hash(create_string(name), create_string(""), calc_hash(name[0 .. strlen(name)]), HASH_ENV);
             free(eptr);
         }
         guml_environ_initialized = 1;
