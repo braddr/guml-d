@@ -30,7 +30,7 @@ char *guml_index (Data *out_string, const ref Data[] args)
     return null;
 }
 
-/* returns substring of length arg[2] starting at arg[1] */
+/* returns substring of length arg[2] (or through end if omitted) starting at arg[1] */
 char *guml_substr (Data *out_string, const ref Data[] args)
 {
     if (args.length != 2 && args.length != 3)
@@ -43,13 +43,12 @@ char *guml_substr (Data *out_string, const ref Data[] args)
 
     size_t len;
     if (args.length == 2)
-        len = strlen(args[0].asCharStar);
+        len = args[0].length;
     else
-    {
         len = atoi (args[2].asCharStar);
-        if (len < 0)
-            return null;
-    }
+
+    if (len < 0)
+        return null;
 
     if (len > args[0].length - start_index)
         len = args[0].length - start_index;
@@ -349,36 +348,6 @@ char *guml_httpencode(Data *out_string, const ref Data[] args)
         else
             add_string(out_string, tohex(c));
     }
-    return null;
-}
-
-/* quote a string; that is, replace double quotes
-   with backslashed double-quotes */
- 
-version (USE_ORACLE)
-{
-    enum QUOTE_CHAR = '\'';
-    enum QUOTED_STR = "''";
-}
-else
-{
-    enum QUOTE_CHAR = '"';
-    enum QUOTED_STR = "\"\"";
-}
-
-char *guml_sqlquote(Data *out_string, const ref Data[] args)
-{
-    if (args.length != 1)
-        return cast(char*)"\\sqlquote requires only 1 parameter";
- 
-    foreach (c; args[0].asString)
-    {
-        if (c == QUOTE_CHAR)
-            add_string(out_string, QUOTED_STR, 2);
-        else
-            add_char(out_string, c);
-    }
- 
     return null;
 }
 

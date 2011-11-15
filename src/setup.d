@@ -45,16 +45,15 @@ bool read_startup_config_file()
     stat_t* last = sn.asString in lastread;
 
     Data* bd = find_hash_data("BASE_DIR", calc_hash("BASE_DIR"));
-    Data* fn = create_string(bd);
-    add_string(fn, "/include/");
-    add_string(fn, sn);
+    Data fn;
+    add_string(&fn, bd);
+    add_string(&fn, "/include/");
+    add_string(&fn, sn);
 
     stat_t s;
     auto rc = stat(fn.asCharStar, &s);
-
-    writelog("read_startup_config_file: rc = %d, last = %p, file = %s", rc, last, fn.asCharStar);
     fn.reset();
-    free(fn);
+
     if (rc == 0)
     {
         // found file, so let's see if it's new

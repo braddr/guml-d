@@ -47,15 +47,13 @@ void FPUTS(const char* x)
 
 void processRequest(string[] args)
 {
-    Data results;
-
     setup_environment (args);
     init_engine();
 
     if (read_startup_config_file())
     {
         // config file was re-read.. so flush anything that might have cached state
-        sql_shutdown(); // will re-connect next time a query happens
+        sql_reset_connection(); // will re-connect next time a query happens
     }
 
     fatal_error = 0;
@@ -74,6 +72,7 @@ void processRequest(string[] args)
     }
 
     Data[] funcargs = [ *filename ];
+    Data results;
     char *errstr = guml_file_include (&results, funcargs);
 
     Data* error_data = find_hash_data ("ERROR", calc_hash("ERROR"));
@@ -189,6 +188,7 @@ int main (string[] args)
 
     version (FASTCGI)
     {
+        writelog ("start fcgi loop");
         while(!shutdownguml && FCGX_Accept(&fcgi_in, &fcgi_out, &fcgi_err, &fcgi_envp) >= 0)
         {
             guml_env = fcgi_envp;
@@ -213,6 +213,7 @@ int main (string[] args)
         clean_hash(HASH_ALL);
     }
 
+    writelog("shutting down");
     sql_shutdown();
     clean_hash(HASH_BUILTIN);
 

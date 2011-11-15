@@ -21,7 +21,7 @@ public:
     bool opCast(T = bool)() const { return length_ > 1; }
 }
 
-enum LOGFILE = "/tmp/guml_logfile";
+enum LOGFILE = "/tmp/betaguml_logfile";
 
 void writelog(const char *msg, ...)
 {

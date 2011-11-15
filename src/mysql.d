@@ -14,9 +14,25 @@ struct MYSQL { ubyte[1272] junk; } // sizeof on 64 bit linux from the c header
 struct MYSQL_RES;
 alias char** MYSQL_ROW;
 
+enum mysql_option
+{
+    MYSQL_OPT_CONNECT_TIMEOUT, MYSQL_OPT_COMPRESS, MYSQL_OPT_NAMED_PIPE,
+    MYSQL_INIT_COMMAND, MYSQL_READ_DEFAULT_FILE, MYSQL_READ_DEFAULT_GROUP,
+    MYSQL_SET_CHARSET_DIR, MYSQL_SET_CHARSET_NAME, MYSQL_OPT_LOCAL_INFILE,
+    MYSQL_OPT_PROTOCOL, MYSQL_SHARED_MEMORY_BASE_NAME, MYSQL_OPT_READ_TIMEOUT,
+    MYSQL_OPT_WRITE_TIMEOUT, MYSQL_OPT_USE_RESULT,
+    MYSQL_OPT_USE_REMOTE_CONNECTION, MYSQL_OPT_USE_EMBEDDED_CONNECTION,
+    MYSQL_OPT_GUESS_CONNECTION, MYSQL_SET_CLIENT_IP, MYSQL_SECURE_AUTH,
+    MYSQL_REPORT_DATA_TRUNCATION, MYSQL_OPT_RECONNECT,
+    MYSQL_OPT_SSL_VERIFY_SERVER_CERT
+};
+
+enum CLIENT_REMEMBER_OPTIONS = 1UL << 31;
+
 extern(C)
 {
     extern MYSQL* mysql_init(MYSQL *mysql);
+    extern int mysql_options(MYSQL *mysql, mysql_option option, const void *arg);
     extern MYSQL* mysql_real_connect(MYSQL *mysql, const char *host, const char *user, const char *passwd, const char *db, uint port, const char *unix_socket, c_ulong clientflag);
     extern void mysql_close(MYSQL *sock);
     extern void mysql_server_end();
@@ -28,6 +44,7 @@ extern(C)
     extern MYSQL_RES* mysql_store_result(MYSQL *mysql);
     extern void	mysql_free_result(MYSQL_RES *result);
 
+    extern c_ulong mysql_escape_string(char *to, const char *from, c_ulong from_length);
     extern uint mysql_field_count(MYSQL *mysql);
     extern uint mysql_num_fields(MYSQL_RES *res);
 }
@@ -96,8 +113,12 @@ char *sql_init ()
     m = mysql_init(null);
     storedb(m);
 
-    if (!mysql_real_connect (m, db_host.asCharStar, db_userid.asCharStar, db_password.asCharStar, db_db.asCharStar, 3306, null, 0))
-        return exiterr ();
+    ubyte opt = 1;
+    if (mysql_options(m, mysql_option.MYSQL_OPT_RECONNECT, &opt) != 0)
+        return exiterr();
+
+    if (!mysql_real_connect (m, db_host.asCharStar, db_userid.asCharStar, db_password.asCharStar, db_db.asCharStar, 3306, null, CLIENT_REMEMBER_OPTIONS))
+        return exiterr();
 
     return null;
 }
@@ -117,6 +138,18 @@ char *sql_cleanup_after_page()
     }
 
     return null;
+}
+
+void sql_reset_connection()
+{
+    MYSQL* m = lookupdb();
+
+    if (m)
+    {
+        mysql_close(m);
+        storedb(null);
+    }
+    sql_init();
 }
 
 char *sql_shutdown ()
@@ -194,5 +227,21 @@ char *guml_sqlrow (Data *out_string, const ref Data[] args)
             insert_hash(create_string(args[i]), create_string(""), calc_hash(args[i]), 0);
 
     add_string(out_string, cast(char*)"true", 4);
+    return null;
+}
+
+/* quote a string; that is, replace double quotes
+   with backslashed double-quotes */
+char *guml_sqlquote(Data *out_string, const ref Data[] args)
+{
+    if (args.length != 1)
+        return cast(char*)"\\sqlquote requires only 1 parameter";
+
+    char* outstr = cast(char*)malloc(args[0].length * 2 + 1 );
+
+    size_t len = mysql_escape_string(outstr, args[0].asCharStar, args[0].length);
+    add_string(out_string, outstr, len);
+    free(outstr);
+
     return null;
 }
