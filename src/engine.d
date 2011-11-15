@@ -54,6 +54,7 @@ char* guml_parse_params (const(char) **ins, const ref Data[] params, ref Data[] 
     while (*cur == '{' && !err)
     {
         args.length = args.length + 1;
+        check_space(&args[args.length-1], 0);
 
         cur++;
         if (quoted)
