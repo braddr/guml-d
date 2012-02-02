@@ -121,7 +121,7 @@ void check_space(Data *str, size_t add)
     if (str.length_+add > ((str.length_ + 4095) & SPACE_MASK))
     {
         size_t newlen = (str.length_ + add + 4095) & SPACE_MASK;
-        assert(newlen > str.length_+add);
+        assert(newlen >= str.length_ + add);
 
         str.data = cast(char*)realloc(str.data, newlen);
         if (!(str.length_))
