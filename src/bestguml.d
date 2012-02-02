@@ -124,10 +124,9 @@ void processRequest(string[] args)
             filename = null;
             if (errstr)
             {
-                char *oops = strdup("Content-type: text/plain\n\n\\get{ERROR_traceback}\n\nResults so far:\n\n\\get{ERROR_results}");
+                const(char)*oops = "Content-type: text/plain\n\n\\get{ERROR_traceback}\n\nResults so far:\n\n\\get{ERROR_results}";
                 Data[] params;
                 guml_backend (&results, &oops, params);
-                free(oops);
                 oops = null;
 
                 if (err_string.data)

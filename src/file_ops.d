@@ -194,7 +194,7 @@ void guml_file (Data *out_string, FILE * f)
     if (!intext.data)
         return;
 
-    char *holdtext = intext.data;
+    const(char) *holdtext = intext.data;
     Data[] params;
     guml_backend (out_string, &holdtext, params);
     free (intext.data);

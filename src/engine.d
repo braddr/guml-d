@@ -263,14 +263,13 @@ extern(C) void guml_backend (Data *out_string, const(char) **ins, const ref Data
                             else
                             {
                                 Data *env_data = myfunction.data;
-                                char* env_str;
 
-                                if (env_data && ((env_str = env_data.data) != null))
+                                if (env_data && (env_data.data != null))
                                 {
-                                    char *str = strdup(env_str);
-                                    env_str = str;
-                                    guml_backend (out_string, &str, args);
-                                    free(env_str);
+                                    char* str = strdup(env_data.data);
+                                    const(char)* env_str = str;
+                                    guml_backend (out_string, &env_str, args);
+                                    free(str);
                                 }
                             }
                         }
