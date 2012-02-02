@@ -261,7 +261,7 @@ DMD=dmd
 
 .SUFFIXES: .d
 .d.o:
-	$(DMD) -c -gc -w $(DFLAGS) $<
+	$(DMD) -c -g -w $(DFLAGS) $<
 
 all: bestguml
 
