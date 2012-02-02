@@ -193,7 +193,14 @@ int main (string[] args)
         {
             guml_env = fcgi_envp;
 
-            processRequest(args);
+            try
+            {
+                processRequest(args);
+            }
+            catch (Exception e)
+            {
+                writelog ("Caught exception: %s", e.toString);
+            }
 
             version (USE_FILE_HANDLE_OPS)
             {
