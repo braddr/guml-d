@@ -257,9 +257,11 @@ ifdef TUXEDO
 LIBS += -L$(ROOTDIR)/../lib -lcsrv -L$(ROOTDIR)/../tpmsg -ltpmsg
 endif
 
+DMD=dmd
+
 .SUFFIXES: .d
 .d.o:
-	dmd -c -gc -w $(DFLAGS) $<
+	$(DMD) -c -gc -w $(DFLAGS) $<
 
 all: bestguml
 
@@ -270,7 +272,7 @@ clean:
 	rm -f *.o bestguml stub
 
 bestguml: bestguml.o $(O_FILES)
-	dmd -ofbestguml bestguml.o $(O_FILES) $(addprefix -L,$(LIBS))
+	$(DMD) -ofbestguml bestguml.o $(O_FILES) $(addprefix -L,$(LIBS))
 
 #stub: stub.o
 #	${CC} $(CFLAGS) -o stub stub.o
