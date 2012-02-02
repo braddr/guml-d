@@ -38,17 +38,22 @@ char *guml_substr (Data *out_string, const ref Data[] args)
     uint start_index;
     size_t len;
 
-    if (args.length != 3)
-        return cast(char*)"\\strsubstr requires 3 parameters";
+    if (args.length != 2 && args.length != 3)
+        return cast(char*)"\\strsubstr requires 2-3 parameters";
 
     start_index = atoi (args[1].data);
 
     if (start_index > strlen (args[0].data))
         return null;
 
-    len = atoi (args[2].data);
-    if (len < 0)
-        return null;
+    if (args.length == 2)
+        len = strlen(args[0].data);
+    else
+    {
+        len = atoi (args[2].data);
+        if (len < 0)
+            return null;
+    }
 
     if (len > strlen (args[0].data) - start_index)
         len = strlen (args[0].data) - start_index;
