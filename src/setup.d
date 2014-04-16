@@ -15,7 +15,7 @@ version = ARG_HANDLE_USE_ONLY_GET_FORMAT;
 
 extern(C)
 {
-    extern char **guml_env;
+    extern __gshared char **guml_env;
 
     version (FASTCGI)
     {
