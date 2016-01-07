@@ -182,7 +182,6 @@ int main (string[] args)
 {
     guml_env = cast(char**)environ;
 
-    srand(cast(uint)time(null));
     init_hash_table();
     init_commands();
 

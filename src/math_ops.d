@@ -2,6 +2,8 @@ module math_ops;
 
 import string_utils;
 
+import std.random;
+
 import core.stdc.config;
 import core.stdc.ctype;
 import core.stdc.math;
@@ -65,7 +67,7 @@ char *guml_rand (Data *out_string, const ref Data[] args)
         return cast(char*)"\\rand called with a string or a 0";
 
     char[15] res;
-    sprintf (res.ptr, "%ld", cast(long) random () % max);
+    sprintf (res.ptr, "%ld", cast(long) uniform(0, max));
 
     add_string (out_string, res.ptr);
     return null;
