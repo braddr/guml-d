@@ -18,10 +18,10 @@ enum HASH_BUILTIN    = 0x40000000;
 enum HASH_READONLY   = 0x80000000;
 
 enum STACK_INCREMENT = 16;
-enum STACK_MASK      = cast(ulong)(-STACK_INCREMENT);
+enum STACK_MASK      = cast(size_t)(-STACK_INCREMENT);
 enum HASH_WIDTH      = 509;
 enum HASH_DEPTH      = 16;
-enum HASH_MASK       = cast(ulong)(-HASH_DEPTH);
+enum HASH_MASK       = cast(size_t)(-HASH_DEPTH);
 
 struct HashNode
 {
