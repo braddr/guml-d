@@ -26,7 +26,7 @@ enum LOGFILE = "/tmp/betaguml_logfile";
 void writelog(const char *msg, ...)
 {
     timeval tp;
-    char str[1024];
+    char[1024] str;
     static int mypid = -1;
     FILE   *fp;
     va_list ap;

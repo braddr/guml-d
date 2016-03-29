@@ -66,7 +66,7 @@ private char *text_time ()
 
 private char *exiterr ()
 {
-    static char err_msg[1024];
+    static char[1024] err_msg;
 
     FILE *fp = fopen ("/tmp/sqldaemon.log", "a");
     MYSQL* m = lookupdb();

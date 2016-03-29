@@ -34,7 +34,7 @@ struct command
     }
 }
 
-command commlist[] =
+command[] commlist =
 [
     { name: "calc",         flags: 0, c_arg: &guml_calculator   },
     { name: "cmode",        flags: 0, c_arg: &guml_cmode        },

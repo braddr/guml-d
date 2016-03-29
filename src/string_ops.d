@@ -23,7 +23,7 @@ char *guml_index (Data *out_string, const ref Data[] args)
     char *comres = strstr (args[0].asCharStar, args[1].asCharStar);
     if (comres != null)
     {
-        char retc[32];
+        char[32] retc;
         sprintf (retc.ptr, "%ld", (comres - args[0].asCharStar) / char.sizeof);
         add_string (out_string, retc.ptr);
     }
@@ -64,7 +64,7 @@ char *guml_length (Data *out_string, const ref Data[] args)
     if (args.length != 1)
         return cast(char*)"\\strlen requires only 1 parameter";
 
-    char s[128];
+    char[128] s;
     sprintf (s.ptr, "%zd", args[0].length);
     add_string (out_string, s.ptr);
 
@@ -139,7 +139,7 @@ char *guml_date (Data *out_string, const ref Data[] args)
         ttime = atol (args[1].asCharStar);
     tm* tmtime = localtime (&ttime);
 
-    char buffer[100];
+    char[100] buffer;
     strftime (buffer.ptr, buffer.sizeof, fmtstr, tmtime);
     add_string (out_string, buffer.ptr);
 
@@ -164,14 +164,14 @@ char *guml_time (Data *out_string, const ref Data[] args)
         ttime = mktime (&tms);
     }
 
-    char buffer[64];
+    char[64] buffer;
     sprintf (buffer.ptr, "%li", cast(long) ttime);
     add_string (out_string, buffer.ptr);
 
     return null;
 }
 
-static char soundex_lookup[] =
+static char[] soundex_lookup =
 [
     '0',    /* A */
     '1',    /* B */
@@ -313,7 +313,7 @@ char *guml_httpdecode(Data *out_string, const ref Data[] args)
 
 string tohex(int c)
 {
-    static string dec_2_hex[] =
+    static string[] dec_2_hex =
     [
        "%00", "%01", "%02", "%03", "%04", "%05", "%06", "%07", "%08", "%09",
        "%0a", "%0b", "%0c", "%0d", "%0e",

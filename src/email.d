@@ -18,7 +18,7 @@ char *guml_email (Data *out_string, const ref Data[] args)
     if (!fwd || !*fwd)
         return cast(char*)"\\email -- FILE_WRITE_DIR not configured";
 
-    char cmdstr[1000];
+    char[1000] cmdstr;
     if (args.length == 3 && args[2].length > 0)
         sprintf (cmdstr.ptr, "/usr/lib/sendmail -f \\\"%s\\\" %s >> %s/email.log", args[2].asCharStar, args[0].asCharStar, fwd.asCharStar);
     else

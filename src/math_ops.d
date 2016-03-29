@@ -20,7 +20,7 @@ char *guml_parse_money (Data *out_string, const ref Data[] args)
     if (args.length != 1)
         return cast(char*)"\\money requires only one parameter";
 
-    char buffer[1024];
+    char[1024] buffer;
     size_t pos = 0;
     foreach(c; args[0].asString)
     {
@@ -64,7 +64,7 @@ char *guml_rand (Data *out_string, const ref Data[] args)
     if (max == 0)
         return cast(char*)"\\rand called with a string or a 0";
 
-    char res[15];
+    char[15] res;
     sprintf (res.ptr, "%ld", cast(long) random () % max);
 
     add_string (out_string, res.ptr);
@@ -174,7 +174,7 @@ char *guml_op (Data *out_string, const ref Data[] args)
     }
     else
     {
-        char res[32];
+        char[32] res;
         sprintf (res.ptr, "%d", c);
         add_string (out_string, res.ptr);
     }
@@ -184,10 +184,10 @@ char *guml_op (Data *out_string, const ref Data[] args)
 /* do general fp math operation */
 char *guml_fop (Data *out_string, const ref Data[] args)
 {
-    static char res[1024];
+    static char[1024] res;
     double a, b, c;
     int d = 0, isrel = 0;
-    char fmt[10];
+    char[10] fmt;
 
 /*
    if (args.length < 2 || args.length > 5)

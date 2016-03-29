@@ -234,7 +234,7 @@ extern(C) void guml_backend (Data *out_string, const(char) **ins, const ref Data
                         err = guml_parse_params (&cur, params, args, quoteargs);
                         if (err || fatal_error)
                         {
-                            char tmp[1024];
+                            char[1024] tmp;
 
                             if (!fatal_error)
                                 fatal_error = 1;
@@ -275,7 +275,7 @@ extern(C) void guml_backend (Data *out_string, const(char) **ins, const ref Data
                         }
                         else
                         {
-                            char buffer[128];
+                            char[128] buffer;
 
                             if (!fatal_error)
                                 fatal_error = 1;
@@ -285,7 +285,7 @@ extern(C) void guml_backend (Data *out_string, const(char) **ins, const ref Data
 
                         if (err || fatal_error)
                         {
-                            char tmp[1024];
+                            char[1024] tmp;
 
                             if (!fatal_error)
                                 fatal_error = 1;

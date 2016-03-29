@@ -232,7 +232,7 @@ char *guml_while (Data *out_string, const ref Data[] args, const ref Data[] para
 
 char *guml_paramcount (Data *out_string, const ref Data[] args, const ref Data[] params)
 {
-    char temp[1024];
+    char[1024] temp;
 
     if (args.length != 0)
         return cast(char*)"\\paramcount expects no parameters";

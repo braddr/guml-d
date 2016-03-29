@@ -328,8 +328,8 @@ double guml_calc_parseexpr (char *expr, int level)
 
 char *guml_calculator (Data *out_string, const ref Data[] args)
 {
-    char buf[1024];
-    char formstr[16];
+    char[1024] buf;
+    char[16] formstr;
 
     if (args.length < 1 || args.length > 2)
         return cast(char*)"\\calc requires 1 or 2 parameters";

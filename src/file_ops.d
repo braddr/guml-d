@@ -14,7 +14,7 @@ import core.sys.posix.sys.stat;
 
 char *guml_file_delete (Data *out_string, const ref Data[] args)
 {
-    char  buffer[1024];
+    char[1024] buffer;
 
     if (args.length != 1)
         return cast(char*)"\\filedelete requires only 1 parameter";
@@ -38,7 +38,7 @@ char *guml_file_delete (Data *out_string, const ref Data[] args)
 
 char *guml_file_write (Data *out_string, const ref Data[] args)
 {
-    char  buffer[1024];
+    char[1024] buffer;
 
     if (args.length != 2)
         return cast(char*)"\\filewrite requires 2 parameters";
@@ -69,7 +69,7 @@ char *guml_file_write (Data *out_string, const ref Data[] args)
 
 char *guml_file_read (Data *out_string, const ref Data[] args)
 {
-    char buffer[1024];
+    char[1024] buffer;
 
     if (args.length != 1)
         return cast(char*)"\\fileread requires only 1 parameter";
@@ -116,7 +116,7 @@ char *guml_file_exists (Data *out_string, const ref Data[] args)
     if (!*base_dir)
         return cast(char*)"\\fileexists -- BASE_DIR contains nothing";
  
-    char buffer[1024];
+    char[1024] buffer;
     sprintf (buffer.ptr, "%s%s", base_dir.asCharStar, (args[0].asCharStar[0] == '/') ? args[0].asCharStar + 1 : args[0].asCharStar);
     writelog ("guml_file_exists() called: %s", buffer.ptr);
 
@@ -144,7 +144,7 @@ char *guml_file_status (Data *out_string, const ref Data[] args)
     if (!*base_dir)
         return cast(char*)"\\filestatus -- BASE_DIR contains nothing";
  
-    char buffer[1024];
+    char[1024] buffer;
     sprintf (buffer.ptr, "%s%s", base_dir.asCharStar, (args[0].asCharStar[0] == '/') ? args[0].asCharStar + 1 : args[0].asCharStar);
     writelog ("guml_file_status() called: %s", buffer.ptr);
 
@@ -181,7 +181,7 @@ void guml_file (Data *out_string, FILE * f)
 
     while (!feof (f))
     {
-        char buffer[1025];
+        char[1025] buffer;
         size_t i = fread (buffer.ptr, 1, buffer.sizeof - 1, f);
         buffer[i] = 0;
         add_string (&intext, buffer.ptr);
@@ -216,7 +216,7 @@ char *guml_file_include (Data *out_string, const ref Data[] args)
     if (!*base_dir)
         return cast(char*)"\\include -- BASE_DIR contains nothing";
  
-    char myfile[1024];
+    char[1024] myfile;
     sprintf (myfile.ptr, "%s%s", base_dir.asCharStar, (args[0].asCharStar[0] == '/') ? args[0].asCharStar + 1 : args[0].asCharStar);
     stat_t mystat;
     if (stat(myfile.ptr, &mystat))
@@ -243,12 +243,12 @@ char *guml_file_include (Data *out_string, const ref Data[] args)
     }
  
 file_error:
-    char filenotfound[1024];
+    char[1024] filenotfound;
     sprintf (filenotfound.ptr, "%sfile-not-found", base_dir.asCharStar);
     FILE* g = fopen (filenotfound.ptr, "r");
     if (g == null)
     { 
-        static char errstr[1024];
+        static char[1024] errstr;
  
         sprintf(errstr.ptr, cast(char*)"\\include -- file not found (%s)", myfile.ptr);
         return errstr.ptr;
