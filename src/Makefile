@@ -31,7 +31,7 @@ endif
 
 ifeq (${DB},MYSQL)
 DB_OBJS = mysql.o
-DB_LIBS    = -lmysqlclient
+DB_LIBS = -L/usr/lib64/mysql56 -lmysqlclient
 endif
 
 OTHER_LIBS = -lm
