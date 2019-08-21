@@ -113,11 +113,14 @@ version (TUXEDO)
 
 void init_commands()
 {
-    foreach (ref c; commlist)
+    foreach (i, c; commlist)
+    {
+        Data * d = cast(Data*) cast(void*)(&commlist[i]);
         insert_hash(create_string(c.name),
-                    cast(Data*)(&c),
+                    d,
                     calc_hash(c.name),
                     HASH_BUILTIN | HASH_READONLY);
+    }
 }
 
 char* command_invoke(command* c, Data* out_string, const ref Data[] args, const ref Data[] params)

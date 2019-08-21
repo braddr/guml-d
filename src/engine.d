@@ -217,16 +217,28 @@ extern(C) void guml_backend (Data *out_string, const(char) **ins, const ref Data
                     {
                         command *mycmd = null;
                         HashNode *myfunction;
+                        c_ulong func_flags = 0;
+                        Data *func_data = null;
                         int quoteargs = 0;
                         char* err;
 
-                        if ((myfunction = find_hash_node(commandstr[0 .. i], hash_value)) != null)
-                            if (myfunction.flags & HASH_BUILTIN)
+                        myfunction = find_hash_node(commandstr[0 .. i], hash_value);
+                        if (myfunction)
+                        {
+                            // copy data since if the hash node is resized, pointer isn't valid
+                            func_flags = myfunction.flags;
+                            func_data = myfunction.data;
+                        }
+
+                        if (myfunction != null)
+                        {
+                            if (func_flags & HASH_BUILTIN)
                             {
-                                mycmd = cast(command*)(myfunction.data);
+                                mycmd = cast(command*)cast(void*)(func_data);
                                 if (command_wants_quoted(mycmd))
                                     quoteargs = 1;
                             }
+                        }
 
                         Data[] args;
                         err = guml_parse_params (&cur, params, args, quoteargs);
@@ -248,7 +260,7 @@ extern(C) void guml_backend (Data *out_string, const(char) **ins, const ref Data
 
                         if (myfunction)
                         {
-                            if (myfunction.flags & HASH_BUILTIN)
+                            if (func_flags & HASH_BUILTIN)
                             {
                                 err = command_invoke(mycmd, out_string, args, params);
 
@@ -260,11 +272,9 @@ extern(C) void guml_backend (Data *out_string, const(char) **ins, const ref Data
                             }
                             else
                             {
-                                Data *env_data = myfunction.data;
-
-                                if (env_data && (env_data.asCharStar != null))
+                                if (func_data && (func_data.asCharStar != null))
                                 {
-                                    char* str = strdup(env_data.asCharStar);
+                                    char* str = strdup(func_data.asCharStar);
                                     const(char)* env_str = str;
                                     guml_backend (out_string, &env_str, args);
                                     free(str);
