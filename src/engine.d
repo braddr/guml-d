@@ -79,11 +79,9 @@ char* guml_parse_params (const(char) **ins, const ref Data[] params, ref Data[] 
                     case '#':
                         if (prev != '\\')
                         {
-                            char *tmp;
-
                             notws = 0;
                             dump_accumulate(&args[args.length-1], cur, accumulate);
-                            tmp = strchr(cur, '\n');
+                            const char * tmp = strchr(cur, '\n');
                             cur = tmp ? tmp : &(cur[strlen(cur)-1]);
                         }
                         else
@@ -175,7 +173,7 @@ extern(C) void guml_backend (Data *out_string, const(char) **ins, const ref Data
             case '#':
                 dump_accumulate(out_string, cur, accumulate);
                 {
-                    char *t = strchr(cur, '\n');
+                    const char *t = strchr(cur, '\n');
                     cur = t ? t : &(cur[strlen(cur)-1]);
                 }
                 notws = 0;

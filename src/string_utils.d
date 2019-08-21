@@ -45,7 +45,7 @@ void writelog(const char *msg, ...)
         else version(X86)
             va_start(ap, msg);
         else version(X86_64)
-            va_start(ap, __va_argsave);
+            va_start(ap, msg);
         else
             static assert(false, "unknown platform");
         vfprintf(fp, msg, ap);

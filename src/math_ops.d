@@ -220,7 +220,7 @@ char *guml_fop (Data *out_string, const ref Data[] args)
         sprintf (fmt.ptr, "%%%d.%df", atoi (args[3].asCharStar), atoi (args[4].asCharStar));
     else
     {
-        char* ptr = strchr (args[0].asCharStar, '.');
+        const char* ptr = strchr (args[0].asCharStar, '.');
         size_t len = args[0].length;
         if (ptr) len -= (ptr - args[0].asCharStar) + 1;
         sprintf (fmt.ptr, "%%.%zdf", len);

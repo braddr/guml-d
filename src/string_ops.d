@@ -20,7 +20,7 @@ char *guml_index (Data *out_string, const ref Data[] args)
     if (args.length != 2)
         return cast(char*)"\\strindex requires 2 parameters";
 
-    char *comres = strstr (args[0].asCharStar, args[1].asCharStar);
+    const char *comres = strstr (args[0].asCharStar, args[1].asCharStar);
     if (comres != null)
     {
         char[32] retc;
