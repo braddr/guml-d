@@ -242,7 +242,11 @@ void delete_hash(string key, size_t hash)
         hash_table[bucket][i].key.reset();
         free(hash_table[bucket][i].key);
         hash_depths[bucket]--;
-        memcpy(&(hash_table[bucket][i]), &(hash_table[bucket][hash_depths[bucket]]), HashNode.sizeof);
+        if (i != hash_depths[bucket])
+        {
+            //printf("delete_hash: key = %.*s, i = %d, hash_depths[bucket] = %d, bucket = %d\n", cast(int)key.length, key.ptr, i, hash_depths[bucket], bucket);
+            memcpy(&(hash_table[bucket][i]), &(hash_table[bucket][hash_depths[bucket]]), HashNode.sizeof);
+        }
     }
 }
 
