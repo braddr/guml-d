@@ -66,14 +66,14 @@ private char *text_time ()
 
 private char *exiterr ()
 {
-    static char[1024] err_msg;
+    static char[10240] err_msg;
 
     FILE *fp = fopen ("/tmp/sqldaemon.log", "a");
     MYSQL* m = lookupdb();
 
-    sprintf (err_msg.ptr, "%s - cmd:\t%s\n%s - error:\t%s\n",
-            text_time (), sql_cmd ? sql_cmd : "<none>",
-            text_time (), m ? mysql_error (m) : "<unknown>");
+    snprintf (err_msg.ptr, err_msg.length, "%s - error:\t%s\n%s - cmd:\t%s\n",
+            text_time (), m ? mysql_error (m) : "<unknown>",
+            text_time (), sql_cmd ? sql_cmd : "<none>");
     if (fp)
     {
         fprintf (fp, "%s", err_msg.ptr);
