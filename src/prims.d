@@ -200,8 +200,8 @@ char *guml_while (Data *out_string, const ref Data[] args, const ref Data[] para
     do
     {
         loop_count++;
-        if (loop_count > 5000)
-            return cast(char*)"\\while -- exceeded max loop count (5000)";
+        if (loop_count > 10000)
+            return cast(char*)"\\while -- exceeded max loop count (10000)";
 
         const(char)* arg = args[0].asCharStar;
         Data res;
