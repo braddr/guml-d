@@ -49,7 +49,7 @@ ifdef FASTCGI
 DFLAGS += -version=FASTCGI
 endif
 ifdef OPTIMIZE
-DFLAGS += -O
+DFLAGS += -O -inline
 endif
 
 O_FILES = setup.o engine.o commands.o env_ops.o dir_ops.o file_ops.o math_ops.o \
