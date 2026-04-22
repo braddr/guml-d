@@ -40,7 +40,9 @@ void writelog(const char *msg, ...)
         gettimeofday(&tp, null);
         sprintf(str.ptr, "%05d - %ld.%06ld", mypid, tp.tv_sec, tp.tv_usec);
         fprintf(fp, "%s - ", str.ptr);
-        version(ARM)
+        version(AArch64)
+            va_start(ap, msg);
+        else version(ARM)
             va_start(ap, msg);
         else version(X86)
             va_start(ap, msg);
