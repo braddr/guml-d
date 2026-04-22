@@ -237,7 +237,7 @@ char *guml_paramcount (Data *out_string, const ref Data[] args, const ref Data[]
     if (args.length != 0)
         return cast(char*)"\\paramcount expects no parameters";
 
-    sprintf(temp.ptr, "%d", params.length);
+    sprintf(temp.ptr, "%zd", params.length);
     add_string(out_string, temp.ptr);
 
     return null;
