@@ -2,7 +2,7 @@
 FASTCGI = yes
 
 # define for building optimized
-#OPTIMIZE = yes
+OPTIMIZE = yes
 
 # define for various debugging flags
 #DEBUG_BUILD = yes
